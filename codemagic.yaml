@@ -47,7 +47,7 @@ workflows:
     publishing:
       email:
         recipients:
-          - melih11dincay@gmail.com # Replace with your email
+          - melih11dincay@gmail.com
         notify:
           success: true
           failure: true
@@ -59,9 +59,8 @@ workflows:
           - Internal Testers
         # Configuration for App Store (uncomment when ready)
         # submit_to_app_store: true
-      firebase:
-        firebase_token: $FIREBASE_TOKEN
-        android:
-          app_id: YOUR_FIREBASE_ANDROID_APP_ID # If needed
-        ios:
-          app_id: 1:1000992719491:ios:d0dc8918858c3efd1f51b6 # Replace with your Firebase iOS App ID
+      # Firebase App Distribution (optional - uncomment when you have FIREBASE_TOKEN)
+      # firebase:
+      #   firebase_token: $FIREBASE_TOKEN
+      #   ios:
+      #     app_id: 1:1000992719491:ios:d0dc8918858c3efd1f51b6
