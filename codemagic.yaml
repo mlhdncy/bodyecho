@@ -8,11 +8,11 @@ workflows:
     environment:
       ios_signing:
         distribution_type: app_store
-        bundle_identifier: com.bodyecho.app
+        bundle_identifier: com.melih.bodyecho
       vars:
         XCODE_WORKSPACE: "BodyEcho.xcworkspace"
         XCODE_SCHEME: "BodyEcho"
-        BUNDLE_ID: "com.bodyecho.app"
+        BUNDLE_ID: "com.melih.bodyecho"
         APP_STORE_APPLE_ID: 1234567890 # Replace with your App ID
       xcode: 15.2
       cocoapods: default
