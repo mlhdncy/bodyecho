@@ -1,0 +1,67 @@
+workflows:
+  ios-bodyecho-workflow:
+    name: Body Echo iOS Workflow
+    max_build_duration: 120
+    instance_type: mac_mini_m1
+    integrations:
+      app_store_connect: codemagic
+    environment:
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: com.bodyecho.app
+      vars:
+        XCODE_WORKSPACE: "BodyEcho.xcworkspace"
+        XCODE_SCHEME: "BodyEcho"
+        BUNDLE_ID: "com.bodyecho.app"
+        APP_STORE_APPLE_ID: 1234567890 # Replace with your App ID
+      xcode: 15.2
+      cocoapods: default
+    scripts:
+      - name: Install Firebase CLI
+        script: |
+          npm install -g firebase-tools
+      - name: Set up provisioning profiles
+        script: |
+          # Automatically managed by Codemagic signing
+          keychain initialize
+      - name: Get CocoaPods dependencies
+        script: |
+          pod install
+      - name: Set up code signing settings on Xcode project
+        script: |
+          xcode-project use-profiles
+      - name: Increment build number
+        script: |
+          cd $CM_BUILD_DIR
+          agvtool new-version -all $(($BUILD_NUMBER + 1))
+      - name: Build ipa for distribution
+        script: |
+          xcode-project build-ipa \
+            --workspace "$XCODE_WORKSPACE" \
+            --scheme "$XCODE_SCHEME"
+    artifacts:
+      - build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
+      - $HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.app
+      - $HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.dSYM
+    publishing:
+      email:
+        recipients:
+          - user@example.com # Replace with your email
+        notify:
+          success: true
+          failure: true
+      app_store_connect:
+        auth: integration
+        # Configuration for TestFlight
+        submit_to_testflight: true
+        beta_groups:
+          - Internal Testers
+        # Configuration for App Store (uncomment when ready)
+        # submit_to_app_store: true
+      firebase:
+        firebase_token: $FIREBASE_TOKEN
+        android:
+          app_id: YOUR_FIREBASE_ANDROID_APP_ID # If needed
+        ios:
+          app_id: YOUR_FIREBASE_IOS_APP_ID # Replace with your Firebase iOS App ID
