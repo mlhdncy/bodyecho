@@ -104,3 +104,7 @@ Desktop.ini
 *.swp
 *.swo
 *~
+.dart_tool/
+.packages
+.pub/
+android/app/google-services.json
