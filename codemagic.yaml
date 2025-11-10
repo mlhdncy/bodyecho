@@ -7,8 +7,9 @@ workflows:
       app_store_connect: codemagic
     environment:
       ios_signing:
-        distribution_type: development
+        distribution_type: app_store
         bundle_identifier: com.melih.bodyecho
+        # Automatic code signing enabled via Codemagic
       vars:
         XCODE_WORKSPACE: "BodyEcho.xcworkspace"
         XCODE_SCHEME: "BodyEcho"
@@ -51,11 +52,13 @@ workflows:
         notify:
           success: true
           failure: true
-      # App Store Connect (requires app_store distribution type)
-      # Disabled for development builds
-      # app_store_connect:
-      #   auth: integration
-      #   submit_to_testflight: true
+      app_store_connect:
+        auth: integration
+        # Automatically submit to TestFlight
+        submit_to_testflight: true
+        # Optional: Specify beta group
+        # beta_groups:
+        #   - Internal Testers
       # Firebase App Distribution (optional - uncomment when you have FIREBASE_TOKEN)
       # firebase:
       #   firebase_token: $FIREBASE_TOKEN
