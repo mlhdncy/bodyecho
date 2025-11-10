@@ -47,7 +47,7 @@ workflows:
     publishing:
       email:
         recipients:
-          - user@example.com # Replace with your email
+          - melih11dincay@gmail.com # Replace with your email
         notify:
           success: true
           failure: true
@@ -64,4 +64,4 @@ workflows:
         android:
           app_id: YOUR_FIREBASE_ANDROID_APP_ID # If needed
         ios:
-          app_id: YOUR_FIREBASE_IOS_APP_ID # Replace with your Firebase iOS App ID
+          app_id: 1:1000992719491:ios:d0dc8918858c3efd1f51b6 # Replace with your Firebase iOS App ID
