@@ -1,0 +1,411 @@
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../../../config/app_colors.dart';
+import '../../../core/authentication/viewmodels/auth_provider.dart';
+
+class ProfileScreen extends StatelessWidget {
+  const ProfileScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final authProvider = context.watch<AuthProvider>();
+    final user = authProvider.currentUser;
+
+    return Scaffold(
+      backgroundColor: AppColors.backgroundNeutral,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        title: const Text('Profil'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.edit),
+            onPressed: () {
+              // TODO: Navigate to edit profile
+            },
+          ),
+        ],
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            // Profile Header
+            Container(
+              padding: const EdgeInsets.all(24),
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(
+                  colors: [AppColors.primaryTeal, AppColors.primaryTealLight],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+              ),
+              child: Column(
+                children: [
+                  // Avatar
+                  Container(
+                    width: 100,
+                    height: 100,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: Colors.white,
+                        width: 4,
+                      ),
+                    ),
+                    child: const Icon(
+                      Icons.person,
+                      size: 50,
+                      color: AppColors.primaryTeal,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+
+                  // Name
+                  Text(
+                    user?.fullName ?? 'Kullanıcı',
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+
+                  // Email
+                  Text(
+                    user?.email ?? '',
+                    style: const TextStyle(
+                      color: Colors.white70,
+                      fontSize: 14,
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+
+                  // Level & Points
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 20,
+                      vertical: 12,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.2),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(
+                          Icons.emoji_events,
+                          color: Colors.white,
+                          size: 20,
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          'Seviye ${user?.level ?? 1}',
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
+                        ),
+                        const SizedBox(width: 16),
+                        Text(
+                          '${user?.points ?? 0} puan',
+                          style: const TextStyle(
+                            color: Colors.white70,
+                            fontSize: 14,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            // Stats Cards
+            Padding(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                children: [
+                  // Progress to Next Level
+                  Container(
+                    padding: const EdgeInsets.all(20),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(16),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.05),
+                          blurRadius: 8,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Sonraki Seviye',
+                          style:
+                              Theme.of(context).textTheme.titleMedium?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                        ),
+                        const SizedBox(height: 12),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              '${user?.currentLevelProgress ?? 0} / 500 puan',
+                              style: Theme.of(context).textTheme.bodyMedium,
+                            ),
+                            Text(
+                              '%${((user?.currentLevelProgress ?? 0) / 5).toStringAsFixed(0)}',
+                              style: const TextStyle(
+                                color: AppColors.primaryTeal,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 8),
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(8),
+                          child: LinearProgressIndicator(
+                            value: (user?.currentLevelProgress ?? 0) / 500,
+                            backgroundColor: AppColors.primaryTeal.withOpacity(0.2),
+                            valueColor: const AlwaysStoppedAnimation<Color>(
+                              AppColors.primaryTeal,
+                            ),
+                            minHeight: 8,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          '${user?.pointsForNextLevel ?? 500} puan kaldı',
+                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                color: AppColors.textSecondary,
+                              ),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  const SizedBox(height: 16),
+
+                  // Statistics
+                  Container(
+                    padding: const EdgeInsets.all(20),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(16),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.05),
+                          blurRadius: 8,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'İstatistikler',
+                          style:
+                              Theme.of(context).textTheme.titleMedium?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                        ),
+                        const SizedBox(height: 16),
+                        _buildStatRow(
+                          context,
+                          icon: Icons.directions_walk,
+                          label: 'Toplam Adım',
+                          value: '52,450',
+                          color: AppColors.primaryTeal,
+                        ),
+                        const SizedBox(height: 12),
+                        _buildStatRow(
+                          context,
+                          icon: Icons.local_fire_department,
+                          label: 'Toplam Aktivite',
+                          value: '23',
+                          color: AppColors.alertOrange,
+                        ),
+                        const SizedBox(height: 12),
+                        _buildStatRow(
+                          context,
+                          icon: Icons.calendar_today,
+                          label: 'Aktif Gün',
+                          value: '15',
+                          color: AppColors.accentGreen,
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  const SizedBox(height: 16),
+
+                  // Settings
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(16),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.05),
+                          blurRadius: 8,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: Column(
+                      children: [
+                        _buildSettingItem(
+                          context,
+                          icon: Icons.notifications_outlined,
+                          title: 'Bildirimler',
+                          onTap: () {
+                            // TODO: Navigate to notifications settings
+                          },
+                        ),
+                        const Divider(height: 1),
+                        _buildSettingItem(
+                          context,
+                          icon: Icons.privacy_tip_outlined,
+                          title: 'Gizlilik',
+                          onTap: () {
+                            // TODO: Navigate to privacy settings
+                          },
+                        ),
+                        const Divider(height: 1),
+                        _buildSettingItem(
+                          context,
+                          icon: Icons.help_outline,
+                          title: 'Yardım & Destek',
+                          onTap: () {
+                            // TODO: Navigate to help
+                          },
+                        ),
+                        const Divider(height: 1),
+                        _buildSettingItem(
+                          context,
+                          icon: Icons.info_outline,
+                          title: 'Hakkında',
+                          onTap: () {
+                            // TODO: Show about dialog
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  const SizedBox(height: 16),
+
+                  // Logout Button
+                  SizedBox(
+                    width: double.infinity,
+                    child: OutlinedButton.icon(
+                      onPressed: () async {
+                        final confirmed = await showDialog<bool>(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                            title: const Text('Çıkış Yap'),
+                            content: const Text(
+                                'Çıkış yapmak istediğinize emin misiniz?'),
+                            actions: [
+                              TextButton(
+                                onPressed: () => Navigator.pop(context, false),
+                                child: const Text('İptal'),
+                              ),
+                              TextButton(
+                                onPressed: () => Navigator.pop(context, true),
+                                child: const Text(
+                                  'Çıkış Yap',
+                                  style: TextStyle(color: AppColors.error),
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+
+                        if (confirmed == true && context.mounted) {
+                          await authProvider.signOut();
+                        }
+                      },
+                      icon: const Icon(Icons.logout, color: AppColors.error),
+                      label: const Text(
+                        'Çıkış Yap',
+                        style: TextStyle(color: AppColors.error),
+                      ),
+                      style: OutlinedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        side: const BorderSide(color: AppColors.error),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  const SizedBox(height: 20),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildStatRow(
+    BuildContext context, {
+    required IconData icon,
+    required String label,
+    required String value,
+    required Color color,
+  }) {
+    return Row(
+      children: [
+        Container(
+          padding: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: color.withOpacity(0.1),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Icon(icon, color: color, size: 20),
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Text(
+            label,
+            style: Theme.of(context).textTheme.bodyMedium,
+          ),
+        ),
+        Text(
+          value,
+          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSettingItem(
+    BuildContext context, {
+    required IconData icon,
+    required String title,
+    required VoidCallback onTap,
+  }) {
+    return ListTile(
+      leading: Icon(icon, color: AppColors.textSecondary),
+      title: Text(title),
+      trailing: const Icon(Icons.chevron_right, color: AppColors.textSecondary),
+      onTap: onTap,
+    );
+  }
+}
