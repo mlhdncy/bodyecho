@@ -100,6 +100,8 @@ Desktop.ini
 
 # IDEs
 .vscode/
+!.vscode/launch.json
+!.vscode/tasks.json
 .idea/
 *.swp
 *.swo
@@ -109,3 +111,6 @@ Desktop.ini
 .pub/
 android/app/google-services.json
 nul
+
+# GitHub Actions - DON'T IGNORE
+!.github/
