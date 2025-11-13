@@ -102,25 +102,4 @@ class FirestoreService {
         .toList();
   }
 
-  // USER
-
-  Future<void> addPointsToUser(String userId, int points) async {
-    final userRef = _firestore.collection('users').doc(userId);
-    await userRef.update({
-      'points': FieldValue.increment(points),
-      'updatedAt': FieldValue.serverTimestamp(),
-    });
-
-    // Update level if needed
-    final doc = await userRef.get();
-    if (doc.exists) {
-      final data = doc.data()!;
-      final currentPoints = data['points'] as int;
-      final newLevel = (currentPoints / 500).floor() + 1;
-
-      if (newLevel != data['level']) {
-        await userRef.update({'level': newLevel});
-      }
-    }
-  }
 }

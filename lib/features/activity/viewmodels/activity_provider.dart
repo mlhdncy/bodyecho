@@ -37,8 +37,8 @@ class ActivityProvider with ChangeNotifier {
     try {
       await _firestoreService.addActivity(activity);
 
-      // Add points to user (10 points per activity)
-      await _firestoreService.addPointsToUser(activity.userId, 10);
+      // Update daily calories
+      await _updateDailyCalories(activity.userId, activity.caloriesBurned);
 
       _isLoading = false;
       notifyListeners();
@@ -47,6 +47,23 @@ class ActivityProvider with ChangeNotifier {
       _isLoading = false;
       notifyListeners();
       rethrow;
+    }
+  }
+
+  Future<void> _updateDailyCalories(String userId, int calories) async {
+    try {
+      // Get today's metric
+      final todayMetric = await _firestoreService.getTodayMetric(userId);
+      final currentCalories = todayMetric?.calorieEstimate ?? 0;
+
+      // Add new calories to existing
+      await _firestoreService.createOrUpdateTodayMetric(
+        userId: userId,
+        calories: currentCalories + calories,
+      );
+    } catch (e) {
+      // Don't throw, just log - activity was already added
+      debugPrint('Kalori güncellenemedi: $e');
     }
   }
 

@@ -215,7 +215,7 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
                       label: 'Mesafe (km)',
                       hint: 'Örn: 5.0',
                       controller: _distanceController,
-                      keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                      keyboardType: TextInputType.numberWithOptions(decimal: true),
                       prefixIcon: Icons.route,
                       validator: (value) {
                         if (value == null || value.isEmpty) {

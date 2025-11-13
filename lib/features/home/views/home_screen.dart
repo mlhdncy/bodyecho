@@ -4,9 +4,13 @@ import '../../../config/app_colors.dart';
 import '../../../core/authentication/viewmodels/auth_provider.dart';
 import '../../../widgets/circular_progress_widget.dart';
 import '../../../widgets/progress_bar_widget.dart';
+import '../../../widgets/health_avatar_widget.dart';
 import '../viewmodels/home_provider.dart';
 import '../../trends/views/trends_screen.dart';
 import '../../activity/views/activity_log_screen.dart';
+import '../../activity/views/add_activity_screen.dart';
+import '../../activity/viewmodels/activity_provider.dart';
+import '../../chat/views/chat_screen.dart';
 import '../../profile/views/profile_screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -23,9 +27,14 @@ class _HomeScreenState extends State<HomeScreen> {
     // Load today's metrics when screen loads
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final homeProvider = context.read<HomeProvider>();
+      final activityProvider = context.read<ActivityProvider>();
       final authProvider = context.read<AuthProvider>();
       if (authProvider.currentUser != null) {
+        debugPrint('HomeScreen: Loading data for user ${authProvider.currentUser!.anonymousId}');
         homeProvider.loadTodayMetrics(authProvider.currentUser!.anonymousId);
+        activityProvider.loadActivities(authProvider.currentUser!.anonymousId, limit: 5);
+      } else {
+        debugPrint('HomeScreen: No current user found');
       }
     });
   }
@@ -55,31 +64,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ],
         ),
-        actions: [
-          // Level Badge
-          Container(
-            margin: const EdgeInsets.only(right: 16),
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-            decoration: BoxDecoration(
-              color: AppColors.primaryTeal,
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: Row(
-              children: [
-                const Icon(Icons.emoji_events, size: 16, color: Colors.white),
-                const SizedBox(width: 4),
-                Text(
-                  'Seviye ${user?.level ?? 1}',
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 12,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
+        actions: const [],
       ),
       body: Consumer<HomeProvider>(
         builder: (context, homeProvider, _) {
@@ -94,6 +79,11 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
+                // Health Avatar
+                _buildHealthAvatar(context, metric),
+
+                const SizedBox(height: 20),
+
                 // Daily Progress Card
                 _buildDailyProgressCard(context, user, metric),
 
@@ -120,10 +110,62 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  Widget _buildHealthAvatar(BuildContext context, metric) {
+    // Determine avatar mood based on metrics
+    final stepsProgress = metric?.stepsProgress ?? 0.0;
+    final waterProgress = metric?.waterProgress ?? 0.0;
+    final calorieProgress = metric?.calorieProgress ?? 0.0;
+
+    // Get activity count from ActivityProvider
+    final activityProvider = context.watch<ActivityProvider>();
+    final activityCount = activityProvider.activities.length;
+
+    final mood = AvatarMoodHelper.determineMood(
+      stepsProgress: stepsProgress,
+      waterProgress: waterProgress,
+      calorieProgress: calorieProgress,
+      activityCount: activityCount,
+    );
+
+    final moodMessage = AvatarMoodHelper.getMoodMessage(mood);
+
+    return Center(
+      child: Column(
+        children: [
+          HealthAvatarWidget(
+            mood: mood,
+            size: 140,
+          ),
+          const SizedBox(height: 16),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(20),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.05),
+                  blurRadius: 8,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+            ),
+            child: Text(
+              moodMessage,
+              style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+                color: AppColors.textPrimary,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildDailyProgressCard(BuildContext context, user, metric) {
     final stepsProgress = metric != null ? metric.stepsProgress : 0.0;
-    final points = user?.currentLevelProgress ?? 0;
-    final nextLevel = user?.pointsForNextLevel ?? 500;
 
     return Container(
       padding: const EdgeInsets.all(20),
@@ -136,7 +178,7 @@ class _HomeScreenState extends State<HomeScreen> {
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: AppColors.primaryTeal.withOpacity(0.3),
+            color: AppColors.primaryTeal.withValues(alpha: 0.3),
             blurRadius: 12,
             offset: const Offset(0, 6),
           ),
@@ -191,36 +233,17 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             ),
           ),
-          const SizedBox(height: 16),
-          Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.2),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text(
-                  'Sonraki seviyeye',
-                  style: TextStyle(color: Colors.white70, fontSize: 12),
-                ),
-                Text(
-                  '$nextLevel puan',
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
-            ),
-          ),
         ],
       ),
     );
   }
 
   Widget _buildMetricGrid(BuildContext context, metric) {
+    // Get activity count from ActivityProvider
+    final activityProvider = context.watch<ActivityProvider>();
+    final activityCount = activityProvider.activities.length;
+    final activityProgress = activityCount / 3.0; // Goal is 3 activities
+
     return GridView.count(
       crossAxisCount: 2,
       shrinkWrap: true,
@@ -242,7 +265,7 @@ class _HomeScreenState extends State<HomeScreen> {
           context,
           title: 'Kalori',
           value: '${metric?.calorieEstimate ?? 0}',
-          goal: '2000 kcal',
+          goal: '2500 kcal',
           progress: metric != null ? metric.calorieProgress : 0.0,
           icon: Icons.local_fire_department,
           color: AppColors.alertOrange,
@@ -259,9 +282,9 @@ class _HomeScreenState extends State<HomeScreen> {
         _buildMetricCard(
           context,
           title: 'Aktivite',
-          value: '0',
+          value: '$activityCount',
           goal: '3 aktivite',
-          progress: 0.0,
+          progress: activityProgress,
           icon: Icons.directions_run,
           color: AppColors.accentGreen,
         ),
@@ -378,9 +401,31 @@ class _HomeScreenState extends State<HomeScreen> {
                 icon: Icons.directions_run,
                 label: 'Aktivite',
                 color: AppColors.accentGreen,
-                onTap: () {
-                  // TODO: Navigate to add activity
-                },
+                onTap: () => _navigateToAddActivity(context),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 12),
+        Row(
+          children: [
+            Expanded(
+              child: _buildActionButton(
+                context,
+                icon: Icons.directions_walk,
+                label: 'Adım Ekle',
+                color: AppColors.primaryTeal,
+                onTap: () => _showAddStepsDialog(context),
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: _buildActionButton(
+                context,
+                icon: Icons.bedtime,
+                label: 'Uyku Ekle',
+                color: AppColors.accentPurple,
+                onTap: () => _showAddSleepDialog(context),
               ),
             ),
           ],
@@ -425,54 +470,197 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildRecentActivities(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return Consumer<ActivityProvider>(
+      builder: (context, activityProvider, _) {
+        final activities = activityProvider.activities;
+
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              'Son Aktiviteler',
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-            ),
-            TextButton(
-              onPressed: () {
-                // TODO: Navigate to activities
-              },
-              child: const Text('Tümünü Gör'),
-            ),
-          ],
-        ),
-        const SizedBox(height: 12),
-        Container(
-          padding: const EdgeInsets.all(20),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(16),
-          ),
-          child: Center(
-            child: Column(
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Icon(
-                  Icons.inbox_outlined,
-                  size: 48,
-                  color: AppColors.textSecondary.withOpacity(0.5),
-                ),
-                const SizedBox(height: 8),
                 Text(
-                  'Henüz aktivite yok',
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: AppColors.textSecondary,
+                  'Son Aktiviteler',
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
                       ),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) => const ActivityLogScreen(),
+                      ),
+                    );
+                  },
+                  child: const Text('Tümünü Gör'),
                 ),
               ],
             ),
-          ),
-        ),
-      ],
+            const SizedBox(height: 12),
+            if (activities.isEmpty)
+              Container(
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Center(
+                  child: Column(
+                    children: [
+                      Icon(
+                        Icons.inbox_outlined,
+                        size: 48,
+                        color: AppColors.textSecondary.withValues(alpha: 0.5),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        'Henüz aktivite yok',
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                              color: AppColors.textSecondary,
+                            ),
+                      ),
+                    ],
+                  ),
+                ),
+              )
+            else
+              ...activities.map((activity) => Padding(
+                    padding: const EdgeInsets.only(bottom: 12),
+                    child: Container(
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(16),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.05),
+                            blurRadius: 8,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                      child: Row(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(12),
+                            decoration: BoxDecoration(
+                              color: _getActivityColor(activity.type).withValues(alpha: 0.1),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Icon(
+                              _getActivityIcon(activity.type),
+                              color: _getActivityColor(activity.type),
+                            ),
+                          ),
+                          const SizedBox(width: 16),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  _getActivityName(activity.type),
+                                  style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                ),
+                                const SizedBox(height: 4),
+                                Text(
+                                  '${activity.duration} dk • ${activity.distance.toStringAsFixed(1)} km',
+                                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                        color: AppColors.textSecondary,
+                                      ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Text(
+                                '${activity.caloriesBurned}',
+                                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                      fontWeight: FontWeight.bold,
+                                      color: AppColors.alertOrange,
+                                    ),
+                              ),
+                              const Text(
+                                'kcal',
+                                style: TextStyle(
+                                  fontSize: 10,
+                                  color: AppColors.textSecondary,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  )),
+          ],
+        );
+      },
     );
+  }
+
+  IconData _getActivityIcon(String type) {
+    switch (type) {
+      case 'walking':
+        return Icons.directions_walk;
+      case 'running':
+        return Icons.directions_run;
+      case 'cycling':
+        return Icons.directions_bike;
+      default:
+        return Icons.fitness_center;
+    }
+  }
+
+  Color _getActivityColor(String type) {
+    switch (type) {
+      case 'walking':
+        return AppColors.accentGreen;
+      case 'running':
+        return AppColors.alertOrange;
+      case 'cycling':
+        return AppColors.accentBlue;
+      default:
+        return AppColors.primaryTeal;
+    }
+  }
+
+  String _getActivityName(String type) {
+    switch (type) {
+      case 'walking':
+        return 'Yürüyüş';
+      case 'running':
+        return 'Koşu';
+      case 'cycling':
+        return 'Bisiklet';
+      default:
+        return 'Aktivite';
+    }
+  }
+
+  Future<void> _navigateToAddActivity(BuildContext context) async {
+    final result = await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => const AddActivityScreen(),
+      ),
+    );
+
+    // Reload data if activity was added
+    if (result == true && mounted) {
+      if (!mounted) return;
+      final homeProvider = context.read<HomeProvider>();
+      final activityProvider = context.read<ActivityProvider>();
+      final authProvider = context.read<AuthProvider>();
+      if (authProvider.currentUser != null) {
+        homeProvider.loadTodayMetrics(authProvider.currentUser!.anonymousId);
+        activityProvider.loadActivities(authProvider.currentUser!.anonymousId, limit: 5);
+      }
+    }
   }
 
   Widget _buildBottomNavBar(BuildContext context) {
@@ -519,6 +707,18 @@ class _HomeScreenState extends State<HomeScreen> {
                   Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (_) => const ActivityLogScreen(),
+                    ),
+                  );
+                },
+              ),
+              _buildNavItem(
+                icon: Icons.chat_bubble_outline,
+                label: 'Chat',
+                isActive: false,
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (_) => const ChatScreen(),
                     ),
                   );
                 },
@@ -642,6 +842,153 @@ class _HomeScreenState extends State<HomeScreen> {
             color: AppColors.accentBlue,
             fontWeight: FontWeight.bold,
           ),
+        ),
+      ),
+    );
+  }
+
+  void _showAddStepsDialog(BuildContext context) {
+    final TextEditingController stepsController = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Adım Ekle'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Text('Bugün kaç adım attınız?'),
+            const SizedBox(height: 16),
+            TextField(
+              controller: stepsController,
+              keyboardType: TextInputType.number,
+              decoration: InputDecoration(
+                hintText: 'Örn: 5000',
+                prefixIcon: const Icon(Icons.directions_walk),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+              autofocus: true,
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('İptal'),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              final steps = int.tryParse(stepsController.text);
+              if (steps != null && steps > 0) {
+                final homeProvider = context.read<HomeProvider>();
+                final authProvider = context.read<AuthProvider>();
+
+                if (authProvider.currentUser != null) {
+                  await homeProvider.updateSteps(
+                    authProvider.currentUser!.anonymousId,
+                    steps,
+                  );
+                  if (context.mounted) {
+                    Navigator.pop(context);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('$steps adım eklendi!'),
+                        backgroundColor: AppColors.accentGreen,
+                      ),
+                    );
+                  }
+                }
+              }
+            },
+            child: const Text('Ekle'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showAddSleepDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Uyku Ekle'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Text('Bu gece kaç saat uyudunuz?'),
+            const SizedBox(height: 16),
+            Wrap(
+              spacing: 12,
+              runSpacing: 12,
+              alignment: WrapAlignment.center,
+              children: [
+                for (int hours = 4; hours <= 10; hours++)
+                  _buildSleepOption(context, hours),
+              ],
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('İptal'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSleepOption(BuildContext context, int hours) {
+    return InkWell(
+      onTap: () async {
+        final homeProvider = context.read<HomeProvider>();
+        final authProvider = context.read<AuthProvider>();
+
+        if (authProvider.currentUser != null) {
+          await homeProvider.updateSleep(
+            authProvider.currentUser!.anonymousId,
+            hours,
+          );
+          if (context.mounted) {
+            Navigator.pop(context);
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('$hours saat uyku kaydedildi!'),
+                backgroundColor: AppColors.accentGreen,
+              ),
+            );
+          }
+        }
+      },
+      child: Container(
+        width: 60,
+        height: 60,
+        decoration: BoxDecoration(
+          color: AppColors.accentPurple.withValues(alpha: 0.1),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: AppColors.accentPurple),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              '$hours',
+              style: const TextStyle(
+                color: AppColors.accentPurple,
+                fontWeight: FontWeight.bold,
+                fontSize: 20,
+              ),
+            ),
+            const Text(
+              'saat',
+              style: TextStyle(
+                color: AppColors.accentPurple,
+                fontSize: 10,
+              ),
+            ),
+          ],
         ),
       ),
     );

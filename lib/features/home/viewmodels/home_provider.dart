@@ -20,9 +20,11 @@ class HomeProvider with ChangeNotifier {
 
     try {
       _todayMetric = await _firestoreService.getTodayMetric(userId);
+      debugPrint('HomeProvider: Loaded metrics - Steps: ${_todayMetric?.steps}, Water: ${_todayMetric?.waterIntake}, Calories: ${_todayMetric?.calorieEstimate}, Sleep: ${_todayMetric?.sleepQuality}');
       _isLoading = false;
       notifyListeners();
     } catch (e) {
+      debugPrint('HomeProvider: Error loading metrics - $e');
       _errorMessage = 'Metrikler yüklenemedi: $e';
       _isLoading = false;
       notifyListeners();

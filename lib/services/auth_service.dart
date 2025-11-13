@@ -35,8 +35,6 @@ class AuthService {
         anonymousId: anonymousId,
         fullName: fullName,
         email: _anonymizer.anonymizeEmail(email),
-        level: 1,
-        points: 0,
         avatarType: 'bunny_pink',
       );
 

@@ -15,7 +15,7 @@ class AppConstants {
   static const int defaultStepsGoal = 10000;
   static const double defaultWaterGoal = 2.5; // liters
   static const int defaultCalorieGoal = 2500;
-  static const int defaultSleepQualityGoal = 80; // percentage
+  static const int defaultSleepQualityGoal = 8; // hours
 
   // Level System
   static const int pointsPerLevel = 500;
