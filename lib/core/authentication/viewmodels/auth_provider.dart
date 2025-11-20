@@ -86,6 +86,17 @@ class AuthProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> reloadUser() async {
+    if (_currentUser != null) {
+      try {
+        _currentUser = await _authService.getCurrentUserData(_currentUser!.anonymousId);
+        notifyListeners();
+      } catch (e) {
+        debugPrint('Error reloading user: $e');
+      }
+    }
+  }
+
   void clearError() {
     _errorMessage = null;
     notifyListeners();

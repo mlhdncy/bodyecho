@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../config/app_colors.dart';
 import '../../../core/authentication/viewmodels/auth_provider.dart';
+import 'settings_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -21,7 +22,10 @@ class ProfileScreen extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.edit),
             onPressed: () {
-              // TODO: Navigate to edit profile
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const SettingsScreen()),
+              );
             },
           ),
         ],
@@ -108,7 +112,7 @@ class ProfileScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'İstatistikler',
+                          'Fiziksel Bilgiler',
                           style:
                               Theme.of(context).textTheme.titleMedium?.copyWith(
                                     fontWeight: FontWeight.bold,
@@ -117,25 +121,25 @@ class ProfileScreen extends StatelessWidget {
                         const SizedBox(height: 16),
                         _buildStatRow(
                           context,
-                          icon: Icons.directions_walk,
-                          label: 'Toplam Adım',
-                          value: '52,450',
+                          icon: Icons.height,
+                          label: 'Boy',
+                          value: user?.height != null ? '${user!.height!.toInt()} cm' : '-',
                           color: AppColors.primaryTeal,
                         ),
                         const SizedBox(height: 12),
                         _buildStatRow(
                           context,
-                          icon: Icons.local_fire_department,
-                          label: 'Toplam Aktivite',
-                          value: '23',
+                          icon: Icons.monitor_weight_outlined,
+                          label: 'Kilo',
+                          value: user?.weight != null ? '${user!.weight!.toStringAsFixed(1)} kg' : '-',
                           color: AppColors.alertOrange,
                         ),
                         const SizedBox(height: 12),
                         _buildStatRow(
                           context,
-                          icon: Icons.calendar_today,
-                          label: 'Aktif Gün',
-                          value: '15',
+                          icon: Icons.cake_outlined,
+                          label: 'Yaş',
+                          value: user?.age != null ? '${user!.age}' : '-',
                           color: AppColors.accentGreen,
                         ),
                       ],

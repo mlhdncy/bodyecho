@@ -66,6 +66,41 @@ class FirestoreService {
     }
   }
 
+  // STREAM FOR LIVE UPDATES
+  Stream<DailyMetricModel?> getTodayMetricStream(String userId) {
+    final today = DateTime.now();
+    final startOfDay = DateTime(today.year, today.month, today.day);
+
+    return _firestore
+        .collection('dailyMetrics')
+        .where('userId', isEqualTo: userId)
+        .where('date', isGreaterThanOrEqualTo: Timestamp.fromDate(startOfDay))
+        .limit(1)
+        .snapshots()
+        .map((snapshot) {
+      if (snapshot.docs.isEmpty) return null;
+      final doc = snapshot.docs.first;
+      return DailyMetricModel.fromMap(doc.data(), doc.id);
+    });
+  }
+
+  // HISTORY FOR TRENDS
+  Future<List<DailyMetricModel>> getDailyMetricsHistory(String userId, {int days = 7}) async {
+    final endDate = DateTime.now();
+    final startDate = endDate.subtract(Duration(days: days));
+
+    final querySnapshot = await _firestore
+        .collection('dailyMetrics')
+        .where('userId', isEqualTo: userId)
+        .where('date', isGreaterThanOrEqualTo: Timestamp.fromDate(startDate))
+        .orderBy('date', descending: false) // Eskiden yeniye
+        .get();
+
+    return querySnapshot.docs
+        .map((doc) => DailyMetricModel.fromMap(doc.data(), doc.id))
+        .toList();
+  }
+
   // ACTIVITIES
 
   Future<void> addActivity(ActivityModel activity) async {

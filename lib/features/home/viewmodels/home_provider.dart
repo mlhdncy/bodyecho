@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../models/daily_metric_model.dart';
 import '../../../services/firestore_service.dart';
 
+import 'dart:async';
 import '../../../models/user_model.dart';
 import '../../../models/health_record_model.dart';
 import '../../../services/insights_service.dart';
@@ -15,11 +16,18 @@ class HomeProvider with ChangeNotifier {
   List<Insight> _insights = [];
   bool _isLoading = false;
   String? _errorMessage;
+  StreamSubscription<DailyMetricModel?>? _metricSubscription;
 
   DailyMetricModel? get todayMetric => _todayMetric;
   List<Insight> get insights => _insights;
   bool get isLoading => _isLoading;
   String? get errorMessage => _errorMessage;
+
+  @override
+  void dispose() {
+    _metricSubscription?.cancel();
+    super.dispose();
+  }
 
   Future<void> loadData(String userId, UserModel? user) async {
     _isLoading = true;
@@ -27,9 +35,23 @@ class HomeProvider with ChangeNotifier {
     notifyListeners();
 
     try {
-      // 1. Günlük Metrikleri Yükle
+      // 1. Günlük Metrikleri Canlı İzle (Stream)
+      _metricSubscription?.cancel();
+      _metricSubscription = _firestoreService.getTodayMetricStream(userId).listen((metric) {
+        _todayMetric = metric;
+        
+        // Metrik her değiştiğinde yaşam tarzı analizini güncelle
+        if (_todayMetric != null) {
+          _updateLifestyleInsights(_todayMetric!);
+        }
+        
+        notifyListeners();
+      }, onError: (e) {
+        debugPrint('HomeProvider: Stream error - $e');
+      });
+
+      // İlk veriyi manuel çekelim ki UI hemen dolsun (Stream bazen gecikebilir)
       _todayMetric = await _firestoreService.getTodayMetric(userId);
-      debugPrint('HomeProvider: Loaded metrics - Steps: ${_todayMetric?.steps}');
 
       // 2. Sağlık Kayıtlarını Yükle (Son kayıt)
       final healthRecords = await _firestoreService.getHealthRecords(userId, limit: 1);
@@ -47,7 +69,7 @@ class HomeProvider with ChangeNotifier {
         _insights.addAll(diseaseInsights);
       }
 
-      // Level 3: Yaşam Tarzı
+      // Level 3: Yaşam Tarzı (İlk yükleme)
       _insights.addAll(_insightsService.analyzeLifestyle(_todayMetric));
 
       _isLoading = false;
@@ -58,6 +80,12 @@ class HomeProvider with ChangeNotifier {
       _isLoading = false;
       notifyListeners();
     }
+  }
+
+  void _updateLifestyleInsights(DailyMetricModel metric) {
+    // Mevcut lifestyle insight'larını temizle ve yenilerini ekle
+    _insights.removeWhere((i) => i.category == 'lifestyle');
+    _insights.addAll(_insightsService.analyzeLifestyle(metric));
   }
 
   // Eski metod uyumluluğu için (kaldırılabilir veya loadData'ya yönlendirilebilir)

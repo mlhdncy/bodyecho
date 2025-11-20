@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:provider/provider.dart';
+import 'package:intl/intl.dart';
 import '../../../config/app_colors.dart';
+import '../../../services/firestore_service.dart';
+import '../../../models/daily_metric_model.dart';
+import '../../../core/authentication/viewmodels/auth_provider.dart';
 
 class TrendsScreen extends StatefulWidget {
   const TrendsScreen({super.key});
@@ -10,7 +15,38 @@ class TrendsScreen extends StatefulWidget {
 }
 
 class _TrendsScreenState extends State<TrendsScreen> {
-  String _selectedPeriod = 'week'; // week, month, year
+  String _selectedPeriod = 'week'; // week, month
+  bool _isLoading = true;
+  List<DailyMetricModel> _history = [];
+  final FirestoreService _firestoreService = FirestoreService();
+
+  @override
+  void initState() {
+    super.initState();
+    _loadHistory();
+  }
+
+  Future<void> _loadHistory() async {
+    setState(() => _isLoading = true);
+    try {
+      final authProvider = context.read<AuthProvider>();
+      final userId = authProvider.currentUser?.anonymousId;
+      
+      if (userId != null) {
+        // Hafta için 7, Ay için 30 gün
+        final days = _selectedPeriod == 'week' ? 7 : 30;
+        final history = await _firestoreService.getDailyMetricsHistory(userId, days: days);
+        
+        setState(() {
+          _history = history;
+        });
+      }
+    } catch (e) {
+      debugPrint('TrendsScreen: Error loading history - $e');
+    } finally {
+      setState(() => _isLoading = false);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,51 +57,53 @@ class _TrendsScreenState extends State<TrendsScreen> {
         elevation: 0,
         title: const Text('Trendler'),
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            // Period Selector
-            _buildPeriodSelector(),
+      body: _isLoading 
+        ? const Center(child: CircularProgressIndicator())
+        : SingleChildScrollView(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              // Period Selector
+              _buildPeriodSelector(),
 
-            const SizedBox(height: 20),
+              const SizedBox(height: 20),
 
-            // Steps Chart
-            _buildChartCard(
-              title: 'Adım Sayısı',
-              icon: Icons.directions_walk,
-              color: AppColors.primaryTeal,
-              chart: _buildStepsChart(),
-            ),
+              // Steps Chart
+              _buildChartCard(
+                title: 'Adım Sayısı',
+                icon: Icons.directions_walk,
+                color: AppColors.primaryTeal,
+                chart: _buildStepsChart(),
+              ),
 
-            const SizedBox(height: 16),
+              const SizedBox(height: 16),
 
-            // Water Chart
-            _buildChartCard(
-              title: 'Su Tüketimi',
-              icon: Icons.water_drop,
-              color: AppColors.accentBlue,
-              chart: _buildWaterChart(),
-            ),
+              // Water Chart
+              _buildChartCard(
+                title: 'Su Tüketimi',
+                icon: Icons.water_drop,
+                color: AppColors.accentBlue,
+                chart: _buildWaterChart(),
+              ),
 
-            const SizedBox(height: 16),
+              const SizedBox(height: 16),
 
-            // Calories Chart
-            _buildChartCard(
-              title: 'Kalori',
-              icon: Icons.local_fire_department,
-              color: AppColors.alertOrange,
-              chart: _buildCaloriesChart(),
-            ),
+              // Calories Chart
+              _buildChartCard(
+                title: 'Kalori',
+                icon: Icons.local_fire_department,
+                color: AppColors.alertOrange,
+                chart: _buildCaloriesChart(),
+              ),
 
-            const SizedBox(height: 20),
+              const SizedBox(height: 20),
 
-            // Stats Summary
-            _buildStatsSummary(),
-          ],
+              // Stats Summary
+              _buildStatsSummary(),
+            ],
+          ),
         ),
-      ),
     );
   }
 
@@ -84,9 +122,6 @@ class _TrendsScreenState extends State<TrendsScreen> {
           Expanded(
             child: _buildPeriodButton('Ay', 'month'),
           ),
-          Expanded(
-            child: _buildPeriodButton('Yıl', 'year'),
-          ),
         ],
       ),
     );
@@ -100,6 +135,7 @@ class _TrendsScreenState extends State<TrendsScreen> {
         setState(() {
           _selectedPeriod = value;
         });
+        _loadHistory();
       },
       borderRadius: BorderRadius.circular(8),
       child: Container(
@@ -164,7 +200,9 @@ class _TrendsScreenState extends State<TrendsScreen> {
           const SizedBox(height: 20),
           SizedBox(
             height: 200,
-            child: chart,
+            child: _history.isEmpty 
+              ? const Center(child: Text('Veri yok')) 
+              : chart,
           ),
         ],
       ),
@@ -172,80 +210,36 @@ class _TrendsScreenState extends State<TrendsScreen> {
   }
 
   Widget _buildStepsChart() {
-    // Sample data - replace with real data
-    final spots = [
-      FlSpot(0, 5000),
-      FlSpot(1, 7000),
-      FlSpot(2, 6500),
-      FlSpot(3, 8000),
-      FlSpot(4, 9000),
-      FlSpot(5, 7500),
-      FlSpot(6, 10000),
-    ];
+    final spots = _history.asMap().entries.map((entry) {
+      return FlSpot(entry.key.toDouble(), entry.value.steps.toDouble());
+    }).toList();
 
     return LineChart(
       LineChartData(
-        gridData: FlGridData(
-          show: true,
-          drawVerticalLine: false,
-          horizontalInterval: 2500,
-          getDrawingHorizontalLine: (value) {
-            return FlLine(
-              color: Colors.grey.withOpacity(0.2),
-              strokeWidth: 1,
-            );
-          },
-        ),
+        gridData: FlGridData(show: false),
         titlesData: FlTitlesData(
           show: true,
-          rightTitles: const AxisTitles(
-            sideTitles: SideTitles(showTitles: false),
-          ),
-          topTitles: const AxisTitles(
-            sideTitles: SideTitles(showTitles: false),
-          ),
+          rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+          topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
           bottomTitles: AxisTitles(
             sideTitles: SideTitles(
               showTitles: true,
               reservedSize: 30,
               interval: 1,
               getTitlesWidget: (value, meta) {
-                const days = ['Pzt', 'Sal', 'Çar', 'Per', 'Cum', 'Cmt', 'Paz'];
-                if (value.toInt() >= 0 && value.toInt() < days.length) {
+                if (value.toInt() >= 0 && value.toInt() < _history.length) {
+                  final date = _history[value.toInt()].date;
                   return Text(
-                    days[value.toInt()],
-                    style: const TextStyle(
-                      color: AppColors.textSecondary,
-                      fontSize: 12,
-                    ),
+                    DateFormat('E', 'tr_TR').format(date), // Gün ismi
+                    style: const TextStyle(color: AppColors.textSecondary, fontSize: 10),
                   );
                 }
                 return const Text('');
               },
             ),
           ),
-          leftTitles: AxisTitles(
-            sideTitles: SideTitles(
-              showTitles: true,
-              interval: 2500,
-              reservedSize: 40,
-              getTitlesWidget: (value, meta) {
-                return Text(
-                  '${(value / 1000).toStringAsFixed(0)}k',
-                  style: const TextStyle(
-                    color: AppColors.textSecondary,
-                    fontSize: 12,
-                  ),
-                );
-              },
-            ),
-          ),
         ),
         borderData: FlBorderData(show: false),
-        minX: 0,
-        maxX: 6,
-        minY: 0,
-        maxY: 12000,
         lineBarsData: [
           LineChartBarData(
             spots: spots,
@@ -253,17 +247,7 @@ class _TrendsScreenState extends State<TrendsScreen> {
             color: AppColors.primaryTeal,
             barWidth: 3,
             isStrokeCapRound: true,
-            dotData: FlDotData(
-              show: true,
-              getDotPainter: (spot, percent, barData, index) {
-                return FlDotCirclePainter(
-                  radius: 4,
-                  color: Colors.white,
-                  strokeWidth: 2,
-                  strokeColor: AppColors.primaryTeal,
-                );
-              },
-            ),
+            dotData: const FlDotData(show: false),
             belowBarData: BarAreaData(
               show: true,
               color: AppColors.primaryTeal.withOpacity(0.1),
@@ -275,79 +259,36 @@ class _TrendsScreenState extends State<TrendsScreen> {
   }
 
   Widget _buildWaterChart() {
-    final spots = [
-      FlSpot(0, 1.5),
-      FlSpot(1, 2.0),
-      FlSpot(2, 1.8),
-      FlSpot(3, 2.5),
-      FlSpot(4, 2.2),
-      FlSpot(5, 2.8),
-      FlSpot(6, 2.5),
-    ];
+    final spots = _history.asMap().entries.map((entry) {
+      return FlSpot(entry.key.toDouble(), entry.value.waterIntake);
+    }).toList();
 
     return LineChart(
       LineChartData(
-        gridData: FlGridData(
-          show: true,
-          drawVerticalLine: false,
-          horizontalInterval: 0.5,
-          getDrawingHorizontalLine: (value) {
-            return FlLine(
-              color: Colors.grey.withOpacity(0.2),
-              strokeWidth: 1,
-            );
-          },
-        ),
+        gridData: FlGridData(show: false),
         titlesData: FlTitlesData(
           show: true,
-          rightTitles: const AxisTitles(
-            sideTitles: SideTitles(showTitles: false),
-          ),
-          topTitles: const AxisTitles(
-            sideTitles: SideTitles(showTitles: false),
-          ),
+          rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+          topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
           bottomTitles: AxisTitles(
             sideTitles: SideTitles(
               showTitles: true,
               reservedSize: 30,
               interval: 1,
               getTitlesWidget: (value, meta) {
-                const days = ['Pzt', 'Sal', 'Çar', 'Per', 'Cum', 'Cmt', 'Paz'];
-                if (value.toInt() >= 0 && value.toInt() < days.length) {
+                if (value.toInt() >= 0 && value.toInt() < _history.length) {
+                  final date = _history[value.toInt()].date;
                   return Text(
-                    days[value.toInt()],
-                    style: const TextStyle(
-                      color: AppColors.textSecondary,
-                      fontSize: 12,
-                    ),
+                    DateFormat('E', 'tr_TR').format(date),
+                    style: const TextStyle(color: AppColors.textSecondary, fontSize: 10),
                   );
                 }
                 return const Text('');
               },
             ),
           ),
-          leftTitles: AxisTitles(
-            sideTitles: SideTitles(
-              showTitles: true,
-              interval: 0.5,
-              reservedSize: 40,
-              getTitlesWidget: (value, meta) {
-                return Text(
-                  '${value.toStringAsFixed(1)}L',
-                  style: const TextStyle(
-                    color: AppColors.textSecondary,
-                    fontSize: 12,
-                  ),
-                );
-              },
-            ),
-          ),
         ),
         borderData: FlBorderData(show: false),
-        minX: 0,
-        maxX: 6,
-        minY: 0,
-        maxY: 3,
         lineBarsData: [
           LineChartBarData(
             spots: spots,
@@ -355,17 +296,7 @@ class _TrendsScreenState extends State<TrendsScreen> {
             color: AppColors.accentBlue,
             barWidth: 3,
             isStrokeCapRound: true,
-            dotData: FlDotData(
-              show: true,
-              getDotPainter: (spot, percent, barData, index) {
-                return FlDotCirclePainter(
-                  radius: 4,
-                  color: Colors.white,
-                  strokeWidth: 2,
-                  strokeColor: AppColors.accentBlue,
-                );
-              },
-            ),
+            dotData: const FlDotData(show: false),
             belowBarData: BarAreaData(
               show: true,
               color: AppColors.accentBlue.withOpacity(0.1),
@@ -380,94 +311,54 @@ class _TrendsScreenState extends State<TrendsScreen> {
     return BarChart(
       BarChartData(
         alignment: BarChartAlignment.spaceAround,
-        maxY: 2500,
         barTouchData: BarTouchData(enabled: false),
         titlesData: FlTitlesData(
           show: true,
-          rightTitles: const AxisTitles(
-            sideTitles: SideTitles(showTitles: false),
-          ),
-          topTitles: const AxisTitles(
-            sideTitles: SideTitles(showTitles: false),
-          ),
+          rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+          topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
           bottomTitles: AxisTitles(
             sideTitles: SideTitles(
               showTitles: true,
               reservedSize: 30,
               getTitlesWidget: (value, meta) {
-                const days = ['Pzt', 'Sal', 'Çar', 'Per', 'Cum', 'Cmt', 'Paz'];
-                if (value.toInt() >= 0 && value.toInt() < days.length) {
+                if (value.toInt() >= 0 && value.toInt() < _history.length) {
+                  final date = _history[value.toInt()].date;
                   return Text(
-                    days[value.toInt()],
-                    style: const TextStyle(
-                      color: AppColors.textSecondary,
-                      fontSize: 12,
-                    ),
+                    DateFormat('E', 'tr_TR').format(date),
+                    style: const TextStyle(color: AppColors.textSecondary, fontSize: 10),
                   );
                 }
                 return const Text('');
               },
             ),
           ),
-          leftTitles: AxisTitles(
-            sideTitles: SideTitles(
-              showTitles: true,
-              interval: 500,
-              reservedSize: 40,
-              getTitlesWidget: (value, meta) {
-                return Text(
-                  '${value.toInt()}',
-                  style: const TextStyle(
-                    color: AppColors.textSecondary,
-                    fontSize: 12,
-                  ),
-                );
-              },
-            ),
-          ),
         ),
-        gridData: FlGridData(
-          show: true,
-          drawVerticalLine: false,
-          horizontalInterval: 500,
-          getDrawingHorizontalLine: (value) {
-            return FlLine(
-              color: Colors.grey.withOpacity(0.2),
-              strokeWidth: 1,
-            );
-          },
-        ),
+        gridData: FlGridData(show: false),
         borderData: FlBorderData(show: false),
-        barGroups: [
-          _buildBarGroup(0, 1500),
-          _buildBarGroup(1, 1800),
-          _buildBarGroup(2, 1600),
-          _buildBarGroup(3, 2000),
-          _buildBarGroup(4, 2200),
-          _buildBarGroup(5, 1900),
-          _buildBarGroup(6, 2100),
-        ],
+        barGroups: _history.asMap().entries.map((entry) {
+          return BarChartGroupData(
+            x: entry.key,
+            barRods: [
+              BarChartRodData(
+                toY: entry.value.calorieEstimate.toDouble(),
+                color: AppColors.alertOrange,
+                width: 12,
+                borderRadius: const BorderRadius.vertical(top: Radius.circular(4)),
+              ),
+            ],
+          );
+        }).toList(),
       ),
     );
   }
 
-  BarChartGroupData _buildBarGroup(int x, double y) {
-    return BarChartGroupData(
-      x: x,
-      barRods: [
-        BarChartRodData(
-          toY: y,
-          color: AppColors.alertOrange,
-          width: 16,
-          borderRadius: const BorderRadius.vertical(
-            top: Radius.circular(4),
-          ),
-        ),
-      ],
-    );
-  }
-
   Widget _buildStatsSummary() {
+    if (_history.isEmpty) return const SizedBox.shrink();
+
+    final avgSteps = (_history.map((m) => m.steps).reduce((a, b) => a + b) / _history.length).toInt();
+    final totalWater = _history.map((m) => m.waterIntake).reduce((a, b) => a + b);
+    final totalCalories = _history.map((m) => m.calorieEstimate).reduce((a, b) => a + b);
+
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -481,9 +372,9 @@ class _TrendsScreenState extends State<TrendsScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'Bu Hafta Özeti',
-            style: TextStyle(
+          Text(
+            '${_selectedPeriod == 'week' ? 'Bu Hafta' : 'Bu Ay'} Özeti',
+            style: const TextStyle(
               color: Colors.white,
               fontSize: 18,
               fontWeight: FontWeight.bold,
@@ -493,9 +384,9 @@ class _TrendsScreenState extends State<TrendsScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              _buildStatItem('Ortalama Adım', '7,500', Icons.directions_walk),
-              _buildStatItem('Toplam Su', '16.3 L', Icons.water_drop),
-              _buildStatItem('Toplam Kalori', '13,100', Icons.local_fire_department),
+              _buildStatItem('Ort. Adım', '$avgSteps', Icons.directions_walk),
+              _buildStatItem('Top. Su', '${totalWater.toStringAsFixed(1)} L', Icons.water_drop),
+              _buildStatItem('Top. Kalori', '$totalCalories', Icons.local_fire_department),
             ],
           ),
         ],
