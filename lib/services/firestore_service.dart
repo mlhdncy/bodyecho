@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/daily_metric_model.dart';
 import '../models/activity_model.dart';
+import '../models/health_record_model.dart';
 
 class FirestoreService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -102,4 +103,27 @@ class FirestoreService {
         .toList();
   }
 
+  // HEALTH RECORDS
+
+  Future<void> addHealthRecord(HealthRecordModel record) async {
+    await _firestore.collection('healthRecords').add(record.toMap());
+  }
+
+  Future<List<HealthRecordModel>> getHealthRecords(String userId, {int limit = 10}) async {
+    final querySnapshot = await _firestore
+        .collection('healthRecords')
+        .where('userId', isEqualTo: userId)
+        .orderBy('date', descending: true)
+        .limit(limit)
+        .get();
+
+    return querySnapshot.docs
+        .map((doc) => HealthRecordModel.fromMap(doc.data(), doc.id))
+        .toList();
+  }
+
+  // USER PROFILE UPDATE
+  Future<void> updateUserProfile(String userId, Map<String, dynamic> data) async {
+    await _firestore.collection('users').doc(userId).update(data);
+  }
 }

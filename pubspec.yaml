@@ -30,6 +30,7 @@ dependencies:
 
   # Charts for health trends
   fl_chart: ^0.70.1
+  http: ^1.6.0
 
 dev_dependencies:
   flutter_test:

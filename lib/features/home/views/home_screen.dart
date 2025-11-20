@@ -24,17 +24,16 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    // Load today's metrics when screen loads
+    // Load data when screen loads
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final homeProvider = context.read<HomeProvider>();
       final activityProvider = context.read<ActivityProvider>();
       final authProvider = context.read<AuthProvider>();
+      
       if (authProvider.currentUser != null) {
         debugPrint('HomeScreen: Loading data for user ${authProvider.currentUser!.anonymousId}');
-        homeProvider.loadTodayMetrics(authProvider.currentUser!.anonymousId);
+        homeProvider.loadData(authProvider.currentUser!.anonymousId, authProvider.currentUser);
         activityProvider.loadActivities(authProvider.currentUser!.anonymousId, limit: 5);
-      } else {
-        debugPrint('HomeScreen: No current user found');
       }
     });
   }
@@ -79,6 +78,12 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
+                // Insights Section
+                if (homeProvider.insights.isNotEmpty) ...[
+                  _buildInsightsSection(context, homeProvider.insights),
+                  const SizedBox(height: 20),
+                ],
+
                 // Health Avatar
                 _buildHealthAvatar(context, metric),
 
@@ -107,6 +112,89 @@ class _HomeScreenState extends State<HomeScreen> {
         },
       ),
       bottomNavigationBar: _buildBottomNavBar(context),
+    );
+  }
+
+  Widget _buildInsightsSection(BuildContext context, List<dynamic> insights) {
+    return SizedBox(
+      height: 140,
+      child: ListView.separated(
+        scrollDirection: Axis.horizontal,
+        itemCount: insights.length,
+        separatorBuilder: (context, index) => const SizedBox(width: 12),
+        itemBuilder: (context, index) {
+          final insight = insights[index];
+          Color bgColor;
+          Color textColor;
+          IconData icon;
+
+          switch (insight.type) {
+            case 'risk':
+              bgColor = Colors.red.shade50;
+              textColor = Colors.red.shade900;
+              icon = Icons.warning_amber_rounded;
+              break;
+            case 'warning':
+              bgColor = Colors.orange.shade50;
+              textColor = Colors.orange.shade900;
+              icon = Icons.info_outline;
+              break;
+            case 'success':
+              bgColor = Colors.green.shade50;
+              textColor = Colors.green.shade900;
+              icon = Icons.check_circle_outline;
+              break;
+            default:
+              bgColor = Colors.blue.shade50;
+              textColor = Colors.blue.shade900;
+              icon = Icons.lightbulb_outline;
+          }
+
+          return Container(
+            width: 280,
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: bgColor,
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(color: textColor.withOpacity(0.2)),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Icon(icon, color: textColor, size: 20),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        insight.title,
+                        style: TextStyle(
+                          color: textColor,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  insight.message,
+                  style: TextStyle(
+                    color: textColor.withOpacity(0.8),
+                    fontSize: 12,
+                    height: 1.4,
+                  ),
+                  maxLines: 3,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
+            ),
+          );
+        },
+      ),
     );
   }
 

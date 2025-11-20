@@ -2,33 +2,69 @@ import 'package:flutter/material.dart';
 import '../../../models/daily_metric_model.dart';
 import '../../../services/firestore_service.dart';
 
+import '../../../models/user_model.dart';
+import '../../../models/health_record_model.dart';
+import '../../../services/insights_service.dart';
+import '../../core/authentication/viewmodels/auth_provider.dart';
+
 class HomeProvider with ChangeNotifier {
   final FirestoreService _firestoreService = FirestoreService();
+  final InsightsService _insightsService = InsightsService();
 
   DailyMetricModel? _todayMetric;
+  List<Insight> _insights = [];
   bool _isLoading = false;
   String? _errorMessage;
 
   DailyMetricModel? get todayMetric => _todayMetric;
+  List<Insight> get insights => _insights;
   bool get isLoading => _isLoading;
   String? get errorMessage => _errorMessage;
 
-  Future<void> loadTodayMetrics(String userId) async {
+  Future<void> loadData(String userId, UserModel? user) async {
     _isLoading = true;
     _errorMessage = null;
     notifyListeners();
 
     try {
+      // 1. Günlük Metrikleri Yükle
       _todayMetric = await _firestoreService.getTodayMetric(userId);
-      debugPrint('HomeProvider: Loaded metrics - Steps: ${_todayMetric?.steps}, Water: ${_todayMetric?.waterIntake}, Calories: ${_todayMetric?.calorieEstimate}, Sleep: ${_todayMetric?.sleepQuality}');
+      debugPrint('HomeProvider: Loaded metrics - Steps: ${_todayMetric?.steps}');
+
+      // 2. Sağlık Kayıtlarını Yükle (Son kayıt)
+      final healthRecords = await _firestoreService.getHealthRecords(userId, limit: 1);
+      final latestRecord = healthRecords.isNotEmpty ? healthRecords.first : null;
+
+      // 3. Analizleri Oluştur
+      _insights = [];
+      
+      // Level 1: Profil
+      if (user != null) {
+        _insights.addAll(_insightsService.analyzeProfile(user));
+        
+        // Level 2: Hastalık Riski (Async)
+        final diseaseInsights = await _insightsService.analyzeDiseaseRisks(user, latestRecord);
+        _insights.addAll(diseaseInsights);
+      }
+
+      // Level 3: Yaşam Tarzı
+      _insights.addAll(_insightsService.analyzeLifestyle(_todayMetric));
+
       _isLoading = false;
       notifyListeners();
     } catch (e) {
-      debugPrint('HomeProvider: Error loading metrics - $e');
-      _errorMessage = 'Metrikler yüklenemedi: $e';
+      debugPrint('HomeProvider: Error loading data - $e');
+      _errorMessage = 'Veriler yüklenemedi: $e';
       _isLoading = false;
       notifyListeners();
     }
+  }
+
+  // Eski metod uyumluluğu için (kaldırılabilir veya loadData'ya yönlendirilebilir)
+  Future<void> loadTodayMetrics(String userId) async {
+    // Basitçe sadece metriği yenilemek istersek
+    _todayMetric = await _firestoreService.getTodayMetric(userId);
+    notifyListeners();
   }
 
   Future<void> updateSteps(String userId, int steps) async {
