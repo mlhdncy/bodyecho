@@ -12,12 +12,10 @@ class AppTheme {
         primary: AppColors.primaryTeal,
         secondary: AppColors.secondaryTeal,
         surface: AppColors.backgroundWhite,
-        background: AppColors.backgroundNeutral,
         error: AppColors.error,
         onPrimary: Colors.white,
         onSecondary: AppColors.textPrimary,
         onSurface: AppColors.textPrimary,
-        onBackground: AppColors.textPrimary,
         onError: Colors.white,
       ),
 
@@ -42,7 +40,7 @@ class AppTheme {
       cardTheme: CardThemeData(
         color: AppColors.backgroundWhite,
         elevation: 2,
-        shadowColor: Colors.black.withOpacity(0.08),
+        shadowColor: Colors.black.withValues(alpha: 0.08),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),
         ),

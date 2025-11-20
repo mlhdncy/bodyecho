@@ -22,7 +22,7 @@ class ProgressBarWidget extends StatelessWidget {
     return Container(
       height: height,
       decoration: BoxDecoration(
-        color: backgroundColor.withOpacity(0.2),
+        color: backgroundColor.withValues(alpha: 0.2),
         borderRadius: BorderRadius.circular(height / 2),
       ),
       child: FractionallySizedBox(

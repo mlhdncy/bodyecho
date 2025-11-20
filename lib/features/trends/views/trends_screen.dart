@@ -169,7 +169,7 @@ class _TrendsScreenState extends State<TrendsScreen> {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -183,7 +183,7 @@ class _TrendsScreenState extends State<TrendsScreen> {
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: color.withOpacity(0.1),
+                  color: color.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Icon(icon, color: color, size: 20),
@@ -250,7 +250,7 @@ class _TrendsScreenState extends State<TrendsScreen> {
             dotData: const FlDotData(show: false),
             belowBarData: BarAreaData(
               show: true,
-              color: AppColors.primaryTeal.withOpacity(0.1),
+              color: AppColors.primaryTeal.withValues(alpha: 0.1),
             ),
           ),
         ],
@@ -299,7 +299,7 @@ class _TrendsScreenState extends State<TrendsScreen> {
             dotData: const FlDotData(show: false),
             belowBarData: BarAreaData(
               show: true,
-              color: AppColors.accentBlue.withOpacity(0.1),
+              color: AppColors.accentBlue.withValues(alpha: 0.1),
             ),
           ),
         ],

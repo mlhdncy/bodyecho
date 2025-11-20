@@ -10,6 +10,9 @@ class UserModel {
   final int? age;
   final String? gender; // 'Male', 'Female'
   final String? activityLevel; // 'Low', 'Moderate', 'High'
+  final String avatarType;
+  final DateTime createdAt;
+  final DateTime updatedAt;
 
   UserModel({
     this.id,

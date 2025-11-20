@@ -6,7 +6,7 @@ import 'dart:async';
 import '../../../models/user_model.dart';
 import '../../../models/health_record_model.dart';
 import '../../../services/insights_service.dart';
-import '../../core/authentication/viewmodels/auth_provider.dart';
+import '../../../core/authentication/viewmodels/auth_provider.dart';
 
 class HomeProvider with ChangeNotifier {
   final FirestoreService _firestoreService = FirestoreService();

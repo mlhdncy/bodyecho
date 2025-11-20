@@ -30,7 +30,7 @@ class CircularProgressWidget extends StatelessWidget {
           progress: progress.clamp(0.0, 1.0),
           strokeWidth: strokeWidth,
           color: color,
-          backgroundColor: backgroundColor.withOpacity(0.2),
+          backgroundColor: backgroundColor.withValues(alpha: 0.2),
         ),
         child: center != null ? Center(child: center) : null,
       ),

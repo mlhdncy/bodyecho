@@ -112,7 +112,7 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
                   borderRadius: BorderRadius.circular(16),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.05),
+                      color: Colors.black.withValues(alpha: 0.05),
                       blurRadius: 8,
                       offset: const Offset(0, 2),
                     ),
@@ -172,7 +172,7 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
                   borderRadius: BorderRadius.circular(16),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.05),
+                      color: Colors.black.withValues(alpha: 0.05),
                       blurRadius: 8,
                       offset: const Offset(0, 2),
                     ),
@@ -246,7 +246,7 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
                     borderRadius: BorderRadius.circular(16),
                     boxShadow: [
                       BoxShadow(
-                        color: AppColors.alertOrange.withOpacity(0.3),
+                        color: AppColors.alertOrange.withValues(alpha: 0.3),
                         blurRadius: 8,
                         offset: const Offset(0, 4),
                       ),
@@ -323,10 +323,10 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 16),
         decoration: BoxDecoration(
-          color: isSelected ? color.withOpacity(0.1) : Colors.transparent,
+          color: isSelected ? color.withValues(alpha: 0.1) : Colors.transparent,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: isSelected ? color : AppColors.textSecondary.withOpacity(0.2),
+            color: isSelected ? color : AppColors.textSecondary.withValues(alpha: 0.2),
             width: isSelected ? 2 : 1,
           ),
         ),

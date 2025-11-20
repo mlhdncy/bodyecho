@@ -107,7 +107,7 @@ class _ActivityLogScreenState extends State<ActivityLogScreen> {
             Icon(
               Icons.directions_run,
               size: 100,
-              color: AppColors.textSecondary.withOpacity(0.3),
+              color: AppColors.textSecondary.withValues(alpha: 0.3),
             ),
             const SizedBox(height: 24),
             Text(
@@ -156,7 +156,7 @@ class _ActivityLogScreenState extends State<ActivityLogScreen> {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: AppColors.primaryTeal.withOpacity(0.3),
+            color: AppColors.primaryTeal.withValues(alpha: 0.3),
             blurRadius: 8,
             offset: const Offset(0, 4),
           ),
@@ -263,7 +263,7 @@ class _ActivityLogScreenState extends State<ActivityLogScreen> {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -275,7 +275,7 @@ class _ActivityLogScreenState extends State<ActivityLogScreen> {
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: activityColor.withOpacity(0.1),
+              color: activityColor.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Icon(
@@ -326,7 +326,7 @@ class _ActivityLogScreenState extends State<ActivityLogScreen> {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             decoration: BoxDecoration(
-              color: AppColors.alertOrange.withOpacity(0.1),
+              color: AppColors.alertOrange.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(20),
             ),
             child: Row(
