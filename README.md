@@ -1,6 +1,6 @@
-# Body Echo - iOS Health & Wellness App
+# Body Echo -  Health & Wellness App
 
-Body Echo is a comprehensive health and wellness iOS application that helps users track their daily activities, monitor health metrics, and receive AI-powered insights for better health management.
+Body Echo is a comprehensive health and wellness flutter application that helps users track their daily activities, monitor health metrics, and receive AI-powered insights for better health management.
 
 ## Features
 
@@ -73,8 +73,6 @@ BodyEcho/
 
 ### Prerequisites
 
-- Xcode 15.0 or later
-- macOS 13.0 (Ventura) or later
 - Firebase account
 - Apple Developer account (for deployment)
 
