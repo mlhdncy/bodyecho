@@ -84,10 +84,12 @@ class SplashScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              Icons.favorite,
-              size: 80,
-              color: Theme.of(context).colorScheme.primary,
+            // Body Echo Logo
+            Image.asset(
+              'assets/logo/bodyecho_logo.png',
+              width: 120,
+              height: 120,
+              fit: BoxFit.contain,
             ),
             const SizedBox(height: 24),
             Text(
