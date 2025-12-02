@@ -91,6 +91,10 @@ iOSInjectionProject/
 # Firebase
 GoogleService-Info.plist
 
+# Environment variables
+.env
+functions/.env
+
 # macOS
 .DS_Store
 

@@ -7,6 +7,10 @@ import requests
 from requests_oauthlib import OAuth1
 from firebase_functions import https_fn
 from firebase_admin import initialize_app
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
 
 initialize_app()
 
@@ -229,7 +233,7 @@ def predict(req: https_fn.Request) -> https_fn.Response:
     except Exception as e:
         return https_fn.Response(json.dumps({'success': False, 'error': str(e)}), status=500, content_type='application/json')
 
-@https_fn.on_request(min_instances=0, max_instances=1)
+@https_fn.on_request(min_instances=0, max_instances=1, timeout_sec=60)
 def search_food(req: https_fn.Request) -> https_fn.Response:
     # Enable CORS
     if req.method == 'OPTIONS':
@@ -247,49 +251,191 @@ def search_food(req: https_fn.Request) -> https_fn.Response:
         # Parse request
         print(f"Request Headers: {req.headers}")
         print(f"Request Data: {req.get_data(as_text=True)}")
-        
+
         req_json = req.get_json(silent=True)
         query = None
-        
+
         if req_json and 'query' in req_json:
             query = req_json['query']
         elif req.args and 'query' in req.args:
             query = req.args['query']
-            
+
         print(f"Search Food Request (OAuth1): query={query}")
 
         if not query:
-            return https_fn.Response(json.dumps({'error': 'Query parameter is required'}), status=400, headers=headers, content_type='application/json')
+            return https_fn.Response(
+                json.dumps({
+                    'success': False,
+                    'error': 'Query parameter is required',
+                    'error_code': 'MISSING_QUERY'
+                }),
+                status=400,
+                headers=headers,
+                content_type='application/json'
+            )
 
-        # FatSecret Credentials (OAuth 1.0)
-        CONSUMER_KEY = 'f7a036bce03d407082f0051ed0c8639a'
-        CONSUMER_SECRET = '7d1ca9b45a964c3095f04a0cdec04ee3'
-        
+        # FatSecret Credentials (OAuth 1.0) - Load from environment variables
+        CONSUMER_KEY = os.getenv('FATSECRET_CONSUMER_KEY')
+        CONSUMER_SECRET = os.getenv('FATSECRET_CONSUMER_SECRET')
+
+        if not CONSUMER_KEY or not CONSUMER_SECRET:
+            print("ERROR: FatSecret credentials not found in environment variables")
+            return https_fn.Response(
+                json.dumps({
+                    'success': False,
+                    'error': 'API credentials not configured',
+                    'error_code': 'MISSING_CREDENTIALS'
+                }),
+                status=500,
+                headers=headers,
+                content_type='application/json'
+            )
+
         # Create OAuth1 Session
-        # Note: FatSecret uses the Consumer Key/Secret for signing. 
-        # No access token is needed for general food search (Signed Request).
-        auth = OAuth1(CONSUMER_KEY, CONSUMER_SECRET)
-        
-        # Search Food
-        # Using the REST API endpoint for OAuth 1.0
+        # FatSecret uses OAuth 1.0 with HMAC-SHA1 signature method
+        # The requests_oauthlib library handles signature generation automatically
+        auth = OAuth1(
+            CONSUMER_KEY,
+            CONSUMER_SECRET,
+            signature_method='HMAC-SHA1',
+            signature_type='AUTH_HEADER'
+        )
+
+        # Search Food using FatSecret REST API
         url = 'https://platform.fatsecret.com/rest/server.api'
         params = {
             'method': 'foods.search',
             'search_expression': query,
-            'format': 'json'
+            'format': 'json',
+            'max_results': '20'  # Limit results
         }
-        
-        # Use POST for better compatibility with signing
-        search_resp = requests.post(url, data=params, auth=auth)
-        
-        print(f"Search Response Status: {search_resp.status_code}")
-        print(f"Search Response Body: {search_resp.text[:1000]}") 
-        
-        if search_resp.status_code != 200:
-            return https_fn.Response(json.dumps({'error': 'Failed to search food', 'details': search_resp.text}), status=500, headers=headers, content_type='application/json')
-            
-        return https_fn.Response(json.dumps(search_resp.json()), headers=headers, content_type='application/json')
 
+        print(f"Making FatSecret API request with params: {params}")
+
+        # Use POST with timeout for better reliability
+        search_resp = requests.post(
+            url,
+            data=params,
+            auth=auth,
+            timeout=30  # 30 second timeout
+        )
+
+        print(f"Search Response Status: {search_resp.status_code}")
+        print(f"Search Response Headers: {search_resp.headers}")
+        print(f"Search Response Body: {search_resp.text[:1000]}")
+
+        # Handle different error codes
+        if search_resp.status_code == 401:
+            return https_fn.Response(
+                json.dumps({
+                    'success': False,
+                    'error': 'Authentication failed - Invalid API credentials',
+                    'error_code': 'AUTH_FAILED',
+                    'details': search_resp.text
+                }),
+                status=401,
+                headers=headers,
+                content_type='application/json'
+            )
+        elif search_resp.status_code == 403:
+            return https_fn.Response(
+                json.dumps({
+                    'success': False,
+                    'error': 'Access forbidden - Check API permissions',
+                    'error_code': 'FORBIDDEN',
+                    'details': search_resp.text
+                }),
+                status=403,
+                headers=headers,
+                content_type='application/json'
+            )
+        elif search_resp.status_code == 429:
+            return https_fn.Response(
+                json.dumps({
+                    'success': False,
+                    'error': 'Rate limit exceeded - Too many requests',
+                    'error_code': 'RATE_LIMIT',
+                    'details': search_resp.text
+                }),
+                status=429,
+                headers=headers,
+                content_type='application/json'
+            )
+        elif search_resp.status_code != 200:
+            return https_fn.Response(
+                json.dumps({
+                    'success': False,
+                    'error': f'FatSecret API request failed with status {search_resp.status_code}',
+                    'error_code': 'API_ERROR',
+                    'details': search_resp.text
+                }),
+                status=500,
+                headers=headers,
+                content_type='application/json'
+            )
+
+        # Parse response
+        try:
+            response_data = search_resp.json()
+            # Wrap response in success envelope
+            return https_fn.Response(
+                json.dumps({
+                    'success': True,
+                    'data': response_data
+                }),
+                headers=headers,
+                content_type='application/json'
+            )
+        except json.JSONDecodeError as je:
+            print(f"JSON Parse Error: {je}")
+            return https_fn.Response(
+                json.dumps({
+                    'success': False,
+                    'error': 'Failed to parse API response',
+                    'error_code': 'PARSE_ERROR',
+                    'details': str(je)
+                }),
+                status=500,
+                headers=headers,
+                content_type='application/json'
+            )
+
+    except requests.exceptions.Timeout:
+        print("Request timeout")
+        return https_fn.Response(
+            json.dumps({
+                'success': False,
+                'error': 'Request timeout - FatSecret API took too long to respond',
+                'error_code': 'TIMEOUT'
+            }),
+            status=504,
+            headers=headers,
+            content_type='application/json'
+        )
+    except requests.exceptions.ConnectionError as ce:
+        print(f"Connection Error: {ce}")
+        return https_fn.Response(
+            json.dumps({
+                'success': False,
+                'error': 'Connection error - Unable to reach FatSecret API',
+                'error_code': 'CONNECTION_ERROR',
+                'details': str(ce)
+            }),
+            status=503,
+            headers=headers,
+            content_type='application/json'
+        )
     except Exception as e:
-        print(f"Exception: {e}")
-        return https_fn.Response(json.dumps({'error': str(e)}), status=500, headers=headers, content_type='application/json')
+        print(f"Unexpected Exception: {e}")
+        import traceback
+        traceback.print_exc()
+        return https_fn.Response(
+            json.dumps({
+                'success': False,
+                'error': f'Unexpected error: {str(e)}',
+                'error_code': 'UNKNOWN_ERROR'
+            }),
+            status=500,
+            headers=headers,
+            content_type='application/json'
+        )
