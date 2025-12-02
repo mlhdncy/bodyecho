@@ -85,7 +85,8 @@ class FirestoreService {
   }
 
   // HISTORY FOR TRENDS
-  Future<List<DailyMetricModel>> getDailyMetricsHistory(String userId, {int days = 7}) async {
+  Future<List<DailyMetricModel>> getDailyMetricsHistory(String userId,
+      {int days = 7}) async {
     final endDate = DateTime.now();
     final startDate = endDate.subtract(Duration(days: days));
 
@@ -107,7 +108,8 @@ class FirestoreService {
     await _firestore.collection('activities').add(activity.toMap());
   }
 
-  Future<List<ActivityModel>> getActivities(String userId, {int limit = 20}) async {
+  Future<List<ActivityModel>> getActivities(String userId,
+      {int limit = 20}) async {
     final querySnapshot = await _firestore
         .collection('activities')
         .where('userId', isEqualTo: userId)
@@ -144,7 +146,8 @@ class FirestoreService {
     await _firestore.collection('healthRecords').add(record.toMap());
   }
 
-  Future<List<HealthRecordModel>> getHealthRecords(String userId, {int limit = 10}) async {
+  Future<List<HealthRecordModel>> getHealthRecords(String userId,
+      {int limit = 10}) async {
     final querySnapshot = await _firestore
         .collection('healthRecords')
         .where('userId', isEqualTo: userId)
@@ -158,7 +161,11 @@ class FirestoreService {
   }
 
   // USER PROFILE UPDATE
-  Future<void> updateUserProfile(String userId, Map<String, dynamic> data) async {
-    await _firestore.collection('users').doc(userId).update(data);
+  Future<void> updateUserProfile(
+      String userId, Map<String, dynamic> data) async {
+    await _firestore
+        .collection('users')
+        .doc(userId)
+        .set(data, SetOptions(merge: true));
   }
 }

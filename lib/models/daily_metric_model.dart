@@ -28,9 +28,20 @@ class DailyMetricModel {
 
   double get stepsProgress => steps / AppConstants.defaultStepsGoal;
   double get waterProgress => waterIntake / AppConstants.defaultWaterGoal;
-  double get calorieProgress => calorieEstimate / AppConstants.defaultCalorieGoal;
-  double get sleepQualityProgress => sleepQuality / AppConstants.defaultSleepQualityGoal;
-  double get sleepProgress => sleepQuality / AppConstants.defaultSleepQualityGoal;
+  double get calorieProgress =>
+      calorieEstimate / AppConstants.defaultCalorieGoal;
+  double get sleepQualityProgress =>
+      sleepQuality / AppConstants.defaultSleepQualityGoal;
+  double get sleepProgress =>
+      sleepQuality / AppConstants.defaultSleepQualityGoal;
+
+  // Overall Progress: Average of Steps, Water, and Sleep (capped at 1.0 each)
+  double get overallProgress {
+    final s = (stepsProgress > 1.0) ? 1.0 : stepsProgress;
+    final w = (waterProgress > 1.0) ? 1.0 : waterProgress;
+    final sl = (sleepProgress > 1.0) ? 1.0 : sleepProgress;
+    return (s + w + sl) / 3.0;
+  }
 
   Map<String, dynamic> toMap() {
     return {

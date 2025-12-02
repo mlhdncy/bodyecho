@@ -8,7 +8,10 @@ import 'core/authentication/views/login_view.dart';
 import 'features/home/viewmodels/home_provider.dart';
 import 'features/home/views/home_screen.dart';
 import 'features/activity/viewmodels/activity_provider.dart';
+import 'features/nutrition/viewmodels/nutrition_provider.dart';
 import 'features/trends/views/health_risk_view.dart';
+
+import 'package:intl/date_symbol_data_local.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -17,6 +20,9 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  // Initialize Date Formatting
+  await initializeDateFormatting('tr_TR', null);
 
   runApp(const MyApp());
 }
@@ -31,6 +37,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => AuthProvider()),
         ChangeNotifierProvider(create: (_) => HomeProvider()),
         ChangeNotifierProvider(create: (_) => ActivityProvider()),
+        ChangeNotifierProvider(create: (_) => NutritionProvider()),
       ],
       child: MaterialApp(
         title: 'Body Echo',
@@ -141,13 +148,15 @@ class HomeScreenPlaceholder extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const HealthRiskView()),
+                  MaterialPageRoute(
+                      builder: (context) => const HealthRiskView()),
                 );
               },
               icon: const Icon(Icons.analytics),
               label: const Text('AI Sağlık Analizi'),
               style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
               ),
             ),
             const SizedBox(height: 24),

@@ -12,6 +12,7 @@ import '../../activity/views/add_activity_screen.dart';
 import '../../activity/viewmodels/activity_provider.dart';
 import '../../chat/views/chat_screen.dart';
 import '../../profile/views/profile_screen.dart';
+import '../../nutrition/views/calorie_tracking_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -29,11 +30,14 @@ class _HomeScreenState extends State<HomeScreen> {
       final homeProvider = context.read<HomeProvider>();
       final activityProvider = context.read<ActivityProvider>();
       final authProvider = context.read<AuthProvider>();
-      
+
       if (authProvider.currentUser != null) {
-        debugPrint('HomeScreen: Loading data for user ${authProvider.currentUser!.anonymousId}');
-        homeProvider.loadData(authProvider.currentUser!.anonymousId, authProvider.currentUser);
-        activityProvider.loadActivities(authProvider.currentUser!.anonymousId, limit: 5);
+        debugPrint(
+            'HomeScreen: Loading data for user ${authProvider.currentUser!.anonymousId}');
+        homeProvider.loadData(
+            authProvider.currentUser!.anonymousId, authProvider.currentUser);
+        activityProvider.loadActivities(authProvider.currentUser!.anonymousId,
+            limit: 5);
       }
     });
   }
@@ -253,7 +257,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildDailyProgressCard(BuildContext context, user, metric) {
-    final stepsProgress = metric != null ? metric.stepsProgress : 0.0;
+    final overallProgress = metric != null ? metric.overallProgress : 0.0;
 
     return Container(
       padding: const EdgeInsets.all(20),
@@ -286,7 +290,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
               Text(
-                '${(stepsProgress * 100).toInt()}%',
+                '${(overallProgress * 100).toInt()}%',
                 style: const TextStyle(
                   color: Colors.white,
                   fontSize: 24,
@@ -297,25 +301,25 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           const SizedBox(height: 16),
           CircularProgressWidget(
-            progress: stepsProgress,
+            progress: overallProgress,
             size: 120,
             color: Colors.white,
             center: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  '${metric?.steps ?? 0}',
+                  '${(overallProgress * 100).toInt()}',
                   style: const TextStyle(
                     color: Colors.white,
-                    fontSize: 24,
+                    fontSize: 32,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 const Text(
-                  'adım',
+                  'Puan',
                   style: TextStyle(
                     color: Colors.white70,
-                    fontSize: 12,
+                    fontSize: 14,
                   ),
                 ),
               ],
@@ -518,6 +522,22 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ],
         ),
+        const SizedBox(height: 12),
+        Row(
+          children: [
+            Expanded(
+              child: _buildActionButton(
+                context,
+                icon: Icons.local_fire_department,
+                label: 'Kalori Ekle',
+                color: AppColors.alertOrange,
+                onTap: () => _showAddCaloriesDialog(context),
+              ),
+            ),
+            const SizedBox(width: 12),
+            const Spacer(), // Placeholder for future button
+          ],
+        ),
       ],
     );
   }
@@ -634,7 +654,8 @@ class _HomeScreenState extends State<HomeScreen> {
                           Container(
                             padding: const EdgeInsets.all(12),
                             decoration: BoxDecoration(
-                              color: _getActivityColor(activity.type).withValues(alpha: 0.1),
+                              color: _getActivityColor(activity.type)
+                                  .withValues(alpha: 0.1),
                               borderRadius: BorderRadius.circular(12),
                             ),
                             child: Icon(
@@ -649,14 +670,20 @@ class _HomeScreenState extends State<HomeScreen> {
                               children: [
                                 Text(
                                   _getActivityName(activity.type),
-                                  style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .titleSmall
+                                      ?.copyWith(
                                         fontWeight: FontWeight.bold,
                                       ),
                                 ),
                                 const SizedBox(height: 4),
                                 Text(
                                   '${activity.duration} dk • ${activity.distance.toStringAsFixed(1)} km',
-                                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodySmall
+                                      ?.copyWith(
                                         color: AppColors.textSecondary,
                                       ),
                                 ),
@@ -668,7 +695,10 @@ class _HomeScreenState extends State<HomeScreen> {
                             children: [
                               Text(
                                 '${activity.caloriesBurned}',
-                                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .titleMedium
+                                    ?.copyWith(
                                       fontWeight: FontWeight.bold,
                                       color: AppColors.alertOrange,
                                     ),
@@ -746,7 +776,8 @@ class _HomeScreenState extends State<HomeScreen> {
       final authProvider = context.read<AuthProvider>();
       if (authProvider.currentUser != null) {
         homeProvider.loadTodayMetrics(authProvider.currentUser!.anonymousId);
-        activityProvider.loadActivities(authProvider.currentUser!.anonymousId, limit: 5);
+        activityProvider.loadActivities(authProvider.currentUser!.anonymousId,
+            limit: 5);
       }
     }
   }
@@ -1079,6 +1110,13 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
       ),
+    );
+  }
+
+  void _showAddCaloriesDialog(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const CalorieTrackingScreen()),
     );
   }
 }

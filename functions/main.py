@@ -3,6 +3,8 @@ import os
 import joblib
 import pandas as pd
 import numpy as np
+import requests
+from requests_oauthlib import OAuth1
 from firebase_functions import https_fn
 from firebase_admin import initialize_app
 
@@ -226,3 +228,68 @@ def predict(req: https_fn.Request) -> https_fn.Response:
         
     except Exception as e:
         return https_fn.Response(json.dumps({'success': False, 'error': str(e)}), status=500, content_type='application/json')
+
+@https_fn.on_request(min_instances=0, max_instances=1)
+def search_food(req: https_fn.Request) -> https_fn.Response:
+    # Enable CORS
+    if req.method == 'OPTIONS':
+        headers = {
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Methods': 'GET, POST',
+            'Access-Control-Allow-Headers': 'Content-Type',
+            'Access-Control-Max-Age': '3600'
+        }
+        return https_fn.Response('', status=204, headers=headers)
+
+    headers = {'Access-Control-Allow-Origin': '*'}
+
+    try:
+        # Parse request
+        print(f"Request Headers: {req.headers}")
+        print(f"Request Data: {req.get_data(as_text=True)}")
+        
+        req_json = req.get_json(silent=True)
+        query = None
+        
+        if req_json and 'query' in req_json:
+            query = req_json['query']
+        elif req.args and 'query' in req.args:
+            query = req.args['query']
+            
+        print(f"Search Food Request (OAuth1): query={query}")
+
+        if not query:
+            return https_fn.Response(json.dumps({'error': 'Query parameter is required'}), status=400, headers=headers, content_type='application/json')
+
+        # FatSecret Credentials (OAuth 1.0)
+        CONSUMER_KEY = 'f7a036bce03d407082f0051ed0c8639a'
+        CONSUMER_SECRET = '7d1ca9b45a964c3095f04a0cdec04ee3'
+        
+        # Create OAuth1 Session
+        # Note: FatSecret uses the Consumer Key/Secret for signing. 
+        # No access token is needed for general food search (Signed Request).
+        auth = OAuth1(CONSUMER_KEY, CONSUMER_SECRET)
+        
+        # Search Food
+        # Using the REST API endpoint for OAuth 1.0
+        url = 'https://platform.fatsecret.com/rest/server.api'
+        params = {
+            'method': 'foods.search',
+            'search_expression': query,
+            'format': 'json'
+        }
+        
+        # Use POST for better compatibility with signing
+        search_resp = requests.post(url, data=params, auth=auth)
+        
+        print(f"Search Response Status: {search_resp.status_code}")
+        print(f"Search Response Body: {search_resp.text[:1000]}") 
+        
+        if search_resp.status_code != 200:
+            return https_fn.Response(json.dumps({'error': 'Failed to search food', 'details': search_resp.text}), status=500, headers=headers, content_type='application/json')
+            
+        return https_fn.Response(json.dumps(search_resp.json()), headers=headers, content_type='application/json')
+
+    except Exception as e:
+        print(f"Exception: {e}")
+        return https_fn.Response(json.dumps({'error': str(e)}), status=500, headers=headers, content_type='application/json')
