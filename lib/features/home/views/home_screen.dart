@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../config/app_colors.dart';
 import '../../../core/authentication/viewmodels/auth_provider.dart';
-import '../../../widgets/circular_progress_widget.dart';
 import '../../../widgets/progress_bar_widget.dart';
 import '../../../widgets/health_avatar_widget.dart';
+import '../../../widgets/daily_progress_with_insights.dart';
+import '../../../services/insights_service.dart';
 import '../viewmodels/home_provider.dart';
 import '../../trends/views/trends_screen.dart';
 import '../../activity/views/activity_log_screen.dart';
@@ -82,19 +83,13 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                // Insights Section
-                if (homeProvider.insights.isNotEmpty) ...[
-                  _buildInsightsSection(context, homeProvider.insights),
-                  const SizedBox(height: 20),
-                ],
-
                 // Health Avatar
                 _buildHealthAvatar(context, metric),
 
                 const SizedBox(height: 20),
 
-                // Daily Progress Card
-                _buildDailyProgressCard(context, user, metric),
+                // Daily Progress Card with Insights
+                _buildDailyProgressWithInsights(context, metric, homeProvider.insights),
 
                 const SizedBox(height: 20),
 
@@ -119,86 +114,10 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildInsightsSection(BuildContext context, List<dynamic> insights) {
-    return SizedBox(
-      height: 140,
-      child: ListView.separated(
-        scrollDirection: Axis.horizontal,
-        itemCount: insights.length,
-        separatorBuilder: (context, index) => const SizedBox(width: 12),
-        itemBuilder: (context, index) {
-          final insight = insights[index];
-          Color bgColor;
-          Color textColor;
-          IconData icon;
-
-          switch (insight.type) {
-            case 'risk':
-              bgColor = Colors.red.shade50;
-              textColor = Colors.red.shade900;
-              icon = Icons.warning_amber_rounded;
-              break;
-            case 'warning':
-              bgColor = Colors.orange.shade50;
-              textColor = Colors.orange.shade900;
-              icon = Icons.info_outline;
-              break;
-            case 'success':
-              bgColor = Colors.green.shade50;
-              textColor = Colors.green.shade900;
-              icon = Icons.check_circle_outline;
-              break;
-            default:
-              bgColor = Colors.blue.shade50;
-              textColor = Colors.blue.shade900;
-              icon = Icons.lightbulb_outline;
-          }
-
-          return Container(
-            width: 280,
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: bgColor,
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: textColor.withValues(alpha: 0.2)),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Icon(icon, color: textColor, size: 20),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: Text(
-                        insight.title,
-                        style: TextStyle(
-                          color: textColor,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 14,
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  insight.message,
-                  style: TextStyle(
-                    color: textColor.withValues(alpha: 0.8),
-                    fontSize: 12,
-                    height: 1.4,
-                  ),
-                  maxLines: 3,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ],
-            ),
-          );
-        },
-      ),
+  Widget _buildDailyProgressWithInsights(BuildContext context, metric, List<dynamic> insights) {
+    return DailyProgressWithInsights(
+      metrics: metric,
+      insights: insights.cast<Insight>(),
     );
   }
 
@@ -256,79 +175,6 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildDailyProgressCard(BuildContext context, user, metric) {
-    final overallProgress = metric != null ? metric.overallProgress : 0.0;
-
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          colors: [AppColors.primaryTeal, AppColors.primaryTealLight],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.primaryTeal.withValues(alpha: 0.3),
-            blurRadius: 12,
-            offset: const Offset(0, 6),
-          ),
-        ],
-      ),
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text(
-                'Günlük İlerleme',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              Text(
-                '${(overallProgress * 100).toInt()}%',
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 16),
-          CircularProgressWidget(
-            progress: overallProgress,
-            size: 120,
-            color: Colors.white,
-            center: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  '${(overallProgress * 100).toInt()}',
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 32,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const Text(
-                  'Puan',
-                  style: TextStyle(
-                    color: Colors.white70,
-                    fontSize: 14,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 
   Widget _buildMetricGrid(BuildContext context, metric) {
     // Get activity count from ActivityProvider
