@@ -8,6 +8,7 @@ import '../../../widgets/daily_progress_with_insights.dart';
 import '../../../services/insights_service.dart';
 import '../viewmodels/home_provider.dart';
 import '../../trends/views/trends_screen.dart';
+import '../../trends/views/health_risk_view.dart';
 import '../../activity/views/activity_log_screen.dart';
 import '../../activity/views/add_activity_screen.dart';
 import '../../activity/viewmodels/activity_provider.dart';
@@ -381,7 +382,20 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             const SizedBox(width: 12),
-            const Spacer(), // Placeholder for future button
+            Expanded(
+              child: _buildActionButton(
+                context,
+                icon: Icons.analytics,
+                label: 'AI Analiz',
+                color: Color(0xFF6B73FF),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => const HealthRiskView()),
+                  );
+                },
+              ),
+            ),
           ],
         ),
       ],
