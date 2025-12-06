@@ -128,61 +128,64 @@ class _HealthRiskViewState extends State<HealthRiskView>
               )
             : null,
       ),
-      body: Column(
-        children: [
-          // Input Section (Always visible at top)
-          SingleChildScrollView(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _buildInputSection(),
-                const SizedBox(height: 24),
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: _isLoading ? null : _getPredictions,
-                    style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                      backgroundColor: Theme.of(context).primaryColor,
-                      foregroundColor: Colors.white,
-                    ),
-                    child: _isLoading
-                        ? const SizedBox(
-                            height: 20,
-                            width: 20,
-                            child: CircularProgressIndicator(color: Colors.white),
-                          )
-                        : const Text('Analiz Et',
-                            style: TextStyle(fontSize: 16)),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          // Results Section (Tabbed)
-          if (_response != null)
-            Expanded(
-              child: TabBarView(
-                controller: _tabController,
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            // Input Section (Always visible at top)
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Body Map View
-                  Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: BodyRiskMapWidget(
-                      riskResults: _response!.results,
-                      isLoading: _isLoading,
+                  _buildInputSection(),
+                  const SizedBox(height: 24),
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: _isLoading ? null : _getPredictions,
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        backgroundColor: Theme.of(context).primaryColor,
+                        foregroundColor: Colors.white,
+                      ),
+                      child: _isLoading
+                          ? const SizedBox(
+                              height: 20,
+                              width: 20,
+                              child: CircularProgressIndicator(color: Colors.white),
+                            )
+                          : const Text('Analiz Et',
+                              style: TextStyle(fontSize: 16)),
                     ),
-                  ),
-                  // List View
-                  SingleChildScrollView(
-                    padding: const EdgeInsets.all(16.0),
-                    child: _buildResultsSection(),
                   ),
                 ],
               ),
             ),
-        ],
+            // Results Section (Tabbed)
+            if (_response != null)
+              SizedBox(
+                height: 600, // TabBarView için sabit yükseklik
+                child: TabBarView(
+                  controller: _tabController,
+                  children: [
+                    // Body Map View
+                    SingleChildScrollView(
+                      padding: const EdgeInsets.all(16.0),
+                      child: BodyRiskMapWidget(
+                        riskResults: _response!.results,
+                        isLoading: _isLoading,
+                      ),
+                    ),
+                    // List View
+                    SingleChildScrollView(
+                      padding: const EdgeInsets.all(16.0),
+                      child: _buildResultsSection(),
+                    ),
+                  ],
+                ),
+              ),
+          ],
+        ),
       ),
     );
   }

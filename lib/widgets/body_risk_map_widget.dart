@@ -381,32 +381,31 @@ class _BodyRiskMapWidgetState extends State<BodyRiskMapWidget>
     return FadeTransition(
       opacity: _animationController,
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
           // Legend
           _buildLegend(),
           const SizedBox(height: 16),
           // Body Map
-          Expanded(
-            child: Center(
-              child: SizedBox(
-                height: 500,
-                child: CustomPaint(
-                  painter: BodyMapPainter(
-                    riskResults: widget.riskResults,
-                    getRiskColor: _getRiskColor,
-                    hoveredRegion: _hoveredRegion,
-                  ),
-                  child: GestureDetector(
-                    onTapUp: (details) {
-                      final region = _getRegionFromPosition(
-                        details.localPosition,
-                        context.size!,
-                      );
-                      if (region != null) {
-                        _onRegionTapped(region);
-                      }
-                    },
-                  ),
+          Center(
+            child: SizedBox(
+              height: 500,
+              child: CustomPaint(
+                painter: BodyMapPainter(
+                  riskResults: widget.riskResults,
+                  getRiskColor: _getRiskColor,
+                  hoveredRegion: _hoveredRegion,
+                ),
+                child: GestureDetector(
+                  onTapUp: (details) {
+                    final region = _getRegionFromPosition(
+                      details.localPosition,
+                      context.size!,
+                    );
+                    if (region != null) {
+                      _onRegionTapped(region);
+                    }
+                  },
                 ),
               ),
             ),
