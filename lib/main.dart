@@ -10,6 +10,7 @@ import 'features/home/views/home_screen.dart';
 import 'features/activity/viewmodels/activity_provider.dart';
 import 'features/nutrition/viewmodels/nutrition_provider.dart';
 import 'features/trends/views/health_risk_view.dart';
+import 'features/reports/providers/reports_provider.dart';
 
 import 'package:intl/date_symbol_data_local.dart';
 
@@ -38,6 +39,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => HomeProvider()),
         ChangeNotifierProvider(create: (_) => ActivityProvider()),
         ChangeNotifierProvider(create: (_) => NutritionProvider()),
+        ChangeNotifierProvider(create: (_) => ReportsProvider()),
       ],
       child: MaterialApp(
         title: 'Body Echo',

@@ -15,6 +15,7 @@ import '../../activity/viewmodels/activity_provider.dart';
 import '../../chat/views/chat_screen.dart';
 import '../../profile/views/profile_screen.dart';
 import '../../nutrition/views/calorie_tracking_screen.dart';
+import '../../reports/views/reports_main_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -679,13 +680,13 @@ class _HomeScreenState extends State<HomeScreen> {
                 },
               ),
               _buildNavItem(
-                icon: Icons.history,
-                label: 'Geçmiş',
+                icon: Icons.assessment,
+                label: 'Raporlar',
                 isActive: false,
                 onTap: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (_) => const ActivityLogScreen(),
+                      builder: (_) => const ReportsMainScreen(),
                     ),
                   );
                 },
