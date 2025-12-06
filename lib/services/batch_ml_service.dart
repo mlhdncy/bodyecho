@@ -148,8 +148,8 @@ class BatchMLService {
     required AverageHealthData avgHealthData,
   }) {
     // BMI hesapla
-    final heightM = userProfile.height / 100;
-    final bmi = userProfile.weight / (heightM * heightM);
+    final heightM = (userProfile.height ?? 170) / 100;
+    final bmi = (userProfile.weight ?? 70) / (heightM * heightM);
 
     // Aktivite seviyesi: Low=0, Moderate=1, High=2
     int activeLevel = 0;

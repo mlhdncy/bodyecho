@@ -71,7 +71,7 @@ class MonthlyReportScreen extends StatelessWidget {
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [AppColors.accentOrange, AppColors.accentOrange.withOpacity(0.7)],
+          colors: [AppColors.primaryTeal, AppColors.primaryTealLight],
         ),
         borderRadius: BorderRadius.circular(16),
       ),
@@ -139,17 +139,6 @@ class MonthlyReportScreen extends StatelessWidget {
               '${(report.totalCalories / 1000).toStringAsFixed(1)}K',
               report.caloriesChangeVsPreviousMonth,
             ),
-            if (report.bmiChange != null) ...[
-              const Divider(),
-              _buildMetricRow(
-                context,
-                'BMI Değişimi',
-                report.bmiChange! > 0
-                    ? '+${report.bmiChange!.toStringAsFixed(1)}'
-                    : '${report.bmiChange!.toStringAsFixed(1)}',
-                null,
-              ),
-            ],
           ],
         ),
       ),
@@ -352,7 +341,7 @@ class MonthlyReportScreen extends StatelessWidget {
           children: [
             Row(
               children: [
-                Icon(Icons.lightbulb, color: AppColors.accentOrange),
+                Icon(Icons.lightbulb, color: AppColors.primaryTeal),
                 const SizedBox(width: 8),
                 Text(
                   'Öneriler',
@@ -374,7 +363,7 @@ class MonthlyReportScreen extends StatelessWidget {
                       width: 6,
                       height: 6,
                       decoration: BoxDecoration(
-                        color: AppColors.accentOrange,
+                        color: AppColors.primaryTeal,
                         shape: BoxShape.circle,
                       ),
                     ),
@@ -392,7 +381,7 @@ class MonthlyReportScreen extends StatelessWidget {
   Widget _buildNextMonthGoals(BuildContext context, report) {
     return Card(
       elevation: 2,
-      color: AppColors.primaryBlue.withOpacity(0.1),
+      color: AppColors.primaryTeal.withValues(alpha: 0.1),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: Padding(
         padding: const EdgeInsets.all(20),
@@ -401,13 +390,13 @@ class MonthlyReportScreen extends StatelessWidget {
           children: [
             Row(
               children: [
-                Icon(Icons.flag, color: AppColors.primaryBlue),
+                Icon(Icons.flag, color: AppColors.primaryTeal),
                 const SizedBox(width: 8),
                 Text(
                   'Gelecek Ay Hedefleri',
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.bold,
-                        color: AppColors.primaryBlue,
+                        color: AppColors.primaryTeal,
                       ),
                 ),
               ],
@@ -422,7 +411,7 @@ class MonthlyReportScreen extends StatelessWidget {
                     Icon(
                       Icons.check_circle_outline,
                       size: 20,
-                      color: AppColors.primaryBlue,
+                      color: AppColors.primaryTeal,
                     ),
                     const SizedBox(width: 8),
                     Expanded(child: Text(goal)),
@@ -443,7 +432,7 @@ class MonthlyReportScreen extends StatelessWidget {
           value,
           style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                 fontWeight: FontWeight.bold,
-                color: AppColors.accentOrange,
+                color: AppColors.primaryTeal,
               ),
         ),
         const SizedBox(height: 4),

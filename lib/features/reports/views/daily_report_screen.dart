@@ -92,7 +92,7 @@ class DailyReportScreen extends StatelessWidget {
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [AppColors.primaryBlue, AppColors.primaryBlue.withOpacity(0.7)],
+          colors: [AppColors.primaryTeal, AppColors.primaryTealLight],
         ),
         borderRadius: BorderRadius.circular(16),
       ),
@@ -180,7 +180,7 @@ class DailyReportScreen extends StatelessWidget {
           children: [
             Row(
               children: [
-                Icon(Icons.directions_walk, color: AppColors.primaryBlue),
+                Icon(Icons.directions_walk, color: Colors.blue),
                 const SizedBox(width: 8),
                 Text(
                   'Aktivite',
@@ -316,7 +316,7 @@ class DailyReportScreen extends StatelessWidget {
           children: [
             Row(
               children: [
-                Icon(Icons.analytics, color: AppColors.accentOrange),
+                Icon(Icons.analytics, color: Colors.orange),
                 const SizedBox(width: 8),
                 Text(
                   'ML Risk Analizi',
@@ -378,7 +378,7 @@ class DailyReportScreen extends StatelessWidget {
           children: [
             Row(
               children: [
-                Icon(Icons.lightbulb, color: AppColors.primaryGreen),
+                Icon(Icons.lightbulb, color: Colors.green),
                 const SizedBox(width: 8),
                 Text(
                   'Öneriler',
@@ -400,7 +400,7 @@ class DailyReportScreen extends StatelessWidget {
                       width: 6,
                       height: 6,
                       decoration: BoxDecoration(
-                        color: AppColors.primaryGreen,
+                        color: Colors.green,
                         shape: BoxShape.circle,
                       ),
                     ),

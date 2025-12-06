@@ -109,7 +109,7 @@ class _ReportsMainScreenState extends State<ReportsMainScreen> {
       title: 'Günlük Rapor',
       subtitle: 'Son 24 saat',
       icon: Icons.today,
-      iconColor: AppColors.primaryBlue,
+      iconColor: AppColors.primaryTeal,
       isLoading: isLoading,
       hasError: hasError,
       errorMessage: provider.dailyError,
@@ -139,7 +139,7 @@ class _ReportsMainScreenState extends State<ReportsMainScreen> {
                 Text(
                   'Hedef: %${(report.dailyGoalAchievement * 100).toStringAsFixed(0)}',
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: AppColors.primaryGreen,
+                        color: AppColors.accentGreen,
                         fontWeight: FontWeight.bold,
                       ),
                 ),
@@ -160,7 +160,7 @@ class _ReportsMainScreenState extends State<ReportsMainScreen> {
       title: 'Haftalık Rapor',
       subtitle: 'Son 7 gün',
       icon: Icons.calendar_view_week,
-      iconColor: AppColors.primaryGreen,
+      iconColor: AppColors.accentGreen,
       isLoading: isLoading,
       hasError: hasError,
       errorMessage: provider.weeklyError,
@@ -211,7 +211,7 @@ class _ReportsMainScreenState extends State<ReportsMainScreen> {
       title: 'Aylık Rapor',
       subtitle: 'Son 30 gün',
       icon: Icons.calendar_month,
-      iconColor: AppColors.accentOrange,
+      iconColor: AppColors.alertOrange,
       isLoading: isLoading,
       hasError: hasError,
       errorMessage: provider.monthlyError,
@@ -242,7 +242,7 @@ class _ReportsMainScreenState extends State<ReportsMainScreen> {
                   Text(
                     '${report.achievements.length} rozet kazanıldı',
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: AppColors.accentOrange,
+                          color: AppColors.alertOrange,
                           fontWeight: FontWeight.bold,
                         ),
                   ),
@@ -281,7 +281,7 @@ class _ReportsMainScreenState extends State<ReportsMainScreen> {
                   Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: iconColor.withOpacity(0.1),
+                      color: iconColor.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Icon(icon, color: iconColor, size: 28),
@@ -366,18 +366,18 @@ class _ReportsMainScreenState extends State<ReportsMainScreen> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColors.primaryBlue.withOpacity(0.1),
+        color: AppColors.primaryTeal.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Row(
         children: [
-          Icon(Icons.info_outline, color: AppColors.primaryBlue),
+          Icon(Icons.info_outline, color: AppColors.primaryTeal),
           const SizedBox(width: 12),
           Expanded(
             child: Text(
               'Raporlar uygulamayı her açtığınızda otomatik güncellenir. Elle güncellemek için ↻ ikonuna tıklayın.',
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: AppColors.primaryBlue,
+                    color: AppColors.primaryTeal,
                   ),
             ),
           ),

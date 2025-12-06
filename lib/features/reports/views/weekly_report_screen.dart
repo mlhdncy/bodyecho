@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 import '../../../config/app_colors.dart';
 import '../providers/reports_provider.dart';
 import 'package:intl/intl.dart';
-import 'package:fl_chart/fl_chart.dart';
 
 class WeeklyReportScreen extends StatelessWidget {
   const WeeklyReportScreen({super.key});
@@ -64,7 +63,7 @@ class WeeklyReportScreen extends StatelessWidget {
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [AppColors.primaryGreen, AppColors.primaryGreen.withOpacity(0.7)],
+          colors: [AppColors.accentGreen, AppColors.success],
         ),
         borderRadius: BorderRadius.circular(16),
       ),
@@ -188,7 +187,7 @@ class WeeklyReportScreen extends StatelessWidget {
               '${report.daysGoalAchieved} / ${report.totalDays} gün',
               style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                     fontWeight: FontWeight.bold,
-                    color: AppColors.primaryGreen,
+                    color: AppColors.accentGreen,
                   ),
             ),
             const SizedBox(height: 8),
@@ -208,7 +207,7 @@ class WeeklyReportScreen extends StatelessWidget {
                 '${report.bestDaySteps} adım',
                 style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                       fontWeight: FontWeight.bold,
-                      color: AppColors.primaryGreen,
+                      color: AppColors.accentGreen,
                     ),
               ),
             ],
@@ -229,7 +228,7 @@ class WeeklyReportScreen extends StatelessWidget {
           children: [
             Row(
               children: [
-                Icon(Icons.lightbulb, color: AppColors.primaryGreen),
+                Icon(Icons.lightbulb, color: AppColors.accentGreen),
                 const SizedBox(width: 8),
                 Text(
                   'Öneriler',
@@ -251,7 +250,7 @@ class WeeklyReportScreen extends StatelessWidget {
                       width: 6,
                       height: 6,
                       decoration: BoxDecoration(
-                        color: AppColors.primaryGreen,
+                        color: AppColors.accentGreen,
                         shape: BoxShape.circle,
                       ),
                     ),

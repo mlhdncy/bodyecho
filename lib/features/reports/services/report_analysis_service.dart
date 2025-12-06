@@ -1,6 +1,4 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../../models/daily_metric_model.dart';
-import '../../../models/health_record_model.dart';
 import '../../../models/user_model.dart';
 import '../../../services/firestore_service.dart';
 import '../../../services/batch_ml_service.dart';
@@ -12,7 +10,6 @@ import '../../../config/app_constants.dart';
 class ReportAnalysisService {
   final FirestoreService _firestoreService = FirestoreService();
   final BatchMLService _batchMLService = BatchMLService();
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   /// Günlük rapor oluştur
   Future<DailyReportModel> generateDailyReport({
@@ -20,7 +17,6 @@ class ReportAnalysisService {
     required UserModel userProfile,
   }) async {
     final today = DateTime.now();
-    final yesterday = today.subtract(const Duration(days: 1));
 
     // Bugünün verisi
     final todayMetric = await _firestoreService.getTodayMetric(userId);
@@ -416,7 +412,7 @@ class ReportAnalysisService {
       riskTrend: riskTrend,
       achievements: achievements,
       recommendations: recommendations,
-      nextMonthGoals: _generateNextMonthGoals(avgMetrics, mlResult),
+      nextMonthGoals: _generateNextMonthGoals(avgMetrics: avgMetrics, mlResult: mlResult),
       weeklyData: weeklyData,
     );
   }
