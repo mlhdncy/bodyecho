@@ -83,16 +83,16 @@ class MlService {
   }) {
     // Simple rule-based logic to simulate ML model
     int diabetesRisk = 0;
-    int heartRisk = 0;
+    int sugarRisk = 0;
 
     // Diabetes Logic Simulation
     if (bloodGlucoseLevel > 140 || (age > 45 && bmi > 30)) {
       diabetesRisk = 1;
     }
 
-    // Heart Disease Logic Simulation
-    if (bmi > 35 || (age > 50 && active == 0)) {
-      heartRisk = 1;
+    // High Sugar Risk Logic Simulation
+    if (bloodGlucoseLevel >= 140 || bmi > 35) {
+      sugarRisk = 1;
     }
 
     return MlResponse(
@@ -104,11 +104,11 @@ class MlService {
           probability: diabetesRisk == 1 ? 0.85 : 0.1,
           riskLevel: diabetesRisk == 1 ? 'High' : 'Low',
         ),
-        'heart_risk': MlPredictionResult(
-          modelName: 'heart_risk',
-          prediction: heartRisk,
-          probability: heartRisk == 1 ? 0.75 : 0.2,
-          riskLevel: heartRisk == 1 ? 'High' : 'Low',
+        'high_sugar_risk': MlPredictionResult(
+          modelName: 'high_sugar_risk',
+          prediction: sugarRisk,
+          probability: sugarRisk == 1 ? 0.75 : 0.2,
+          riskLevel: sugarRisk == 1 ? 'High' : 'Low',
         ),
       },
     );
