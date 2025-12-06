@@ -3,6 +3,7 @@ import 'package:bodyecho/config/app_colors.dart';
 import 'package:bodyecho/models/daily_metric_model.dart';
 import 'package:bodyecho/services/insights_service.dart';
 import 'package:bodyecho/widgets/circular_progress_widget.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class DailyProgressWithInsights extends StatefulWidget {
   final DailyMetricModel? metrics;
@@ -208,51 +209,110 @@ class _DailyProgressWithInsightsState extends State<DailyProgressWithInsights> {
           width: 1.5,
         ),
       ),
-      child: Row(
+      child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: iconColor.withValues(alpha: 0.15),
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Icon(
-              iconData,
-              color: iconColor,
-              size: 20,
-            ),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: iconColor.withValues(alpha: 0.15),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Icon(
+                  iconData,
+                  color: iconColor,
+                  size: 20,
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      insight.title,
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                        color: iconColor,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      insight.message,
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Colors.grey.shade800,
+                        height: 1.3,
+                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
+          // Kaynak bilgisi (varsa)
+          if (insight.source != null) ...[
+            const SizedBox(height: 8),
+            Row(
               children: [
-                Text(
-                  insight.title,
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                    color: iconColor,
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: iconColor.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(
+                      color: iconColor.withValues(alpha: 0.3),
+                      width: 1,
+                    ),
                   ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  insight.message,
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.grey.shade800,
-                    height: 1.3,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        Icons.verified_rounded,
+                        size: 12,
+                        color: iconColor,
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        insight.source!,
+                        style: TextStyle(
+                          fontSize: 9,
+                          fontWeight: FontWeight.bold,
+                          color: iconColor,
+                        ),
+                      ),
+                    ],
                   ),
-                  maxLines: 3,
-                  overflow: TextOverflow.ellipsis,
                 ),
+                // Referans URL varsa info ikonu ekle
+                if (insight.referenceUrl != null) ...[
+                  const SizedBox(width: 8),
+                  InkWell(
+                    onTap: () => _openReferenceUrl(insight.referenceUrl!),
+                    borderRadius: BorderRadius.circular(12),
+                    child: Container(
+                      padding: const EdgeInsets.all(4),
+                      child: Icon(
+                        Icons.info_outline,
+                        size: 16,
+                        color: iconColor.withValues(alpha: 0.7),
+                      ),
+                    ),
+                  ),
+                ],
               ],
             ),
-          ),
+          ],
         ],
       ),
     );
@@ -321,5 +381,19 @@ class _DailyProgressWithInsightsState extends State<DailyProgressWithInsights> {
         ),
       ),
     );
+  }
+
+  /// Kaynak URL'yi tarayıcıda aç
+  Future<void> _openReferenceUrl(String url) async {
+    final Uri uri = Uri.parse(url);
+    try {
+      if (await canLaunchUrl(uri)) {
+        await launchUrl(uri, mode: LaunchMode.externalApplication);
+      } else {
+        debugPrint('URL açılamadı: $url');
+      }
+    } catch (e) {
+      debugPrint('URL açılırken hata: $e');
+    }
   }
 }

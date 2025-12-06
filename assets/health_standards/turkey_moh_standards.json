@@ -1,0 +1,329 @@
+{
+  "version": "2024.1",
+  "last_updated": "2024-12-06",
+  "source": "T.C. Sağlık Bakanlığı",
+  "reference_url": "https://www.saglik.gov.tr/",
+  "country": "Turkey",
+  "disclaimer": "Bu değerlendirmeler T.C. Sağlık Bakanlığı kılavuzlarına dayalı bilgilendirme amaçlıdır ve doktor tavsiyesi yerine geçmez.",
+
+  "nutrition": {
+    "reference": "T.C. Sağlık Bakanlığı Türkiye Beslenme Rehberi (TÜBER)",
+    "daily_calorie_intake": {
+      "male": {
+        "sedentary": {
+          "18-30": 2400,
+          "31-50": 2200,
+          "51-70": 2000,
+          "70+": 1800
+        },
+        "moderate": {
+          "18-30": 2800,
+          "31-50": 2600,
+          "51-70": 2400,
+          "70+": 2200
+        },
+        "active": {
+          "18-30": 3200,
+          "31-50": 3000,
+          "51-70": 2800,
+          "70+": 2600
+        }
+      },
+      "female": {
+        "sedentary": {
+          "18-30": 2000,
+          "31-50": 1800,
+          "51-70": 1600,
+          "70+": 1400
+        },
+        "moderate": {
+          "18-30": 2200,
+          "31-50": 2000,
+          "51-70": 1800,
+          "70+": 1600
+        },
+        "active": {
+          "18-30": 2400,
+          "31-50": 2200,
+          "51-70": 2000,
+          "70+": 1800
+        },
+        "pregnant_first_trimester": 2000,
+        "pregnant_second_trimester": 2300,
+        "pregnant_third_trimester": 2400,
+        "breastfeeding_0_6_months": 2500,
+        "breastfeeding_6_12_months": 2400
+      }
+    },
+
+    "sodium": {
+      "max_daily_mg": 2000,
+      "warning_level_mg": 2300,
+      "hypertension_max_mg": 1500,
+      "current_turkey_average_mg": 4500,
+      "note": "Türkiye'de ortalama tuz tüketimi günde 18g (önerilen: 5g/gün). Türk mutfağında tuz tüketimi dünya ortalamasının çok üzerindedir.",
+      "recommendation": "Turşu, salamura, hazır gıda, işlenmiş et ürünleri, peynir ve zeytin tüketimini azaltın. Yemeklere az tuz ekleyin."
+    },
+
+    "salt": {
+      "max_daily_grams": 5,
+      "current_turkey_average_grams": 18,
+      "warning": "Türk mutfağında yüksek tuz riski - Kahvaltıda peynir-zeytin, öğünlerde turşu-salamura tüketimi yaygındır.",
+      "high_salt_foods_turkey": [
+        "Beyaz peynir (100g = 3-4g tuz)",
+        "Salamura zeytin (100g = 3-5g tuz)",
+        "Turşu (100g = 2-3g tuz)",
+        "Sucuk (100g = 3-4g tuz)",
+        "Pastırma (100g = 4-5g tuz)",
+        "Konserve ürünler"
+      ]
+    },
+
+    "dietary_guidelines_turkey": {
+      "breakfast_importance": "Türk kahvaltısı besin çeşitliliği açısından önemlidir ancak tuz oranına dikkat edilmelidir.",
+      "traditional_foods": {
+        "bulgur": "Düşük glisemik indeks, yüksek lif - pirinç yerine tercih edilebilir",
+        "yogurt": "Probiyotik kaynağı, kalsiyum açısından zengin - şekersiz tüketin",
+        "olive_oil": "Akdeniz diyetinin temel taşı - sızma zeytinyağı tercih edin",
+        "legumes": "Kuru fasulye, mercimek, nohut - protein ve lif kaynağı, haftada 2-3 kez"
+      },
+      "tea_consumption": {
+        "daily_limit_cups": 5,
+        "warning": "Türkiye dünyada kişi başına en çok çay tüketilen ülke. Aşırı çay tüketimi demir emilimini azaltabilir.",
+        "recommendation": "Öğünlerden 1 saat sonra için. Yeşil çay alternatifi düşünün."
+      }
+    }
+  },
+
+  "endemic_conditions": {
+    "iodine_deficiency": {
+      "risk_regions": [
+        "İç Anadolu",
+        "Doğu Anadolu",
+        "Karadeniz Bölgesi (iç kesimleri)"
+      ],
+      "prevalence": "Orta düzey risk",
+      "recommendation": "İyotlu sofra tuzu kullanımı zorunludur. Deniz ürünleri tüketimini artırın.",
+      "at_risk_groups": ["Hamile kadınlar", "Çocuklar", "Ergenler"]
+    },
+
+    "vitamin_d_deficiency": {
+      "prevalence": "Çok yüksek (%70-80)",
+      "risk_groups": [
+        "Kapalı kıyafet giyen kadınlar",
+        "Yaşlılar",
+        "Ev dışı aktivitesi az olanlar",
+        "Kış aylarında herkes"
+      ],
+      "recommendation": "Günde 15-30 dakika güneş ışığı. D vitamini takviyesi için doktora danışın. Türkiye'de D vitamini eksikliği çok yaygındır.",
+      "sun_exposure": "Öğle saatlerinde (10:00-15:00 arası) kol ve bacaklar açık şekilde 15-20 dakika"
+    },
+
+    "iron_deficiency_anemia": {
+      "prevalence": "Kadınlarda yüksek (%30-40)",
+      "risk_groups": ["Hamile kadınlar", "Doğurganlık çağındaki kadınlar", "Çocuklar"],
+      "recommendation": "Kırmızı et, tavuk, balık, koyu yeşil yapraklı sebzeler. Çay-kahve demir emilimini azaltır.",
+      "screening": "Hamile kadınlarda ve doğurganlık çağındaki kadınlarda yıllık kontrol"
+    },
+
+    "obesity_prevalence": {
+      "adults_overweight_obese": "64.4%",
+      "women": "72.0%",
+      "men": "56.2%",
+      "note": "Türkiye Avrupa'da obezite oranı en yüksek ülkelerden biri",
+      "risk_factors": [
+        "Yüksek karbonhidrat tüketimi (ekmek, pirinç, makarna)",
+        "Şekerli içecek tüketimi",
+        "Sedanter yaşam",
+        "Şekerleme ve tatlı tüketimi"
+      ]
+    },
+
+    "diabetes_prevalence": {
+      "adults": "13.7%",
+      "prediabetes": "~28%",
+      "undiagnosed_rate": "50%",
+      "note": "Türkiye'de her 7 yetişkinden 1'inde diyabet var, yarısı tanı almamış durumda",
+      "screening_recommendation": "40 yaş üstü herkes, obezite varsa 30 yaş üstü"
+    },
+
+    "hypertension_prevalence": {
+      "adults": "30-35%",
+      "awareness_rate": "40%",
+      "treatment_rate": "30%",
+      "note": "Yüksek tuz tüketimi nedeniyle hipertansiyon yaygın"
+    }
+  },
+
+  "local_dietary_patterns": {
+    "mediterranean_score": {
+      "reference": "Akdeniz Diyeti Uyum Skoru",
+      "high": {
+        "min": 7,
+        "max": 9,
+        "description": "Akdeniz diyetine yüksek uyum",
+        "recommendation": "Mükemmel! Zeytinyağı, sebze, meyve, balık ağırlıklı beslenmenize devam edin."
+      },
+      "moderate": {
+        "min": 4,
+        "max": 6,
+        "description": "Orta düzey uyum",
+        "recommendation": "Daha fazla sebze-meyve ve zeytinyağı tüketin. Kırmızı eti azaltın."
+      },
+      "low": {
+        "min": 0,
+        "max": 3,
+        "description": "Düşük uyum",
+        "recommendation": "Akdeniz diyetine geçiş yapın. Kalp sağlığı için en iyi beslenme modeli."
+      }
+    },
+
+    "traditional_turkish_breakfast": {
+      "benefits": "Besin çeşitliliği yüksek: Protein (yumurta, peynir), karbonhidrat (ekmek), sağlıklı yağlar (zeytin, zeytinyağı), sebze",
+      "risks": "Yüksek tuz içeriği (peynir + zeytin + sucuk/salam)",
+      "recommendation": "Kahvaltıyı atlamayın ama tuz oranını azaltın. Tuzsuz peynir ve az tuzlu zeytin tercih edin. Sebze eklemeyi unutmayın."
+    },
+
+    "bread_consumption": {
+      "daily_average_grams": 300,
+      "recommended_grams": 150,
+      "warning": "Türkiye'de kişi başı ekmek tüketimi dünya ortalamasının 2 katı",
+      "recommendation": "Kepekli/tam buğday ekmeği tercih edin. Pirinç ve makarna ile birlikte ekmek yemeyin."
+    }
+  },
+
+  "screening_recommendations": {
+    "diabetes_screening": {
+      "age": "40+",
+      "frequency_years": 3,
+      "high_risk_age": "30+ (obezite, aile öyküsü varsa)",
+      "high_risk_frequency_years": 1,
+      "test": "Açlık kan şekeri veya HbA1c",
+      "note": "Türkiye'de diyabet prevalansı yüksek olduğu için erken tarama önemli"
+    },
+
+    "hypertension_screening": {
+      "age": "18+",
+      "frequency_years": 2,
+      "high_risk_frequency_months": 6,
+      "note": "Yüksek tuz tüketimi nedeniyle düzenli tansiyon takibi kritik"
+    },
+
+    "lipid_profile": {
+      "age": "35+ (erkek), 45+ (kadın)",
+      "frequency_years": 5,
+      "high_risk_frequency_years": 1,
+      "tests": ["Total kolesterol", "LDL", "HDL", "Trigliserit"]
+    },
+
+    "colorectal_cancer": {
+      "age": "50+",
+      "frequency_years": 2,
+      "method": "Gaitada gizli kan testi (GGKT) veya kolonoskopi (10 yılda bir)",
+      "note": "T.C. Sağlık Bakanlığı kanser tarama programı kapsamında"
+    },
+
+    "breast_cancer": {
+      "age": "40-69",
+      "frequency_years": 2,
+      "method": "Mamografi",
+      "self_exam": "Ayda bir kendi kendine meme muayenesi",
+      "note": "Ulusal Kanser Tarama Programı dahilinde ücretsiz"
+    },
+
+    "cervical_cancer": {
+      "age": "30-65",
+      "frequency_years": 5,
+      "method": "HPV testi veya smear testi",
+      "note": "Ulusal tarama programı dahilinde"
+    }
+  },
+
+  "seasonal_recommendations": {
+    "winter": {
+      "vitamin_d": "Kış aylarında D vitamini takviyesi düşünün",
+      "flu_vaccine": "Ekim-Kasım aylarında grip aşısı",
+      "indoor_air": "Kalorifer havasında nem oranına dikkat edin"
+    },
+    "summer": {
+      "hydration": "Sıcak havalarda su tüketimini artırın (4-5 L/gün)",
+      "sun_protection": "11:00-16:00 arası güneşten korunun",
+      "food_safety": "Gıda zehirlenmesine karşı dikkatli olun"
+    }
+  },
+
+  "special_populations": {
+    "ramadan_fasting": {
+      "hydration": "İftar-sahur arası yeterli su için (2.5-3L)",
+      "nutrition": "Sahurda kompleks karbonhidrat, iftarda aşırı yemekten kaçının",
+      "chronic_disease": "Diyabet, hipertansiyon varsa doktora danışmadan oruç tutmayın",
+      "medication": "İlaç saatlerini doktorunuzla ayarlayın"
+    },
+
+    "elderly_65_plus": {
+      "fall_prevention": "Ev içi düzenlemeler, denge egzersizleri",
+      "polypharmacy": "5'ten fazla ilaç kullanımında ilaç etkileşimi kontrolü",
+      "nutrition": "Protein alımına dikkat, 1.0-1.2 g/kg/gün",
+      "vitamin_supplements": "D vitamini ve B12 takviyesi değerlendirin"
+    },
+
+    "pregnancy_lactation": {
+      "folic_acid": "Hamilelik öncesi 400 mcg/gün, hamilelikte 600 mcg/gün",
+      "iron": "Hamilelikte rutin demir takviyesi (30-60 mg/gün)",
+      "iodine": "İyotlu tuz kullanımı kritik",
+      "weight_gain": {
+        "underweight_bmi<18.5": "12.5-18 kg",
+        "normal_bmi_18.5-24.9": "11.5-16 kg",
+        "overweight_bmi_25-29.9": "7-11.5 kg",
+        "obese_bmi≥30": "5-9 kg"
+      }
+    }
+  },
+
+  "regional_variations": {
+    "marmara": {
+      "characteristics": "Batı tarzı beslenme, fast food tüketimi yüksek",
+      "risks": "Obezite, kardiyovasküler hastalık"
+    },
+    "aegean": {
+      "characteristics": "Akdeniz diyetine yakın",
+      "benefits": "Zeytinyağı, sebze, balık tüketimi yüksek"
+    },
+    "mediterranean": {
+      "characteristics": "Geleneksel Akdeniz diyeti",
+      "benefits": "Düşük kardiyovasküler risk"
+    },
+    "central_anatolia": {
+      "characteristics": "Yüksek karbonhidrat, az sebze",
+      "risks": "Diyabet, obezite, iyot eksikliği"
+    },
+    "black_sea": {
+      "characteristics": "Yüksek mısır ekmeği ve hamur işi tüketimi",
+      "risks": "Yüksek karbonhidrat, guatr riski"
+    },
+    "eastern_anatolia": {
+      "characteristics": "Yüksek et tüketimi, az sebze-meyve",
+      "risks": "Kardiyovasküler hastalık, vitamin eksiklikleri"
+    },
+    "southeastern_anatolia": {
+      "characteristics": "Baharatlı yemekler, yüksek yağ kullanımı",
+      "risks": "Obezite, gastrointestinal sorunlar"
+    }
+  },
+
+  "public_health_resources": {
+    "alo_184": {
+      "description": "Sağlık Bakanlığı Sağlık Danışma Hattı",
+      "phone": "184",
+      "available": "7/24"
+    },
+    "family_medicine": {
+      "description": "Aile hekiminizden ücretsiz yararlanabilirsiniz",
+      "services": ["Tarama testleri", "Kronik hastalık takibi", "Aşılama", "Sağlık danışmanlığı"]
+    },
+    "cancer_early_detection_centers": {
+      "description": "Kanser Erken Teşhis, Tarama ve Eğitim Merkezleri (KETEM)",
+      "services": ["Ücretsiz kanser taraması", "Sağlık eğitimi"]
+    }
+  }
+}

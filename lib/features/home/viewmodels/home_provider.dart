@@ -17,6 +17,7 @@ class HomeProvider with ChangeNotifier {
   bool _isLoading = false;
   String? _errorMessage;
   StreamSubscription<DailyMetricModel?>? _metricSubscription;
+  UserModel? _currentUser; // Kullanıcı bilgisini sakla (lifestyle insights için gerekli)
 
   DailyMetricModel? get todayMetric => _todayMetric;
   List<Insight> get insights => _insights;
@@ -32,6 +33,7 @@ class HomeProvider with ChangeNotifier {
   Future<void> loadData(String userId, UserModel? user) async {
     _isLoading = true;
     _errorMessage = null;
+    _currentUser = user; // Kullanıcı bilgisini sakla
     notifyListeners();
 
     try {
@@ -39,12 +41,12 @@ class HomeProvider with ChangeNotifier {
       _metricSubscription?.cancel();
       _metricSubscription = _firestoreService.getTodayMetricStream(userId).listen((metric) {
         _todayMetric = metric;
-        
+
         // Metrik her değiştiğinde yaşam tarzı analizini güncelle
-        if (_todayMetric != null) {
-          _updateLifestyleInsights(_todayMetric!);
+        if (_todayMetric != null && _currentUser != null) {
+          _updateLifestyleInsights(_todayMetric!, _currentUser!);
         }
-        
+
         notifyListeners();
       }, onError: (e) {
         debugPrint('HomeProvider: Stream error - $e');
@@ -59,18 +61,22 @@ class HomeProvider with ChangeNotifier {
 
       // 3. Analizleri Oluştur
       _insights = [];
-      
-      // Level 1: Profil
+
+      // Level 1: Profil (WHO standartlarına göre)
       if (user != null) {
-        _insights.addAll(_insightsService.analyzeProfile(user));
-        
-        // Level 2: Hastalık Riski (Async)
+        final profileInsights = await _insightsService.analyzeProfile(user);
+        _insights.addAll(profileInsights);
+
+        // Level 2: Hastalık Riski (ML Destekli)
         final diseaseInsights = await _insightsService.analyzeDiseaseRisks(user, latestRecord);
         _insights.addAll(diseaseInsights);
       }
 
-      // Level 3: Yaşam Tarzı (İlk yükleme)
-      _insights.addAll(_insightsService.analyzeLifestyle(_todayMetric));
+      // Level 3: Yaşam Tarzı (WHO ve T.C. Sağlık Bakanlığı standartlarına göre)
+      if (_todayMetric != null && user != null) {
+        final lifestyleInsights = await _insightsService.analyzeLifestyle(_todayMetric, user);
+        _insights.addAll(lifestyleInsights);
+      }
 
       _isLoading = false;
       notifyListeners();
@@ -82,10 +88,11 @@ class HomeProvider with ChangeNotifier {
     }
   }
 
-  void _updateLifestyleInsights(DailyMetricModel metric) {
+  Future<void> _updateLifestyleInsights(DailyMetricModel metric, UserModel user) async {
     // Mevcut lifestyle insight'larını temizle ve yenilerini ekle
     _insights.removeWhere((i) => i.category == 'lifestyle');
-    _insights.addAll(_insightsService.analyzeLifestyle(metric));
+    final lifestyleInsights = await _insightsService.analyzeLifestyle(metric, user);
+    _insights.addAll(lifestyleInsights);
   }
 
   // Eski metod uyumluluğu için (kaldırılabilir veya loadData'ya yönlendirilebilir)
