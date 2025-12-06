@@ -20,7 +20,7 @@ class DailyReportModel {
 
   // ML risk skorları (güncel)
   final double? diabetesRisk;
-  final double? heartDiseaseRisk;
+  final double? highSugarRisk;
   final double? obesityRisk;
   final double? cancerRisk;
   final double? highCholesterolRisk;
@@ -52,7 +52,7 @@ class DailyReportModel {
     this.avgHeartRate,
     this.avgTemperature,
     this.diabetesRisk,
-    this.heartDiseaseRisk,
+    this.highSugarRisk,
     this.obesityRisk,
     this.cancerRisk,
     this.highCholesterolRisk,
@@ -80,7 +80,7 @@ class DailyReportModel {
       'avgHeartRate': avgHeartRate,
       'avgTemperature': avgTemperature,
       'diabetesRisk': diabetesRisk,
-      'heartDiseaseRisk': heartDiseaseRisk,
+      'highSugarRisk': highSugarRisk,
       'obesityRisk': obesityRisk,
       'cancerRisk': cancerRisk,
       'highCholesterolRisk': highCholesterolRisk,
@@ -109,7 +109,7 @@ class DailyReportModel {
       avgHeartRate: (map['avgHeartRate'] as num?)?.toDouble(),
       avgTemperature: (map['avgTemperature'] as num?)?.toDouble(),
       diabetesRisk: (map['diabetesRisk'] as num?)?.toDouble(),
-      heartDiseaseRisk: (map['heartDiseaseRisk'] as num?)?.toDouble(),
+      highSugarRisk: (map['highSugarRisk'] as num?)?.toDouble(),
       obesityRisk: (map['obesityRisk'] as num?)?.toDouble(),
       cancerRisk: (map['cancerRisk'] as num?)?.toDouble(),
       highCholesterolRisk: (map['highCholesterolRisk'] as num?)?.toDouble(),
@@ -137,7 +137,7 @@ class DailyReportModel {
     double? avgHeartRate,
     double? avgTemperature,
     double? diabetesRisk,
-    double? heartDiseaseRisk,
+    double? highSugarRisk,
     double? obesityRisk,
     double? cancerRisk,
     double? highCholesterolRisk,
@@ -163,7 +163,7 @@ class DailyReportModel {
       avgHeartRate: avgHeartRate ?? this.avgHeartRate,
       avgTemperature: avgTemperature ?? this.avgTemperature,
       diabetesRisk: diabetesRisk ?? this.diabetesRisk,
-      heartDiseaseRisk: heartDiseaseRisk ?? this.heartDiseaseRisk,
+      highSugarRisk: highSugarRisk ?? this.highSugarRisk,
       obesityRisk: obesityRisk ?? this.obesityRisk,
       cancerRisk: cancerRisk ?? this.cancerRisk,
       highCholesterolRisk: highCholesterolRisk ?? this.highCholesterolRisk,

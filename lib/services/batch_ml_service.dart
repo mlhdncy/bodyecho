@@ -196,7 +196,7 @@ class BatchMLResult {
   /// ML risk skorlarını al
   double? get diabetesRisk =>
       mlResponse?.results['diabetes_risk']?.probability;
-  double? get heartDiseaseRisk => mlResponse?.results['heart_risk']?.probability;
+  double? get highSugarRisk => mlResponse?.results['high_sugar_risk']?.probability;
   double? get obesityRisk => mlResponse?.results['obesity_risk']?.probability;
   double? get cancerRisk => mlResponse?.results['cancer_risk']?.probability;
   double? get highCholesterolRisk =>

@@ -292,8 +292,8 @@ class DailyReportScreen extends StatelessWidget {
     final risks = [
       if (report.diabetesRisk != null)
         {'name': 'Diyabet', 'value': report.diabetesRisk},
-      if (report.heartDiseaseRisk != null)
-        {'name': 'Kalp Hastalığı', 'value': report.heartDiseaseRisk},
+      if (report.highSugarRisk != null)
+        {'name': 'Yüksek Şeker', 'value': report.highSugarRisk},
       if (report.obesityRisk != null)
         {'name': 'Obezite', 'value': report.obesityRisk},
       if (report.cancerRisk != null)
