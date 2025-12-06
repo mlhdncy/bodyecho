@@ -4,6 +4,7 @@ import '../../../config/app_colors.dart';
 import '../../../core/authentication/viewmodels/auth_provider.dart';
 import 'settings_screen.dart';
 import '../../trends/views/health_risk_view.dart';
+import '../../debug/views/debug_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -274,6 +275,19 @@ class ProfileScreen extends StatelessWidget {
                         const Divider(height: 1),
                         _buildSettingItem(
                           context,
+                          icon: Icons.bug_report,
+                          title: '🔧 Debug Console',
+                          iconColor: Colors.red.shade700,
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (_) => const DebugScreen()),
+                            );
+                          },
+                        ),
+                        const Divider(height: 1),
+                        _buildSettingItem(
+                          context,
                           icon: Icons.info_outline,
                           title: 'Hakkında',
                           onTap: () {
@@ -381,9 +395,10 @@ class ProfileScreen extends StatelessWidget {
     required IconData icon,
     required String title,
     required VoidCallback onTap,
+    Color? iconColor,
   }) {
     return ListTile(
-      leading: Icon(icon, color: AppColors.textSecondary),
+      leading: Icon(icon, color: iconColor ?? AppColors.textSecondary),
       title: Text(title),
       trailing: const Icon(Icons.chevron_right, color: AppColors.textSecondary),
       onTap: onTap,
