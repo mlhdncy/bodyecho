@@ -89,7 +89,7 @@ class ReportAnalysisService {
       avgHeartRate: mlResult.avgHealthData.avgHeartRate,
       avgTemperature: mlResult.avgHealthData.avgTemperature,
       diabetesRisk: mlResult.diabetesRisk,
-      heartDiseaseRisk: mlResult.heartDiseaseRisk,
+      highSugarRisk: mlResult.highSugarRisk,
       obesityRisk: mlResult.obesityRisk,
       cancerRisk: mlResult.cancerRisk,
       highCholesterolRisk: mlResult.highCholesterolRisk,
@@ -223,7 +223,7 @@ class ReportAnalysisService {
       avgHeartRate: mlResult.avgHealthData.avgHeartRate,
       avgTemperature: mlResult.avgHealthData.avgTemperature,
       diabetesRisk: mlResult.diabetesRisk,
-      heartDiseaseRisk: mlResult.heartDiseaseRisk,
+      highSugarRisk: mlResult.highSugarRisk,
       obesityRisk: mlResult.obesityRisk,
       cancerRisk: mlResult.cancerRisk,
       highCholesterolRisk: mlResult.highCholesterolRisk,
@@ -312,8 +312,8 @@ class ReportAnalysisService {
     if (prevMonthML != null) {
       diabetesRiskChange = (mlResult.diabetesRisk ?? 0) -
           (prevMonthML.diabetesRisk ?? 0);
-      heartRiskChange = (mlResult.heartDiseaseRisk ?? 0) -
-          (prevMonthML.heartDiseaseRisk ?? 0);
+      heartRiskChange = (mlResult.highSugarRisk ?? 0) -
+          (prevMonthML.highSugarRisk ?? 0);
       obesityRiskChange = (mlResult.obesityRisk ?? 0) -
           (prevMonthML.obesityRisk ?? 0);
     }
@@ -384,7 +384,7 @@ class ReportAnalysisService {
       avgHeartRate: mlResult.avgHealthData.avgHeartRate,
       avgTemperature: mlResult.avgHealthData.avgTemperature,
       diabetesRisk: mlResult.diabetesRisk,
-      heartDiseaseRisk: mlResult.heartDiseaseRisk,
+      highSugarRisk: mlResult.highSugarRisk,
       obesityRisk: mlResult.obesityRisk,
       cancerRisk: mlResult.cancerRisk,
       highCholesterolRisk: mlResult.highCholesterolRisk,
@@ -394,7 +394,7 @@ class ReportAnalysisService {
       caloriesChangeVsPreviousMonth: caloriesChange,
       sleepChangeVsPreviousMonth: sleepChange,
       diabetesRiskChange: diabetesRiskChange,
-      heartDiseaseRiskChange: heartRiskChange,
+      highSugarRiskChange: heartRiskChange,
       obesityRiskChange: obesityRiskChange,
       totalDays: 30,
       daysGoalAchieved: daysGoalAchieved,
