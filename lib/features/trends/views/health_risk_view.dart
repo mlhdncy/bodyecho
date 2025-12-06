@@ -6,6 +6,7 @@ import '../../../core/authentication/viewmodels/auth_provider.dart';
 import '../../../services/firestore_service.dart';
 import '../../../models/health_record_model.dart';
 import '../../home/viewmodels/home_provider.dart';
+import '../../../widgets/body_risk_map_widget.dart';
 
 class HealthRiskView extends StatefulWidget {
   const HealthRiskView({super.key});
@@ -14,16 +15,30 @@ class HealthRiskView extends StatefulWidget {
   State<HealthRiskView> createState() => _HealthRiskViewState();
 }
 
-class _HealthRiskViewState extends State<HealthRiskView> {
+class _HealthRiskViewState extends State<HealthRiskView>
+    with SingleTickerProviderStateMixin {
   final _mlService = MlService();
   bool _isLoading = false;
   MlResponse? _response;
-  
+  late TabController _tabController;
+
   // Form controllers
   final _ageController = TextEditingController(text: '30');
   final _bmiController = TextEditingController(text: '25.0');
   final _glucoseController = TextEditingController(text: '100');
   bool _isActive = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 2, vsync: this);
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
 
   Future<void> _getPredictions() async {
     setState(() {
@@ -97,36 +112,77 @@ class _HealthRiskViewState extends State<HealthRiskView> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('AI Sağlık Analizi'),
+        bottom: _response != null
+            ? TabBar(
+                controller: _tabController,
+                tabs: const [
+                  Tab(
+                    icon: Icon(Icons.accessibility_new),
+                    text: 'Vücut Haritası',
+                  ),
+                  Tab(
+                    icon: Icon(Icons.list),
+                    text: 'Liste',
+                  ),
+                ],
+              )
+            : null,
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildInputSection(),
-            const SizedBox(height: 24),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: _isLoading ? null : _getPredictions,
-                style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  backgroundColor: Theme.of(context).primaryColor,
-                  foregroundColor: Colors.white,
+      body: Column(
+        children: [
+          // Input Section (Always visible at top)
+          SingleChildScrollView(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildInputSection(),
+                const SizedBox(height: 24),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: _isLoading ? null : _getPredictions,
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      backgroundColor: Theme.of(context).primaryColor,
+                      foregroundColor: Colors.white,
+                    ),
+                    child: _isLoading
+                        ? const SizedBox(
+                            height: 20,
+                            width: 20,
+                            child: CircularProgressIndicator(color: Colors.white),
+                          )
+                        : const Text('Analiz Et',
+                            style: TextStyle(fontSize: 16)),
+                  ),
                 ),
-                child: _isLoading
-                    ? const SizedBox(
-                        height: 20,
-                        width: 20,
-                        child: CircularProgressIndicator(color: Colors.white),
-                      )
-                    : const Text('Analiz Et', style: TextStyle(fontSize: 16)),
+              ],
+            ),
+          ),
+          // Results Section (Tabbed)
+          if (_response != null)
+            Expanded(
+              child: TabBarView(
+                controller: _tabController,
+                children: [
+                  // Body Map View
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: BodyRiskMapWidget(
+                      riskResults: _response!.results,
+                      isLoading: _isLoading,
+                    ),
+                  ),
+                  // List View
+                  SingleChildScrollView(
+                    padding: const EdgeInsets.all(16.0),
+                    child: _buildResultsSection(),
+                  ),
+                ],
               ),
             ),
-            const SizedBox(height: 24),
-            if (_response != null) _buildResultsSection(),
-          ],
-        ),
+        ],
       ),
     );
   }

@@ -1,0 +1,91 @@
+<svg width="200" height="400" viewBox="0 0 200 400" xmlns="http://www.w3.org/2000/svg">
+  <!-- Head -->
+  <ellipse id="head" cx="100" cy="40" rx="25" ry="30" fill="#E5E7EB" stroke="#6B7280" stroke-width="2"/>
+
+  <!-- Neck -->
+  <rect id="neck" x="90" y="65" width="20" height="15" fill="#E5E7EB" stroke="#6B7280" stroke-width="1.5"/>
+
+  <!-- Chest/Heart Area -->
+  <path id="chest"
+        d="M 70 80
+           Q 65 85, 65 95
+           L 65 140
+           Q 65 145, 70 145
+           L 130 145
+           Q 135 145, 135 140
+           L 135 95
+           Q 135 85, 130 80
+           L 70 80 Z"
+        fill="#E5E7EB"
+        stroke="#6B7280"
+        stroke-width="2"/>
+
+  <!-- Abdomen/Stomach Area -->
+  <path id="abdomen"
+        d="M 70 145
+           L 70 220
+           Q 70 230, 75 235
+           L 125 235
+           Q 130 230, 130 220
+           L 130 145
+           L 70 145 Z"
+        fill="#E5E7EB"
+        stroke="#6B7280"
+        stroke-width="2"/>
+
+  <!-- Left Arm -->
+  <path id="left_arm"
+        d="M 65 85
+           L 50 90
+           Q 45 95, 45 100
+           L 45 170
+           Q 45 175, 48 178
+           L 55 180
+           Q 58 180, 60 177
+           L 65 140
+           L 65 85 Z"
+        fill="#E5E7EB"
+        stroke="#6B7280"
+        stroke-width="2"/>
+
+  <!-- Right Arm -->
+  <path id="right_arm"
+        d="M 135 85
+           L 150 90
+           Q 155 95, 155 100
+           L 155 170
+           Q 155 175, 152 178
+           L 145 180
+           Q 142 180, 140 177
+           L 135 140
+           L 135 85 Z"
+        fill="#E5E7EB"
+        stroke="#6B7280"
+        stroke-width="2"/>
+
+  <!-- Left Leg -->
+  <path id="left_leg"
+        d="M 75 235
+           L 75 370
+           Q 75 380, 80 385
+           L 88 390
+           Q 92 390, 92 385
+           L 92 235
+           L 75 235 Z"
+        fill="#E5E7EB"
+        stroke="#6B7280"
+        stroke-width="2"/>
+
+  <!-- Right Leg -->
+  <path id="right_leg"
+        d="M 108 235
+           L 108 370
+           Q 108 380, 112 385
+           L 120 390
+           Q 125 390, 125 385
+           L 125 235
+           L 108 235 Z"
+        fill="#E5E7EB"
+        stroke="#6B7280"
+        stroke-width="2"/>
+</svg>
