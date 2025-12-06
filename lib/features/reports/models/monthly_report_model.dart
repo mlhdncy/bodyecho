@@ -26,7 +26,7 @@ class MonthlyReportModel {
 
   // ML risk skorları (aylık ortalama veri ile)
   final double? diabetesRisk;
-  final double? heartDiseaseRisk;
+  final double? highSugarRisk;
   final double? obesityRisk;
   final double? cancerRisk;
   final double? highCholesterolRisk;
@@ -40,7 +40,7 @@ class MonthlyReportModel {
 
   // Risk skoru değişimleri (uzun vadeli)
   final double? diabetesRiskChange;
-  final double? heartDiseaseRiskChange;
+  final double? highSugarRiskChange;
   final double? obesityRiskChange;
   final double? cancerRiskChange;
   final double? cholesterolRiskChange;
@@ -94,7 +94,7 @@ class MonthlyReportModel {
     this.avgHeartRate,
     this.avgTemperature,
     this.diabetesRisk,
-    this.heartDiseaseRisk,
+    this.highSugarRisk,
     this.obesityRisk,
     this.cancerRisk,
     this.highCholesterolRisk,
@@ -104,7 +104,7 @@ class MonthlyReportModel {
     this.caloriesChangeVsPreviousMonth,
     this.sleepChangeVsPreviousMonth,
     this.diabetesRiskChange,
-    this.heartDiseaseRiskChange,
+    this.highSugarRiskChange,
     this.obesityRiskChange,
     this.cancerRiskChange,
     this.cholesterolRiskChange,
@@ -148,7 +148,7 @@ class MonthlyReportModel {
       'avgHeartRate': avgHeartRate,
       'avgTemperature': avgTemperature,
       'diabetesRisk': diabetesRisk,
-      'heartDiseaseRisk': heartDiseaseRisk,
+      'highSugarRisk': highSugarRisk,
       'obesityRisk': obesityRisk,
       'cancerRisk': cancerRisk,
       'highCholesterolRisk': highCholesterolRisk,
@@ -158,7 +158,7 @@ class MonthlyReportModel {
       'caloriesChangeVsPreviousMonth': caloriesChangeVsPreviousMonth,
       'sleepChangeVsPreviousMonth': sleepChangeVsPreviousMonth,
       'diabetesRiskChange': diabetesRiskChange,
-      'heartDiseaseRiskChange': heartDiseaseRiskChange,
+      'highSugarRiskChange': highSugarRiskChange,
       'obesityRiskChange': obesityRiskChange,
       'cancerRiskChange': cancerRiskChange,
       'cholesterolRiskChange': cholesterolRiskChange,
@@ -203,7 +203,7 @@ class MonthlyReportModel {
       avgHeartRate: (map['avgHeartRate'] as num?)?.toDouble(),
       avgTemperature: (map['avgTemperature'] as num?)?.toDouble(),
       diabetesRisk: (map['diabetesRisk'] as num?)?.toDouble(),
-      heartDiseaseRisk: (map['heartDiseaseRisk'] as num?)?.toDouble(),
+      highSugarRisk: (map['highSugarRisk'] as num?)?.toDouble(),
       obesityRisk: (map['obesityRisk'] as num?)?.toDouble(),
       cancerRisk: (map['cancerRisk'] as num?)?.toDouble(),
       highCholesterolRisk: (map['highCholesterolRisk'] as num?)?.toDouble(),
@@ -213,7 +213,7 @@ class MonthlyReportModel {
       caloriesChangeVsPreviousMonth: (map['caloriesChangeVsPreviousMonth'] as num?)?.toDouble(),
       sleepChangeVsPreviousMonth: (map['sleepChangeVsPreviousMonth'] as num?)?.toDouble(),
       diabetesRiskChange: (map['diabetesRiskChange'] as num?)?.toDouble(),
-      heartDiseaseRiskChange: (map['heartDiseaseRiskChange'] as num?)?.toDouble(),
+      highSugarRiskChange: (map['highSugarRiskChange'] as num?)?.toDouble(),
       obesityRiskChange: (map['obesityRiskChange'] as num?)?.toDouble(),
       cancerRiskChange: (map['cancerRiskChange'] as num?)?.toDouble(),
       cholesterolRiskChange: (map['cholesterolRiskChange'] as num?)?.toDouble(),
