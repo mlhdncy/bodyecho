@@ -94,9 +94,9 @@ class HealthStandardsService {
 
     return BmiAssessment(
       category: category,
-      description: categoryData['description'] ?? '',
-      riskLevel: categoryData['risk_level'] ?? 'info',
-      recommendation: categoryData['recommendation'] ?? '',
+      description: categoryData?['description'] ?? '',
+      riskLevel: categoryData?['risk_level'] ?? 'info',
+      recommendation: categoryData?['recommendation'] ?? '',
       source: 'WHO',
       bmiValue: bmi,
     );
@@ -133,9 +133,9 @@ class HealthStandardsService {
 
     return GlucoseAssessment(
       status: status,
-      description: categoryData['description'] ?? status,
+      description: categoryData?['description'] ?? status,
       warning: status == 'normal' ? '' : 'Kan şekeriniz yüksek!',
-      recommendation: categoryData['recommendation'] ?? '',
+      recommendation: categoryData?['recommendation'] ?? '',
       minNormal: null,
       maxNormal: standards['normal']?['max']?.toDouble(),
       source: 'WHO',
