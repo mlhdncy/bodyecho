@@ -54,4 +54,14 @@ class AppConstants {
     if (activity == null) return 0;
     return (activity['caloriesPerMinute'] * durationMinutes).round();
   }
+
+  // Gamification - Level Titles
+  static String getLevelTitle(int level) {
+    if (level < 5) return 'Acemi';
+    if (level < 10) return 'Sporcu';
+    if (level < 20) return 'Uzman';
+    if (level < 30) return 'Şampiyon';
+    if (level < 50) return 'Efsane';
+    return 'Süper Kahraman';
+  }
 }

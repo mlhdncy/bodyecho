@@ -6,11 +6,14 @@ import 'dart:async';
 import '../../../models/user_model.dart';
 import '../../../models/health_record_model.dart';
 import '../../../services/insights_service.dart';
+import '../../../services/gamification_service.dart';
+import '../../../config/app_constants.dart';
 import '../../../core/authentication/viewmodels/auth_provider.dart';
 
 class HomeProvider with ChangeNotifier {
   final FirestoreService _firestoreService = FirestoreService();
   final InsightsService _insightsService = InsightsService();
+  final GamificationService _gamificationService = GamificationService();
 
   DailyMetricModel? _todayMetric;
   List<Insight> _insights = [];
@@ -108,6 +111,24 @@ class HomeProvider with ChangeNotifier {
         userId: userId,
         steps: steps,
       );
+
+      // Check if steps goal is achieved
+      if (steps >= AppConstants.defaultStepsGoal) {
+        await _gamificationService.awardPoints(
+          userId: userId,
+          actionType: 'steps_goal_complete',
+        );
+
+        // Update gamification stats
+        await _gamificationService.updateGamificationStats(
+          userId,
+          stepsGoalHit: true,
+        );
+      }
+
+      // Update streak
+      await _gamificationService.updateStreak(userId, DateTime.now());
+
       await loadTodayMetrics(userId);
     } catch (e) {
       _errorMessage = 'Adım güncellenemedi: $e';
@@ -118,10 +139,36 @@ class HomeProvider with ChangeNotifier {
   Future<void> addWater(String userId, double amount) async {
     try {
       final currentWater = _todayMetric?.waterIntake ?? 0.0;
+      final newWater = currentWater + amount;
+
       await _firestoreService.createOrUpdateTodayMetric(
         userId: userId,
-        water: currentWater + amount,
+        water: newWater,
       );
+
+      // Award base points for logging water
+      await _gamificationService.awardPoints(
+        userId: userId,
+        actionType: 'water_logged',
+      );
+
+      // Check if water goal is achieved
+      if (newWater >= AppConstants.defaultWaterGoal) {
+        await _gamificationService.awardPoints(
+          userId: userId,
+          actionType: 'water_goal_complete',
+        );
+
+        // Update gamification stats
+        await _gamificationService.updateGamificationStats(
+          userId,
+          waterGoalHit: true,
+        );
+      }
+
+      // Update streak
+      await _gamificationService.updateStreak(userId, DateTime.now());
+
       await loadTodayMetrics(userId);
     } catch (e) {
       _errorMessage = 'Su eklenemedi: $e';
@@ -135,6 +182,24 @@ class HomeProvider with ChangeNotifier {
         userId: userId,
         calories: calories,
       );
+
+      // Check if calorie goal is achieved
+      if (calories >= AppConstants.defaultCalorieGoal) {
+        await _gamificationService.awardPoints(
+          userId: userId,
+          actionType: 'calories_goal_complete',
+        );
+
+        // Update gamification stats
+        await _gamificationService.updateGamificationStats(
+          userId,
+          caloriesGoalHit: true,
+        );
+      }
+
+      // Update streak
+      await _gamificationService.updateStreak(userId, DateTime.now());
+
       await loadTodayMetrics(userId);
     } catch (e) {
       _errorMessage = 'Kalori güncellenemedi: $e';
@@ -148,10 +213,55 @@ class HomeProvider with ChangeNotifier {
         userId: userId,
         sleep: hours,
       );
+
+      // Award base points for logging sleep
+      await _gamificationService.awardPoints(
+        userId: userId,
+        actionType: 'sleep_logged',
+      );
+
+      // Check if sleep goal is achieved
+      if (hours >= AppConstants.defaultSleepQualityGoal) {
+        await _gamificationService.awardPoints(
+          userId: userId,
+          actionType: 'sleep_goal_complete',
+        );
+
+        // Update gamification stats
+        await _gamificationService.updateGamificationStats(
+          userId,
+          sleepGoalHit: true,
+        );
+      }
+
+      // Update streak
+      await _gamificationService.updateStreak(userId, DateTime.now());
+
       await loadTodayMetrics(userId);
     } catch (e) {
       _errorMessage = 'Uyku güncellenemedi: $e';
       notifyListeners();
+    }
+  }
+
+  /// Check if all daily goals are completed and award perfect day bonus
+  Future<void> checkPerfectDay(String userId) async {
+    try {
+      if (_todayMetric == null) return;
+
+      final stepsComplete = _todayMetric!.steps >= AppConstants.defaultStepsGoal;
+      final waterComplete = _todayMetric!.waterIntake >= AppConstants.defaultWaterGoal;
+      final sleepComplete = _todayMetric!.sleepQuality >= AppConstants.defaultSleepQualityGoal;
+      final caloriesComplete = _todayMetric!.calorieEstimate >= AppConstants.defaultCalorieGoal;
+
+      if (stepsComplete && waterComplete && sleepComplete && caloriesComplete) {
+        await _gamificationService.awardPoints(
+          userId: userId,
+          actionType: 'perfect_day',
+        );
+      }
+    } catch (e) {
+      debugPrint('Error checking perfect day: $e');
     }
   }
 }

@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../config/app_colors.dart';
+import '../../../config/app_constants.dart';
 import '../../../core/authentication/viewmodels/auth_provider.dart';
+import '../../../services/badge_definitions_service.dart';
+import '../widgets/badge_gallery_widget.dart';
 import 'settings_screen.dart';
 import '../../trends/views/health_risk_view.dart';
 
@@ -34,7 +37,7 @@ class ProfileScreen extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            // Profile Header
+            // Profile Header with Gamification
             Container(
               padding: const EdgeInsets.all(24),
               decoration: BoxDecoration(
@@ -46,23 +49,62 @@ class ProfileScreen extends StatelessWidget {
               ),
               child: Column(
                 children: [
-                  // Avatar
-                  Container(
-                    width: 100,
-                    height: 100,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                        color: Colors.white,
-                        width: 4,
+                  // Avatar with level progress
+                  Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      // Circular progress for next level
+                      SizedBox(
+                        width: 120,
+                        height: 120,
+                        child: CircularProgressIndicator(
+                          value: _getLevelProgress(user),
+                          backgroundColor: Colors.white.withAlpha(76),
+                          valueColor: const AlwaysStoppedAnimation(Colors.white),
+                          strokeWidth: 6,
+                        ),
                       ),
-                    ),
-                    child: const Icon(
-                      Icons.person,
-                      size: 50,
-                      color: AppColors.primaryTeal,
-                    ),
+                      // Avatar
+                      Container(
+                        width: 100,
+                        height: 100,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: Colors.white,
+                            width: 4,
+                          ),
+                        ),
+                        child: const Icon(
+                          Icons.person,
+                          size: 50,
+                          color: AppColors.primaryTeal,
+                        ),
+                      ),
+                      // Level badge
+                      Positioned(
+                        bottom: 0,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                          decoration: BoxDecoration(
+                            gradient: const LinearGradient(
+                              colors: [Color(0xFFFFD700), Color(0xFFFFA500)],
+                            ),
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(color: Colors.white, width: 2),
+                          ),
+                          child: Text(
+                            'LVL ${AppConstants.calculateLevel(user?.totalPoints ?? 0)}',
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                   const SizedBox(height: 16),
 
@@ -85,7 +127,65 @@ class ProfileScreen extends StatelessWidget {
                       fontSize: 14,
                     ),
                   ),
+                  const SizedBox(height: 12),
+
+                  // Points and Level Info
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withAlpha(51),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(Icons.stars, color: Colors.amber, size: 20),
+                        const SizedBox(width: 8),
+                        Text(
+                          '${user?.totalPoints ?? 0} Puan',
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(width: 16),
+                        Text(
+                          AppConstants.getLevelTitle(AppConstants.calculateLevel(user?.totalPoints ?? 0)),
+                          style: const TextStyle(
+                            color: Colors.white70,
+                            fontSize: 14,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                   const SizedBox(height: 8),
+
+                  // Streak indicator
+                  if ((user?.currentStreak ?? 0) > 0)
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      decoration: BoxDecoration(
+                        color: Colors.orange.withAlpha(51),
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Text('🔥', style: TextStyle(fontSize: 16)),
+                          const SizedBox(width: 6),
+                          Text(
+                            '${user?.currentStreak} Gün Serisi',
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 13,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                 ],
               ),
             ),
@@ -226,6 +326,23 @@ class ProfileScreen extends StatelessWidget {
                         ),
                       ),
                     ),
+                  ),
+
+                  const SizedBox(height: 16),
+
+                  // Badge Gallery
+                  FutureBuilder(
+                    future: BadgeDefinitionsService().getAllBadges(),
+                    builder: (context, snapshot) {
+                      if (!snapshot.hasData) {
+                        return const SizedBox.shrink();
+                      }
+
+                      return BadgeGalleryWidget(
+                        earnedBadgeIds: user?.unlockedBadges ?? [],
+                        allBadges: snapshot.data!,
+                      );
+                    },
                   ),
 
                   const SizedBox(height: 16),
@@ -388,5 +505,16 @@ class ProfileScreen extends StatelessWidget {
       trailing: const Icon(Icons.chevron_right, color: AppColors.textSecondary),
       onTap: onTap,
     );
+  }
+
+  double _getLevelProgress(user) {
+    if (user == null) return 0.0;
+    final currentPoints = user.totalPoints ?? 0;
+    final currentLevel = AppConstants.calculateLevel(currentPoints);
+    final pointsForCurrentLevel = (currentLevel - 1) * AppConstants.pointsPerLevel;
+    final pointsForNextLevel = currentLevel * AppConstants.pointsPerLevel;
+    final progressInLevel = currentPoints - pointsForCurrentLevel;
+    final pointsNeededForLevel = pointsForNextLevel - pointsForCurrentLevel;
+    return progressInLevel / pointsNeededForLevel;
   }
 }

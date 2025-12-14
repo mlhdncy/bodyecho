@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../../../config/app_colors.dart';
 import '../../../core/authentication/viewmodels/auth_provider.dart';
 import '../../../services/firestore_service.dart';
+import '../../../utils/init_gamification.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -181,11 +182,84 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         ),
                 ),
               ),
+
+              const SizedBox(height: 40),
+
+              // Gamification Setup Section (Admin/Debug)
+              const Divider(),
+              const SizedBox(height: 20),
+              const Text(
+                'Oyunlaştırma Sistemi',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.textPrimary,
+                ),
+              ),
+              const SizedBox(height: 8),
+              const Text(
+                'Rozetleri ve oyunlaştırma sistemini başlatmak için butona basın. (Sadece ilk kurulumda bir kez çalıştırın)',
+                style: TextStyle(color: AppColors.textSecondary, fontSize: 12),
+              ),
+              const SizedBox(height: 16),
+
+              SizedBox(
+                width: double.infinity,
+                child: OutlinedButton.icon(
+                  onPressed: _isLoading ? null : _initializeGamification,
+                  icon: const Icon(Icons.emoji_events, color: Colors.amber),
+                  label: const Text(
+                    'Rozetleri Yükle',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  style: OutlinedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    side: const BorderSide(color: Colors.amber, width: 2),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                ),
+              ),
             ],
           ),
         ),
       ),
     );
+  }
+
+  Future<void> _initializeGamification() async {
+    setState(() => _isLoading = true);
+
+    try {
+      await GamificationInitializer.initialize();
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('✅ Rozetler başarıyla yüklendi! 30+ rozet Firestore\'a eklendi.'),
+            backgroundColor: Colors.green,
+            duration: Duration(seconds: 3),
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('❌ Hata: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
+    }
   }
 
   Widget _buildTextField({

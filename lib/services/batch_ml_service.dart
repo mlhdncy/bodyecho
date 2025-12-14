@@ -160,7 +160,7 @@ class BatchMLService {
     }
 
     return {
-      'age': userProfile.age,
+      'age': userProfile.age ?? 30,
       'bmi': bmi,
       'bloodGlucoseLevel':
           avgHealthData.avgBloodGlucose?.round() ?? 100, // Default 100
