@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'firebase_options.dart';
 import 'config/app_theme.dart';
 import 'core/authentication/viewmodels/auth_provider.dart';
@@ -11,6 +12,8 @@ import 'features/activity/viewmodels/activity_provider.dart';
 import 'features/nutrition/viewmodels/nutrition_provider.dart';
 import 'features/trends/views/health_risk_view.dart';
 import 'features/reports/providers/reports_provider.dart';
+import 'services/locale_provider.dart';
+import 'package:bodyecho/l10n/app_localizations.dart';
 
 import 'package:intl/date_symbol_data_local.dart';
 
@@ -22,8 +25,9 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  // Initialize Date Formatting
+  // Initialize Date Formatting for both locales
   await initializeDateFormatting('tr_TR', null);
+  await initializeDateFormatting('en_US', null);
 
   runApp(const MyApp());
 }
@@ -35,17 +39,33 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        ChangeNotifierProvider(create: (_) => LocaleProvider()),
         ChangeNotifierProvider(create: (_) => AuthProvider()),
         ChangeNotifierProvider(create: (_) => HomeProvider()),
         ChangeNotifierProvider(create: (_) => ActivityProvider()),
         ChangeNotifierProvider(create: (_) => NutritionProvider()),
         ChangeNotifierProvider(create: (_) => ReportsProvider()),
       ],
-      child: MaterialApp(
-        title: 'Body Echo',
-        debugShowCheckedModeBanner: false,
-        theme: AppTheme.lightTheme,
-        home: const AuthStateHandler(),
+      child: Consumer<LocaleProvider>(
+        builder: (context, localeProvider, child) {
+          return MaterialApp(
+            title: 'Body Echo',
+            debugShowCheckedModeBanner: false,
+            theme: AppTheme.lightTheme,
+            locale: localeProvider.locale,
+            localizationsDelegates: const [
+              AppLocalizations.delegate,
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
+            supportedLocales: const [
+              Locale('tr'),
+              Locale('en'),
+            ],
+            home: const AuthStateHandler(),
+          );
+        },
       ),
     );
   }
@@ -81,6 +101,8 @@ class SplashScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+
     return Scaffold(
       body: Center(
         child: Column(
@@ -95,12 +117,12 @@ class SplashScreen extends StatelessWidget {
             ),
             const SizedBox(height: 24),
             Text(
-              'Body Echo',
+              l10n?.appTitle ?? 'Body Echo',
               style: Theme.of(context).textTheme.displayLarge,
             ),
             const SizedBox(height: 8),
             Text(
-              'Sağlık ve Wellness Takip',
+              l10n?.appSubtitle ?? 'Sağlık ve Wellness Takip',
               style: Theme.of(context).textTheme.bodyMedium,
             ),
             const SizedBox(height: 40),
@@ -118,11 +140,12 @@ class HomeScreenPlaceholder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final authProvider = context.read<AuthProvider>();
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Body Echo'),
+        title: Text(l10n.appTitle),
         actions: [
           IconButton(
             icon: const Icon(Icons.logout),
@@ -139,7 +162,7 @@ class HomeScreenPlaceholder extends StatelessWidget {
             const Icon(Icons.check_circle, size: 80, color: Colors.green),
             const SizedBox(height: 24),
             Text(
-              'Hoş geldin!',
+              l10n.welcome,
               style: Theme.of(context).textTheme.headlineMedium,
             ),
             const SizedBox(height: 8),
@@ -157,7 +180,7 @@ class HomeScreenPlaceholder extends StatelessWidget {
                 );
               },
               icon: const Icon(Icons.analytics),
-              label: const Text('AI Sağlık Analizi'),
+              label: Text(l10n.aiHealthRiskAnalysis),
               style: ElevatedButton.styleFrom(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 32, vertical: 16),

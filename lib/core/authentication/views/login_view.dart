@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:bodyecho/l10n/app_localizations.dart';
 import '../../../config/app_colors.dart';
 import '../../../widgets/custom_button.dart';
 import '../../../widgets/custom_text_field.dart';
+import '../../../widgets/language_selector.dart';
 import '../viewmodels/auth_provider.dart';
 import 'register_view.dart';
 
@@ -37,9 +39,10 @@ class _LoginViewState extends State<LoginView> {
       );
     } catch (e) {
       if (mounted) {
+        final l10n = AppLocalizations.of(context)!;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(authProvider.errorMessage ?? 'Giriş başarısız'),
+            content: Text(authProvider.errorMessage ?? l10n.loginFailed),
             backgroundColor: AppColors.error,
           ),
         );
@@ -49,8 +52,20 @@ class _LoginViewState extends State<LoginView> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
       backgroundColor: AppColors.backgroundNeutral,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        actions: const [
+          Padding(
+            padding: EdgeInsets.only(right: 8),
+            child: LanguageSelector(),
+          ),
+        ],
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(24),
@@ -69,13 +84,13 @@ class _LoginViewState extends State<LoginView> {
                 ),
                 const SizedBox(height: 24),
                 Text(
-                  'Body Echo',
+                  l10n.appTitle,
                   style: Theme.of(context).textTheme.displayLarge,
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  'Sağlık ve Wellness Takibi',
+                  l10n.appSubtitle,
                   style: Theme.of(context).textTheme.bodyMedium,
                   textAlign: TextAlign.center,
                 ),
@@ -100,24 +115,24 @@ class _LoginViewState extends State<LoginView> {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       Text(
-                        'Giriş Yap',
+                        l10n.login,
                         style: Theme.of(context).textTheme.headlineMedium,
                         textAlign: TextAlign.center,
                       ),
                       const SizedBox(height: 24),
 
                       CustomTextField(
-                        label: 'E-posta Adresi',
-                        hint: 'ornek@email.com',
+                        label: l10n.email,
+                        hint: l10n.emailHint,
                         controller: _emailController,
                         keyboardType: TextInputType.emailAddress,
                         prefixIcon: Icons.email_outlined,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'E-posta adresi gerekli';
+                            return l10n.emailRequired;
                           }
                           if (!value.contains('@')) {
-                            return 'Geçerli bir e-posta adresi girin';
+                            return l10n.emailInvalid;
                           }
                           return null;
                         },
@@ -125,13 +140,13 @@ class _LoginViewState extends State<LoginView> {
                       const SizedBox(height: 16),
 
                       CustomTextField(
-                        label: 'Şifre',
+                        label: l10n.password,
                         controller: _passwordController,
                         isPassword: true,
                         prefixIcon: Icons.lock_outlined,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Şifre gerekli';
+                            return l10n.passwordRequired;
                           }
                           return null;
                         },
@@ -145,7 +160,7 @@ class _LoginViewState extends State<LoginView> {
                           onPressed: () {
                             // TODO: Implement password reset
                           },
-                          child: const Text('Şifremi Unuttum?'),
+                          child: Text(l10n.forgotPassword),
                         ),
                       ),
                       const SizedBox(height: 16),
@@ -154,7 +169,7 @@ class _LoginViewState extends State<LoginView> {
                       Consumer<AuthProvider>(
                         builder: (context, authProvider, _) {
                           return CustomButton(
-                            title: 'GİRİŞ',
+                            title: l10n.loginButton,
                             onPressed: _handleLogin,
                             isLoading: authProvider.isLoading,
                           );
@@ -171,7 +186,7 @@ class _LoginViewState extends State<LoginView> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      'Hesabın yok mu? ',
+                      l10n.noAccount,
                       style: Theme.of(context).textTheme.bodyMedium,
                     ),
                     TextButton(
@@ -182,9 +197,9 @@ class _LoginViewState extends State<LoginView> {
                           ),
                         );
                       },
-                      child: const Text(
-                        'Kaydol',
-                        style: TextStyle(fontWeight: FontWeight.bold),
+                      child: Text(
+                        l10n.register,
+                        style: const TextStyle(fontWeight: FontWeight.bold),
                       ),
                     ),
                   ],

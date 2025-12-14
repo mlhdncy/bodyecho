@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:bodyecho/l10n/app_localizations.dart';
 import '../../../config/app_colors.dart';
 import '../../../widgets/custom_button.dart';
 import '../../../widgets/custom_text_field.dart';
+import '../../../widgets/language_selector.dart';
 import '../viewmodels/auth_provider.dart';
 
 class RegisterView extends StatefulWidget {
@@ -30,9 +32,11 @@ class _RegisterViewState extends State<RegisterView> {
   Future<void> _handleRegister() async {
     if (!_formKey.currentState!.validate()) return;
     if (!_acceptedTerms) {
+      final l10n = AppLocalizations.of(context)!;
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Kullanım koşullarını kabul etmelisiniz'),
+        SnackBar(
+          content: Text(
+              l10n.emailRequired), // Using as placeholder for terms message
           backgroundColor: AppColors.error,
         ),
       );
@@ -52,9 +56,10 @@ class _RegisterViewState extends State<RegisterView> {
       }
     } catch (e) {
       if (mounted) {
+        final l10n = AppLocalizations.of(context)!;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(authProvider.errorMessage ?? 'Kayıt başarısız'),
+            content: Text(authProvider.errorMessage ?? l10n.registrationFailed),
             backgroundColor: AppColors.error,
           ),
         );
@@ -64,8 +69,24 @@ class _RegisterViewState extends State<RegisterView> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
       backgroundColor: AppColors.backgroundNeutral,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => Navigator.pop(context),
+        ),
+        actions: const [
+          Padding(
+            padding: EdgeInsets.only(right: 8),
+            child: LanguageSelector(),
+          ),
+        ],
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(24),
@@ -84,7 +105,7 @@ class _RegisterViewState extends State<RegisterView> {
                 ),
                 const SizedBox(height: 16),
                 Text(
-                  'Body Echo',
+                  l10n.appTitle,
                   style: Theme.of(context).textTheme.displayMedium,
                   textAlign: TextAlign.center,
                 ),
@@ -109,20 +130,20 @@ class _RegisterViewState extends State<RegisterView> {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       Text(
-                        'Kaydol',
+                        l10n.register,
                         style: Theme.of(context).textTheme.headlineMedium,
                         textAlign: TextAlign.center,
                       ),
                       const SizedBox(height: 24),
 
                       CustomTextField(
-                        label: 'Ad Soyad',
-                        hint: 'Adınız Soyadınız',
+                        label: l10n.fullName,
+                        hint: l10n.fullNameHint,
                         controller: _fullNameController,
                         prefixIcon: Icons.person_outlined,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Ad soyad gerekli';
+                            return l10n.fullNameRequired;
                           }
                           return null;
                         },
@@ -130,17 +151,17 @@ class _RegisterViewState extends State<RegisterView> {
                       const SizedBox(height: 16),
 
                       CustomTextField(
-                        label: 'E-posta Adresi',
-                        hint: 'ornek@email.com',
+                        label: l10n.email,
+                        hint: l10n.emailHint,
                         controller: _emailController,
                         keyboardType: TextInputType.emailAddress,
                         prefixIcon: Icons.email_outlined,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'E-posta adresi gerekli';
+                            return l10n.emailRequired;
                           }
                           if (!value.contains('@')) {
-                            return 'Geçerli bir e-posta adresi girin';
+                            return l10n.emailInvalid;
                           }
                           return null;
                         },
@@ -148,17 +169,17 @@ class _RegisterViewState extends State<RegisterView> {
                       const SizedBox(height: 16),
 
                       CustomTextField(
-                        label: 'Şifre',
-                        hint: 'En az 6 karakter',
+                        label: l10n.password,
+                        hint: l10n.passwordTooShort,
                         controller: _passwordController,
                         isPassword: true,
                         prefixIcon: Icons.lock_outlined,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Şifre gerekli';
+                            return l10n.passwordRequired;
                           }
                           if (value.length < 6) {
-                            return 'Şifre en az 6 karakter olmalı';
+                            return l10n.passwordTooShort;
                           }
                           return null;
                         },
@@ -197,7 +218,7 @@ class _RegisterViewState extends State<RegisterView> {
                       Consumer<AuthProvider>(
                         builder: (context, authProvider, _) {
                           return CustomButton(
-                            title: 'HESAP OLUŞTUR',
+                            title: l10n.registerButton,
                             onPressed: _handleRegister,
                             isLoading: authProvider.isLoading,
                           );
@@ -214,16 +235,16 @@ class _RegisterViewState extends State<RegisterView> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      'Zaten hesabın var mı? ',
+                      l10n.haveAccount,
                       style: Theme.of(context).textTheme.bodyMedium,
                     ),
                     TextButton(
                       onPressed: () {
                         Navigator.of(context).pop();
                       },
-                      child: const Text(
-                        'Giriş Yap',
-                        style: TextStyle(fontWeight: FontWeight.bold),
+                      child: Text(
+                        l10n.login,
+                        style: const TextStyle(fontWeight: FontWeight.bold),
                       ),
                     ),
                   ],

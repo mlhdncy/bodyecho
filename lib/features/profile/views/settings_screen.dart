@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:bodyecho/l10n/app_localizations.dart';
 import '../../../config/app_colors.dart';
 import '../../../core/authentication/viewmodels/auth_provider.dart';
 import '../../../services/firestore_service.dart';
@@ -55,16 +56,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
         await authProvider.reloadUser();
 
         if (mounted) {
+          final l10n = AppLocalizations.of(context)!;
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Profil güncellendi!')),
+            SnackBar(content: Text(l10n.profileUpdated)),
           );
           Navigator.pop(context);
         }
       }
     } catch (e) {
       if (mounted) {
+        final l10n = AppLocalizations.of(context)!;
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Hata: $e')),
+          SnackBar(content: Text('${l10n.errorOccurred} $e')),
         );
       }
     } finally {
@@ -76,12 +79,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
       backgroundColor: AppColors.backgroundNeutral,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        title: const Text('Ayarlar & Profil'),
+        title: Text(l10n.settingsAndProfile),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: AppColors.textPrimary),
           onPressed: () => Navigator.pop(context),
@@ -103,22 +108,22 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ),
               ),
               const SizedBox(height: 8),
-              const Text(
-                'Daha doğru sağlık analizleri için lütfen bilgilerinizi güncelleyin.',
-                style: TextStyle(color: AppColors.textSecondary),
+              Text(
+                l10n.updateInfoMessage,
+                style: const TextStyle(color: AppColors.textSecondary),
               ),
               const SizedBox(height: 24),
 
               // Height
               _buildTextField(
                 controller: _heightController,
-                label: 'Boy (cm)',
+                label: l10n.height,
                 icon: Icons.height,
                 keyboardType: TextInputType.number,
                 validator: (value) {
                   if (value == null || value.isEmpty) return null;
                   final n = double.tryParse(value);
-                  if (n == null || n < 50 || n > 300) return 'Geçerli bir boy giriniz';
+                  if (n == null || n < 50 || n > 300) return l10n.validHeight;
                   return null;
                 },
               ),
@@ -127,13 +132,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
               // Weight
               _buildTextField(
                 controller: _weightController,
-                label: 'Kilo (kg)',
+                label: l10n.weight,
                 icon: Icons.monitor_weight_outlined,
-                keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                keyboardType:
+                    const TextInputType.numberWithOptions(decimal: true),
                 validator: (value) {
                   if (value == null || value.isEmpty) return null;
                   final n = double.tryParse(value);
-                  if (n == null || n < 20 || n > 300) return 'Geçerli bir kilo giriniz';
+                  if (n == null || n < 20 || n > 300) return l10n.validWeight;
                   return null;
                 },
               ),
@@ -142,13 +148,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
               // Age
               _buildTextField(
                 controller: _ageController,
-                label: 'Yaş',
+                label: l10n.age,
                 icon: Icons.cake_outlined,
                 keyboardType: TextInputType.number,
                 validator: (value) {
                   if (value == null || value.isEmpty) return null;
                   final n = int.tryParse(value);
-                  if (n == null || n < 1 || n > 120) return 'Geçerli bir yaş giriniz';
+                  if (n == null || n < 1 || n > 120) return l10n.validAge;
                   return null;
                 },
               ),
@@ -170,11 +176,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       ? const SizedBox(
                           height: 20,
                           width: 20,
-                          child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
+                          child: CircularProgressIndicator(
+                              color: Colors.white, strokeWidth: 2),
                         )
-                      : const Text(
-                          'Kaydet',
-                          style: TextStyle(
+                      : Text(
+                          l10n.save,
+                          style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
@@ -197,9 +204,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ),
               ),
               const SizedBox(height: 8),
-              const Text(
-                'Rozetleri ve oyunlaştırma sistemini başlatmak için butona basın. (Sadece ilk kurulumda bir kez çalıştırın)',
-                style: TextStyle(color: AppColors.textSecondary, fontSize: 12),
+              Text(
+                l10n.initializeMessage,
+                style: const TextStyle(
+                    color: AppColors.textSecondary, fontSize: 12),
               ),
               const SizedBox(height: 16),
 
@@ -208,9 +216,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 child: OutlinedButton.icon(
                   onPressed: _isLoading ? null : _initializeGamification,
                   icon: const Icon(Icons.emoji_events, color: Colors.amber),
-                  label: const Text(
-                    'Rozetleri Yükle',
-                    style: TextStyle(
+                  label: Text(
+                    l10n.loadBadges,
+                    style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
                     ),
@@ -238,19 +246,21 @@ class _SettingsScreenState extends State<SettingsScreen> {
       await GamificationInitializer.initialize();
 
       if (mounted) {
+        final l10n = AppLocalizations.of(context)!;
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('✅ Rozetler başarıyla yüklendi! 30+ rozet Firestore\'a eklendi.'),
+          SnackBar(
+            content: Text(l10n.badgesLoadedSuccess),
             backgroundColor: Colors.green,
-            duration: Duration(seconds: 3),
+            duration: const Duration(seconds: 3),
           ),
         );
       }
     } catch (e) {
       if (mounted) {
+        final l10n = AppLocalizations.of(context)!;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('❌ Hata: $e'),
+            content: Text('${l10n.errorOccurred} $e'),
             backgroundColor: Colors.red,
           ),
         );

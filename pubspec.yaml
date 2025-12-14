@@ -10,6 +10,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_localizations:
+    sdk: flutter
 
   # UI & Icons
   cupertino_icons: ^1.0.8
@@ -37,6 +39,9 @@ dependencies:
 
   # URL launcher for opening reference links
   url_launcher: ^6.3.1
+  
+  # Shared Preferences for storing user settings
+  shared_preferences: ^2.3.3
 
 dev_dependencies:
   flutter_test:
@@ -63,6 +68,7 @@ flutter_launcher_icons:
 
 # The following section is specific to Flutter packages.
 flutter:
+  generate: true
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in

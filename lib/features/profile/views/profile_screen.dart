@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:bodyecho/l10n/app_localizations.dart';
 import '../../../config/app_colors.dart';
 import '../../../config/app_constants.dart';
 import '../../../core/authentication/viewmodels/auth_provider.dart';
@@ -13,6 +14,7 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final authProvider = context.watch<AuthProvider>();
     final user = authProvider.currentUser;
 
@@ -21,7 +23,7 @@ class ProfileScreen extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        title: const Text('Profil'),
+        title: Text(l10n.profile),
         actions: [
           IconButton(
             icon: const Icon(Icons.edit),
@@ -60,7 +62,8 @@ class ProfileScreen extends StatelessWidget {
                         child: CircularProgressIndicator(
                           value: _getLevelProgress(user),
                           backgroundColor: Colors.white.withAlpha(76),
-                          valueColor: const AlwaysStoppedAnimation(Colors.white),
+                          valueColor:
+                              const AlwaysStoppedAnimation(Colors.white),
                           strokeWidth: 6,
                         ),
                       ),
@@ -86,7 +89,8 @@ class ProfileScreen extends StatelessWidget {
                       Positioned(
                         bottom: 0,
                         child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 12, vertical: 4),
                           decoration: BoxDecoration(
                             gradient: const LinearGradient(
                               colors: [Color(0xFFFFD700), Color(0xFFFFA500)],
@@ -110,7 +114,7 @@ class ProfileScreen extends StatelessWidget {
 
                   // Name
                   Text(
-                    user?.fullName ?? 'Kullanıcı',
+                    user?.fullName ?? l10n.user,
                     style: const TextStyle(
                       color: Colors.white,
                       fontSize: 24,
@@ -131,7 +135,8 @@ class ProfileScreen extends StatelessWidget {
 
                   // Points and Level Info
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 20, vertical: 12),
                     decoration: BoxDecoration(
                       color: Colors.white.withAlpha(51),
                       borderRadius: BorderRadius.circular(20),
@@ -142,7 +147,7 @@ class ProfileScreen extends StatelessWidget {
                         const Icon(Icons.stars, color: Colors.amber, size: 20),
                         const SizedBox(width: 8),
                         Text(
-                          '${user?.totalPoints ?? 0} Puan',
+                          '${user?.totalPoints ?? 0} ${l10n.points}',
                           style: const TextStyle(
                             color: Colors.white,
                             fontSize: 16,
@@ -151,7 +156,9 @@ class ProfileScreen extends StatelessWidget {
                         ),
                         const SizedBox(width: 16),
                         Text(
-                          AppConstants.getLevelTitle(AppConstants.calculateLevel(user?.totalPoints ?? 0)),
+                          AppConstants.getLevelTitle(
+                              AppConstants.calculateLevel(
+                                  user?.totalPoints ?? 0)),
                           style: const TextStyle(
                             color: Colors.white70,
                             fontSize: 14,
@@ -165,7 +172,8 @@ class ProfileScreen extends StatelessWidget {
                   // Streak indicator
                   if ((user?.currentStreak ?? 0) > 0)
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 8),
                       decoration: BoxDecoration(
                         color: Colors.orange.withAlpha(51),
                         borderRadius: BorderRadius.circular(16),
@@ -176,7 +184,7 @@ class ProfileScreen extends StatelessWidget {
                           const Text('🔥', style: TextStyle(fontSize: 16)),
                           const SizedBox(width: 6),
                           Text(
-                            '${user?.currentStreak} Gün Serisi',
+                            '${user?.currentStreak} ${l10n.streak}',
                             style: const TextStyle(
                               color: Colors.white,
                               fontSize: 13,
@@ -213,7 +221,7 @@ class ProfileScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Fiziksel Bilgiler',
+                          l10n.physicalInfo,
                           style:
                               Theme.of(context).textTheme.titleMedium?.copyWith(
                                     fontWeight: FontWeight.bold,
@@ -223,23 +231,27 @@ class ProfileScreen extends StatelessWidget {
                         _buildStatRow(
                           context,
                           icon: Icons.height,
-                          label: 'Boy',
-                          value: user?.height != null ? '${user!.height!.toInt()} cm' : '-',
+                          label: l10n.heightLabel,
+                          value: user?.height != null
+                              ? '${user!.height!.toInt()} ${l10n.cm}'
+                              : '-',
                           color: AppColors.primaryTeal,
                         ),
                         const SizedBox(height: 12),
                         _buildStatRow(
                           context,
                           icon: Icons.monitor_weight_outlined,
-                          label: 'Kilo',
-                          value: user?.weight != null ? '${user!.weight!.toStringAsFixed(1)} kg' : '-',
+                          label: l10n.weightLabel,
+                          value: user?.weight != null
+                              ? '${user!.weight!.toStringAsFixed(1)} ${l10n.kg}'
+                              : '-',
                           color: AppColors.alertOrange,
                         ),
                         const SizedBox(height: 12),
                         _buildStatRow(
                           context,
                           icon: Icons.cake_outlined,
-                          label: 'Yaş',
+                          label: l10n.ageLabel,
                           value: user?.age != null ? '${user!.age}' : '-',
                           color: AppColors.accentGreen,
                         ),
@@ -272,7 +284,8 @@ class ProfileScreen extends StatelessWidget {
                         onTap: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (_) => const HealthRiskView()),
+                            MaterialPageRoute(
+                                builder: (_) => const HealthRiskView()),
                           );
                         },
                         borderRadius: BorderRadius.circular(16),
@@ -297,9 +310,9 @@ class ProfileScreen extends StatelessWidget {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    const Text(
-                                      'AI Sağlık Risk Analizi',
-                                      style: TextStyle(
+                                    Text(
+                                      l10n.aiHealthRiskAnalysis,
+                                      style: const TextStyle(
                                         color: Colors.white,
                                         fontSize: 16,
                                         fontWeight: FontWeight.bold,
@@ -307,7 +320,7 @@ class ProfileScreen extends StatelessWidget {
                                     ),
                                     const SizedBox(height: 4),
                                     Text(
-                                      'Vücut risk haritanızı görüntüleyin',
+                                      l10n.viewBodyRiskMap,
                                       style: TextStyle(
                                         color: Colors.white.withOpacity(0.9),
                                         fontSize: 13,
@@ -365,7 +378,7 @@ class ProfileScreen extends StatelessWidget {
                         _buildSettingItem(
                           context,
                           icon: Icons.notifications_outlined,
-                          title: 'Bildirimler',
+                          title: l10n.notifications,
                           onTap: () {
                             // TODO: Navigate to notifications settings
                           },
@@ -374,7 +387,7 @@ class ProfileScreen extends StatelessWidget {
                         _buildSettingItem(
                           context,
                           icon: Icons.privacy_tip_outlined,
-                          title: 'Gizlilik',
+                          title: l10n.privacy,
                           onTap: () {
                             // TODO: Navigate to privacy settings
                           },
@@ -383,7 +396,7 @@ class ProfileScreen extends StatelessWidget {
                         _buildSettingItem(
                           context,
                           icon: Icons.help_outline,
-                          title: 'Yardım & Destek',
+                          title: l10n.helpSupport,
                           onTap: () {
                             // TODO: Navigate to help
                           },
@@ -392,7 +405,7 @@ class ProfileScreen extends StatelessWidget {
                         _buildSettingItem(
                           context,
                           icon: Icons.info_outline,
-                          title: 'Hakkında',
+                          title: l10n.about,
                           onTap: () {
                             // TODO: Show about dialog
                           },
@@ -411,19 +424,19 @@ class ProfileScreen extends StatelessWidget {
                         final confirmed = await showDialog<bool>(
                           context: context,
                           builder: (context) => AlertDialog(
-                            title: const Text('Çıkış Yap'),
-                            content: const Text(
-                                'Çıkış yapmak istediğinize emin misiniz?'),
+                            title: Text(l10n.logoutConfirmTitle),
+                            content: Text(l10n.logoutConfirmMessage),
                             actions: [
                               TextButton(
                                 onPressed: () => Navigator.pop(context, false),
-                                child: const Text('İptal'),
+                                child: Text(l10n.cancel),
                               ),
                               TextButton(
                                 onPressed: () => Navigator.pop(context, true),
-                                child: const Text(
-                                  'Çıkış Yap',
-                                  style: TextStyle(color: AppColors.error),
+                                child: Text(
+                                  l10n.logout,
+                                  style:
+                                      const TextStyle(color: AppColors.error),
                                 ),
                               ),
                             ],
@@ -435,9 +448,9 @@ class ProfileScreen extends StatelessWidget {
                         }
                       },
                       icon: const Icon(Icons.logout, color: AppColors.error),
-                      label: const Text(
-                        'Çıkış Yap',
-                        style: TextStyle(color: AppColors.error),
+                      label: Text(
+                        l10n.logout,
+                        style: const TextStyle(color: AppColors.error),
                       ),
                       style: OutlinedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(vertical: 16),
@@ -511,7 +524,8 @@ class ProfileScreen extends StatelessWidget {
     if (user == null) return 0.0;
     final currentPoints = user.totalPoints ?? 0;
     final currentLevel = AppConstants.calculateLevel(currentPoints);
-    final pointsForCurrentLevel = (currentLevel - 1) * AppConstants.pointsPerLevel;
+    final pointsForCurrentLevel =
+        (currentLevel - 1) * AppConstants.pointsPerLevel;
     final pointsForNextLevel = currentLevel * AppConstants.pointsPerLevel;
     final progressInLevel = currentPoints - pointsForCurrentLevel;
     final pointsNeededForLevel = pointsForNextLevel - pointsForCurrentLevel;
