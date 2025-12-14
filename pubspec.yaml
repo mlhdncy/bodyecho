@@ -2,7 +2,7 @@ name: bodyecho
 description: "Body Echo - Health & Wellness Tracking App"
 publish_to: 'none'
 
-version: 1.0.0+2
+version: 1.0.0+3
 
 environment:
   sdk: ^3.5.0
