@@ -198,9 +198,9 @@ class _BodyRiskMapWidgetState extends State<BodyRiskMapWidget>
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: riskColor.withOpacity(0.1),
+        color: riskColor.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: riskColor.withOpacity(0.3)),
+        border: Border.all(color: riskColor.withValues(alpha: 0.3)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -289,7 +289,7 @@ class _BodyRiskMapWidgetState extends State<BodyRiskMapWidget>
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -314,7 +314,7 @@ class _BodyRiskMapWidgetState extends State<BodyRiskMapWidget>
           width: 16,
           height: 16,
           decoration: BoxDecoration(
-            color: color.withOpacity(0.8),
+            color: color.withValues(alpha: 0.8),
             shape: BoxShape.circle,
             border: Border.all(color: color, width: 2),
           ),
@@ -482,7 +482,7 @@ class BodyMapPainter extends CustomPainter {
     final color = riskLevel > 0 ? getRiskColor(riskLevel) : Colors.grey[300]!;
 
     final paint = Paint()
-      ..color = color.withOpacity(0.8)
+      ..color = color.withValues(alpha: 0.8)
       ..style = PaintingStyle.fill;
 
     final borderPaint = Paint()
@@ -530,7 +530,7 @@ class BodyMapPainter extends CustomPainter {
     final color = riskLevel > 0 ? getRiskColor(riskLevel) : Colors.grey[300]!;
 
     final paint = Paint()
-      ..color = color.withOpacity(0.8)
+      ..color = color.withValues(alpha: 0.8)
       ..style = PaintingStyle.fill;
 
     final borderPaint = Paint()
@@ -555,7 +555,7 @@ class BodyMapPainter extends CustomPainter {
     final color = riskLevel > 0 ? getRiskColor(riskLevel) : Colors.grey[300]!;
 
     final paint = Paint()
-      ..color = color.withOpacity(0.8)
+      ..color = color.withValues(alpha: 0.8)
       ..style = PaintingStyle.fill;
 
     final borderPaint = Paint()
@@ -580,7 +580,7 @@ class BodyMapPainter extends CustomPainter {
     final color = riskLevel > 0 ? getRiskColor(riskLevel) : Colors.grey[300]!;
 
     final paint = Paint()
-      ..color = color.withOpacity(0.8)
+      ..color = color.withValues(alpha: 0.8)
       ..style = PaintingStyle.fill;
 
     final borderPaint = Paint()
@@ -612,7 +612,7 @@ class BodyMapPainter extends CustomPainter {
     final color = riskLevel > 0 ? getRiskColor(riskLevel) : Colors.grey[300]!;
 
     final paint = Paint()
-      ..color = color.withOpacity(0.8)
+      ..color = color.withValues(alpha: 0.8)
       ..style = PaintingStyle.fill;
 
     final borderPaint = Paint()

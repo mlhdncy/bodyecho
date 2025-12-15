@@ -1,7 +1,6 @@
 import '../models/user_model.dart';
 import '../models/daily_metric_model.dart';
 import '../models/health_record_model.dart';
-import '../models/ml_prediction_model.dart';
 import 'ml_service.dart';
 import 'health_standards_service.dart';
 
@@ -45,7 +44,8 @@ class InsightsService {
 
         insights.add(Insight(
           title: 'Vücut Kitle İndeksi (BMI)',
-          message: 'BMI değeriniz: ${bmi.toStringAsFixed(1)} (${bmiAssessment.description}). '
+          message:
+              'BMI değeriniz: ${bmi.toStringAsFixed(1)} (${bmiAssessment.description}). '
               '${bmiAssessment.recommendation}',
           type: bmiAssessment.insightType,
           category: 'obesity',
@@ -57,7 +57,8 @@ class InsightsService {
         // Fallback to basic evaluation
         insights.add(Insight(
           title: 'Vücut Kitle İndeksi (BMI)',
-          message: 'BMI değeriniz: ${bmi.toStringAsFixed(1)}. Detaylı değerlendirme için standartlar yükleniyor.',
+          message:
+              'BMI değeriniz: ${bmi.toStringAsFixed(1)}. Detaylı değerlendirme için standartlar yükleniyor.',
           type: 'info',
           category: 'obesity',
         ));
@@ -65,7 +66,8 @@ class InsightsService {
     } else {
       insights.add(Insight(
         title: 'Profilinizi Tamamlayın',
-        message: 'Daha doğru analizler için lütfen boy ve kilo bilgilerinizi profilinize ekleyin.',
+        message:
+            'Daha doğru analizler için lütfen boy ve kilo bilgilerinizi profilinize ekleyin.',
         type: 'info',
         category: 'obesity',
       ));
@@ -75,9 +77,10 @@ class InsightsService {
   }
 
   // Level 2: İstatistiksel Hastalık Riski (ML Destekli)
-  Future<List<Insight>> analyzeDiseaseRisks(UserModel user, HealthRecordModel? latestRecord) async {
+  Future<List<Insight>> analyzeDiseaseRisks(
+      UserModel user, HealthRecordModel? latestRecord) async {
     final insights = <Insight>[];
-    
+
     // Yeterli veri yoksa analiz yapma
     if (latestRecord == null || latestRecord.bloodGlucoseLevel == null) {
       return insights;
@@ -96,27 +99,30 @@ class InsightsService {
 
       if (mlResponse.success) {
         final results = mlResponse.results;
-        
+
         // Diyabet Riski
         if (results['diabetes_risk']?.prediction == 1) {
           insights.add(Insight(
             title: 'Diyabet Riski Uyarısı',
-            message: 'İstatistiksel modeller, kan şekeri ve diğer verilerinize dayanarak diyabet riskiniz olabileceğini öngörüyor. Lütfen bir doktora danışın.',
+            message:
+                'İstatistiksel modeller, kan şekeri ve diğer verilerinize dayanarak diyabet riskiniz olabileceğini öngörüyor. Lütfen bir doktora danışın.',
             type: 'risk',
             category: 'disease',
           ));
         }
 
         // Kalp Riski
-        if (results['heart_risk']?.prediction == 1) { // Model ismine göre güncellenmeli
-           insights.add(Insight(
+        if (results['heart_risk']?.prediction == 1) {
+          // Model ismine göre güncellenmeli
+          insights.add(Insight(
             title: 'Kalp Sağlığı Uyarısı',
-            message: 'Verileriniz kalp sağlığı açısından risk faktörleri içeriyor olabilir.',
+            message:
+                'Verileriniz kalp sağlığı açısından risk faktörleri içeriyor olabilir.',
             type: 'risk',
             category: 'disease',
           ));
         }
-        
+
         // Diğer ML sonuçları buraya eklenebilir
       }
     } catch (e) {
@@ -127,19 +133,22 @@ class InsightsService {
   }
 
   double _calculateBmi(double? height, double? weight) {
-    if (height == null || weight == null || height == 0) return 25.0; // Varsayılan
+    if (height == null || weight == null || height == 0)
+      return 25.0; // Varsayılan
     return weight / ((height / 100) * (height / 100));
   }
 
   // Level 3: Günlük Yaşam Tarzı (Daily Metrics) - WHO ve T.C. Sağlık Bakanlığı standartlarına göre
-  Future<List<Insight>> analyzeLifestyle(DailyMetricModel? todayMetric, UserModel user) async {
+  Future<List<Insight>> analyzeLifestyle(
+      DailyMetricModel? todayMetric, UserModel user) async {
     final insights = <Insight>[];
 
     if (todayMetric == null) return insights;
 
     // Su Tüketimi - Dinamik standartlar (yaş, cinsiyet, hamilelik durumu)
     try {
-      final waterRecommendation = await _healthStandards.getWaterIntakeRecommendation(
+      final waterRecommendation =
+          await _healthStandards.getWaterIntakeRecommendation(
         user.gender ?? 'Male',
         user.age ?? 30,
         isPregnant: false, // UserModel'de bu alan yok, gerekirse eklenebilir
@@ -181,7 +190,8 @@ class InsightsService {
 
     // Adım Sayısı - Dinamik standartlar (yaşa göre)
     try {
-      final activityRecommendation = await _healthStandards.getPhysicalActivityRecommendation(
+      final activityRecommendation =
+          await _healthStandards.getPhysicalActivityRecommendation(
         user.age ?? 30,
       );
 
@@ -195,7 +205,8 @@ class InsightsService {
           type: 'warning',
           category: 'lifestyle',
           source: activityRecommendation.source,
-          referenceUrl: 'https://www.who.int/news-room/fact-sheets/detail/physical-activity',
+          referenceUrl:
+              'https://www.who.int/news-room/fact-sheets/detail/physical-activity',
         ));
       } else if (currentSteps >= recommendedSteps) {
         insights.add(Insight(
@@ -221,13 +232,10 @@ class InsightsService {
     // Uyku - Dinamik standartlar (yaşa göre)
     if (todayMetric.sleepQuality > 0) {
       try {
-        final sleepRecommendation = await _healthStandards.getSleepRecommendation(
+        final sleepRecommendation =
+            await _healthStandards.getSleepRecommendation(
           user.age ?? 30,
         );
-
-        // sleepQuality 1-10 arası, saat cinsine çevirelim (varsayımsal)
-        // Gerçek uyku saati verisi varsa onu kullanın
-        final sleepHours = todayMetric.sleepQuality.toDouble(); // Bu kısım gerçek veri yapısına göre ayarlanmalı
 
         if (todayMetric.sleepQuality < 6) {
           insights.add(Insight(
@@ -242,7 +250,8 @@ class InsightsService {
         } else if (todayMetric.sleepQuality >= 8) {
           insights.add(Insight(
             title: 'Mükemmel Uyku',
-            message: 'Uyku kaliteniz harika! Böyle devam edin. ${sleepRecommendation.source} standartlarına uygun dinleniyorsunuz.',
+            message:
+                'Uyku kaliteniz harika! Böyle devam edin. ${sleepRecommendation.source} standartlarına uygun dinleniyorsunuz.',
             type: 'success',
             category: 'lifestyle',
             source: sleepRecommendation.source,

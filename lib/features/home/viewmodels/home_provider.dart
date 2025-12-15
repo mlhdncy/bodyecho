@@ -4,11 +4,9 @@ import '../../../services/firestore_service.dart';
 
 import 'dart:async';
 import '../../../models/user_model.dart';
-import '../../../models/health_record_model.dart';
 import '../../../services/insights_service.dart';
 import '../../../services/gamification_service.dart';
 import '../../../config/app_constants.dart';
-import '../../../core/authentication/viewmodels/auth_provider.dart';
 
 class HomeProvider with ChangeNotifier {
   final FirestoreService _firestoreService = FirestoreService();
@@ -20,7 +18,8 @@ class HomeProvider with ChangeNotifier {
   bool _isLoading = false;
   String? _errorMessage;
   StreamSubscription<DailyMetricModel?>? _metricSubscription;
-  UserModel? _currentUser; // Kullanıcı bilgisini sakla (lifestyle insights için gerekli)
+  UserModel?
+      _currentUser; // Kullanıcı bilgisini sakla (lifestyle insights için gerekli)
 
   DailyMetricModel? get todayMetric => _todayMetric;
   List<Insight> get insights => _insights;
@@ -42,7 +41,8 @@ class HomeProvider with ChangeNotifier {
     try {
       // 1. Günlük Metrikleri Canlı İzle (Stream)
       _metricSubscription?.cancel();
-      _metricSubscription = _firestoreService.getTodayMetricStream(userId).listen((metric) {
+      _metricSubscription =
+          _firestoreService.getTodayMetricStream(userId).listen((metric) {
         _todayMetric = metric;
 
         // Metrik her değiştiğinde yaşam tarzı analizini güncelle
@@ -59,8 +59,10 @@ class HomeProvider with ChangeNotifier {
       _todayMetric = await _firestoreService.getTodayMetric(userId);
 
       // 2. Sağlık Kayıtlarını Yükle (Son kayıt)
-      final healthRecords = await _firestoreService.getHealthRecords(userId, limit: 1);
-      final latestRecord = healthRecords.isNotEmpty ? healthRecords.first : null;
+      final healthRecords =
+          await _firestoreService.getHealthRecords(userId, limit: 1);
+      final latestRecord =
+          healthRecords.isNotEmpty ? healthRecords.first : null;
 
       // 3. Analizleri Oluştur
       _insights = [];
@@ -71,13 +73,15 @@ class HomeProvider with ChangeNotifier {
         _insights.addAll(profileInsights);
 
         // Level 2: Hastalık Riski (ML Destekli)
-        final diseaseInsights = await _insightsService.analyzeDiseaseRisks(user, latestRecord);
+        final diseaseInsights =
+            await _insightsService.analyzeDiseaseRisks(user, latestRecord);
         _insights.addAll(diseaseInsights);
       }
 
       // Level 3: Yaşam Tarzı (WHO ve T.C. Sağlık Bakanlığı standartlarına göre)
       if (_todayMetric != null && user != null) {
-        final lifestyleInsights = await _insightsService.analyzeLifestyle(_todayMetric, user);
+        final lifestyleInsights =
+            await _insightsService.analyzeLifestyle(_todayMetric, user);
         _insights.addAll(lifestyleInsights);
       }
 
@@ -91,10 +95,12 @@ class HomeProvider with ChangeNotifier {
     }
   }
 
-  Future<void> _updateLifestyleInsights(DailyMetricModel metric, UserModel user) async {
+  Future<void> _updateLifestyleInsights(
+      DailyMetricModel metric, UserModel user) async {
     // Mevcut lifestyle insight'larını temizle ve yenilerini ekle
     _insights.removeWhere((i) => i.category == 'lifestyle');
-    final lifestyleInsights = await _insightsService.analyzeLifestyle(metric, user);
+    final lifestyleInsights =
+        await _insightsService.analyzeLifestyle(metric, user);
     _insights.addAll(lifestyleInsights);
   }
 
@@ -249,10 +255,14 @@ class HomeProvider with ChangeNotifier {
     try {
       if (_todayMetric == null) return;
 
-      final stepsComplete = _todayMetric!.steps >= AppConstants.defaultStepsGoal;
-      final waterComplete = _todayMetric!.waterIntake >= AppConstants.defaultWaterGoal;
-      final sleepComplete = _todayMetric!.sleepQuality >= AppConstants.defaultSleepQualityGoal;
-      final caloriesComplete = _todayMetric!.calorieEstimate >= AppConstants.defaultCalorieGoal;
+      final stepsComplete =
+          _todayMetric!.steps >= AppConstants.defaultStepsGoal;
+      final waterComplete =
+          _todayMetric!.waterIntake >= AppConstants.defaultWaterGoal;
+      final sleepComplete =
+          _todayMetric!.sleepQuality >= AppConstants.defaultSleepQualityGoal;
+      final caloriesComplete =
+          _todayMetric!.calorieEstimate >= AppConstants.defaultCalorieGoal;
 
       if (stepsComplete && waterComplete && sleepComplete && caloriesComplete) {
         await _gamificationService.awardPoints(

@@ -21,10 +21,18 @@ class NutritionProvider with ChangeNotifier {
 
   int _calculateTotalCalories() {
     int total = 0;
-    for (var food in _breakfast) total += food.calories;
-    for (var food in _lunch) total += food.calories;
-    for (var food in _dinner) total += food.calories;
-    for (var food in _snacks) total += food.calories;
+    for (var food in _breakfast) {
+      total += food.calories;
+    }
+    for (var food in _lunch) {
+      total += food.calories;
+    }
+    for (var food in _dinner) {
+      total += food.calories;
+    }
+    for (var food in _snacks) {
+      total += food.calories;
+    }
     return total;
   }
 

@@ -445,7 +445,7 @@ class _TrendsScreenState extends State<TrendsScreen> {
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
-              color: const Color(0xFF6B73FF).withOpacity(0.3),
+              color: const Color(0xFF6B73FF).withValues(alpha: 0.3),
               blurRadius: 15,
               offset: const Offset(0, 8),
             ),
@@ -462,7 +462,7 @@ class _TrendsScreenState extends State<TrendsScreen> {
                       Container(
                         padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.2),
+                          color: Colors.white.withValues(alpha: 0.2),
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: const Icon(
@@ -496,7 +496,7 @@ class _TrendsScreenState extends State<TrendsScreen> {
                   Text(
                     'Yapay zeka destekli vücut risk haritanızı keşfedin',
                     style: TextStyle(
-                      color: Colors.white.withOpacity(0.9),
+                      color: Colors.white.withValues(alpha: 0.9),
                       fontSize: 14,
                     ),
                   ),
@@ -534,7 +534,7 @@ class _TrendsScreenState extends State<TrendsScreen> {
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.15),
+                color: Colors.white.withValues(alpha: 0.15),
                 shape: BoxShape.circle,
               ),
               child: const Icon(

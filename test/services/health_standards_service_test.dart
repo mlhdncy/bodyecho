@@ -1,6 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:bodyecho/services/health_standards_service.dart';
-import 'package:flutter/services.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -18,7 +17,8 @@ void main() {
       expect(true, true);
     });
 
-    test('evaluateBmi should return correct assessment for normal BMI', () async {
+    test('evaluateBmi should return correct assessment for normal BMI',
+        () async {
       await service.loadStandards();
 
       final assessment = await service.evaluateBmi(22.0, 30, 'Male');
@@ -30,7 +30,8 @@ void main() {
       expect(assessment.bmiValue, 22.0);
     });
 
-    test('evaluateBmi should return correct assessment for overweight BMI', () async {
+    test('evaluateBmi should return correct assessment for overweight BMI',
+        () async {
       await service.loadStandards();
 
       final assessment = await service.evaluateBmi(27.0, 30, 'Female');
@@ -41,7 +42,8 @@ void main() {
       expect(assessment.source, 'WHO');
     });
 
-    test('evaluateBmi should return correct assessment for obese BMI', () async {
+    test('evaluateBmi should return correct assessment for obese BMI',
+        () async {
       await service.loadStandards();
 
       final assessment = await service.evaluateBmi(32.0, 40, 'Male');
@@ -62,7 +64,9 @@ void main() {
       expect(assessment.source, 'WHO');
     });
 
-    test('evaluateGlucose should return correct assessment for normal fasting glucose', () async {
+    test(
+        'evaluateGlucose should return correct assessment for normal fasting glucose',
+        () async {
       await service.loadStandards();
 
       final assessment = await service.evaluateGlucose(90, isFasting: true);
@@ -72,7 +76,8 @@ void main() {
       expect(assessment.isFasting, true);
     });
 
-    test('evaluateGlucose should return correct assessment for prediabetes', () async {
+    test('evaluateGlucose should return correct assessment for prediabetes',
+        () async {
       await service.loadStandards();
 
       final assessment = await service.evaluateGlucose(110, isFasting: true);
@@ -81,7 +86,8 @@ void main() {
       expect(assessment.source, 'WHO');
     });
 
-    test('evaluateGlucose should return correct assessment for diabetes', () async {
+    test('evaluateGlucose should return correct assessment for diabetes',
+        () async {
       await service.loadStandards();
 
       final assessment = await service.evaluateGlucose(140, isFasting: true);
@@ -90,47 +96,60 @@ void main() {
       expect(assessment.source, 'WHO');
     });
 
-    test('getWaterIntakeRecommendation should return correct values for male adult', () async {
+    test(
+        'getWaterIntakeRecommendation should return correct values for male adult',
+        () async {
       await service.loadStandards();
 
-      final recommendation = await service.getWaterIntakeRecommendation('Male', 30);
+      final recommendation =
+          await service.getWaterIntakeRecommendation('Male', 30);
 
       expect(recommendation.recommendedLiters, 3.7);
       expect(recommendation.source, 'WHO');
       expect(recommendation.description, 'Yetişkin erkek');
     });
 
-    test('getWaterIntakeRecommendation should return correct values for female adult', () async {
+    test(
+        'getWaterIntakeRecommendation should return correct values for female adult',
+        () async {
       await service.loadStandards();
 
-      final recommendation = await service.getWaterIntakeRecommendation('Female', 28);
+      final recommendation =
+          await service.getWaterIntakeRecommendation('Female', 28);
 
       expect(recommendation.recommendedLiters, 2.7);
       expect(recommendation.source, 'WHO');
       expect(recommendation.description, 'Yetişkin kadın');
     });
 
-    test('getWaterIntakeRecommendation should return higher values for pregnant women', () async {
+    test(
+        'getWaterIntakeRecommendation should return higher values for pregnant women',
+        () async {
       await service.loadStandards();
 
-      final recommendation = await service.getWaterIntakeRecommendation('Female', 28, isPregnant: true);
+      final recommendation = await service
+          .getWaterIntakeRecommendation('Female', 28, isPregnant: true);
 
       expect(recommendation.recommendedLiters, 3.0);
       expect(recommendation.source, 'WHO');
       expect(recommendation.specialCondition, 'pregnant');
     });
 
-    test('getWaterIntakeRecommendation should return higher values for breastfeeding women', () async {
+    test(
+        'getWaterIntakeRecommendation should return higher values for breastfeeding women',
+        () async {
       await service.loadStandards();
 
-      final recommendation = await service.getWaterIntakeRecommendation('Female', 28, isBreastfeeding: true);
+      final recommendation = await service
+          .getWaterIntakeRecommendation('Female', 28, isBreastfeeding: true);
 
       expect(recommendation.recommendedLiters, 3.8);
       expect(recommendation.source, 'WHO');
       expect(recommendation.specialCondition, 'breastfeeding');
     });
 
-    test('getSleepRecommendation should return correct values for adult', () async {
+    test('getSleepRecommendation should return correct values for adult',
+        () async {
       await service.loadStandards();
 
       final recommendation = await service.getSleepRecommendation(30);
@@ -141,7 +160,8 @@ void main() {
       expect(recommendation.source, 'WHO');
     });
 
-    test('getSleepRecommendation should return correct values for elderly', () async {
+    test('getSleepRecommendation should return correct values for elderly',
+        () async {
       await service.loadStandards();
 
       final recommendation = await service.getSleepRecommendation(70);
@@ -151,10 +171,13 @@ void main() {
       expect(recommendation.source, 'WHO');
     });
 
-    test('getPhysicalActivityRecommendation should return correct values for adult', () async {
+    test(
+        'getPhysicalActivityRecommendation should return correct values for adult',
+        () async {
       await service.loadStandards();
 
-      final recommendation = await service.getPhysicalActivityRecommendation(30);
+      final recommendation =
+          await service.getPhysicalActivityRecommendation(30);
 
       expect(recommendation.moderateIntensityMinutesPerWeek, 150);
       expect(recommendation.vigorousIntensityMinutesPerWeek, 75);
@@ -162,29 +185,36 @@ void main() {
       expect(recommendation.source, 'WHO');
     });
 
-    test('getPhysicalActivityRecommendation should return correct values for elderly', () async {
+    test(
+        'getPhysicalActivityRecommendation should return correct values for elderly',
+        () async {
       await service.loadStandards();
 
-      final recommendation = await service.getPhysicalActivityRecommendation(68);
+      final recommendation =
+          await service.getPhysicalActivityRecommendation(68);
 
       expect(recommendation.stepsPerDay, 7000);
       expect(recommendation.source, 'WHO');
     });
 
-    test('getCalorieRecommendation should return correct values for male', () async {
+    test('getCalorieRecommendation should return correct values for male',
+        () async {
       await service.loadStandards();
 
-      final recommendation = await service.getCalorieRecommendation(30, 'Male', 'Moderate');
+      final recommendation =
+          await service.getCalorieRecommendation(30, 'Male', 'Moderate');
 
       expect(recommendation.dailyCalories, greaterThan(0));
       expect(recommendation.source, 'T.C. Sağlık Bakanlığı');
       expect(recommendation.activityLevel, 'moderate');
     });
 
-    test('getCalorieRecommendation should return correct values for female', () async {
+    test('getCalorieRecommendation should return correct values for female',
+        () async {
       await service.loadStandards();
 
-      final recommendation = await service.getCalorieRecommendation(28, 'Female', 'Low');
+      final recommendation =
+          await service.getCalorieRecommendation(28, 'Female', 'Low');
 
       expect(recommendation.dailyCalories, greaterThan(0));
       expect(recommendation.source, 'T.C. Sağlık Bakanlığı');
