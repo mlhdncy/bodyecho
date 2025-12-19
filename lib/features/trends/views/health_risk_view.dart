@@ -98,7 +98,7 @@ class _HealthRiskViewState extends State<HealthRiskView>
       
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Hata: $e')),
+        SnackBar(content: Text('Error: $e')),
       );
     } finally {
       setState(() {
@@ -111,18 +111,18 @@ class _HealthRiskViewState extends State<HealthRiskView>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('AI Sağlık Analizi'),
+        title: const Text('AI Health Analysis'),
         bottom: _response != null
             ? TabBar(
                 controller: _tabController,
                 tabs: const [
                   Tab(
                     icon: Icon(Icons.accessibility_new),
-                    text: 'Vücut Haritası',
+                    text: 'Body Map',
                   ),
                   Tab(
                     icon: Icon(Icons.list),
-                    text: 'Liste',
+                    text: 'List',
                   ),
                 ],
               )
@@ -154,7 +154,7 @@ class _HealthRiskViewState extends State<HealthRiskView>
                               width: 20,
                               child: CircularProgressIndicator(color: Colors.white),
                             )
-                          : const Text('Analiz Et',
+                          : const Text('Analyze',
                               style: TextStyle(fontSize: 16)),
                     ),
                   ),
@@ -199,14 +199,14 @@ class _HealthRiskViewState extends State<HealthRiskView>
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Verileriniz',
+              'Your Data',
               style: Theme.of(context).textTheme.titleLarge,
             ),
             const SizedBox(height: 16),
             TextField(
               controller: _ageController,
               decoration: const InputDecoration(
-                labelText: 'Yaş',
+                labelText: 'Age',
                 border: OutlineInputBorder(),
                 prefixIcon: Icon(Icons.calendar_today),
               ),
@@ -216,7 +216,7 @@ class _HealthRiskViewState extends State<HealthRiskView>
             TextField(
               controller: _bmiController,
               decoration: const InputDecoration(
-                labelText: 'Vücut Kitle İndeksi (BMI)',
+                labelText: 'Body Mass Index (BMI)',
                 border: OutlineInputBorder(),
                 prefixIcon: Icon(Icons.monitor_weight),
               ),
@@ -226,7 +226,7 @@ class _HealthRiskViewState extends State<HealthRiskView>
             TextField(
               controller: _glucoseController,
               decoration: const InputDecoration(
-                labelText: 'Kan Şekeri',
+                labelText: 'Blood Glucose',
                 border: OutlineInputBorder(),
                 prefixIcon: Icon(Icons.bloodtype),
               ),
@@ -234,8 +234,8 @@ class _HealthRiskViewState extends State<HealthRiskView>
             ),
             const SizedBox(height: 12),
             SwitchListTile(
-              title: const Text('Aktif Yaşam Tarzı'),
-              subtitle: const Text('Düzenli egzersiz yapıyor musunuz?'),
+              title: const Text('Active Lifestyle'),
+              subtitle: const Text('Do you exercise regularly?'),
               value: _isActive,
               onChanged: (val) => setState(() => _isActive = val),
               secondary: const Icon(Icons.directions_run),
@@ -250,44 +250,44 @@ class _HealthRiskViewState extends State<HealthRiskView>
     if (_response?.success == false) {
       return Center(
         child: Text(
-          'Hata: ${_response?.error}',
+          'Error: ${_response?.error}',
           style: const TextStyle(color: Colors.red),
         ),
       );
     }
 
     final results = _response!.results;
-    
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Analiz Sonuçları',
+          'Analysis Results',
           style: Theme.of(context).textTheme.titleLarge,
         ),
         const SizedBox(height: 16),
         _buildRiskCard(
-          'Diyabet Riski',
+          'Diabetes Risk',
           results['diabetes_risk'],
           Icons.water_drop,
         ),
         _buildRiskCard(
-          'Obezite Riski',
+          'Obesity Risk',
           results['obesity_risk'],
           Icons.monitor_weight_outlined,
         ),
         _buildRiskCard(
-          'Yüksek Şeker Riski',
+          'High Sugar Risk',
           results['high_sugar_risk'],
           Icons.warning_amber,
         ),
         _buildRiskCard(
-          'Kalp/Kolesterol Riski',
+          'Heart/Cholesterol Risk',
           results['high_cholesterol_risk'],
           Icons.favorite_border,
         ),
         _buildRiskCard(
-          'Düşük Aktivite Riski',
+          'Low Activity Risk',
           results['low_activity_risk'],
           Icons.directions_walk,
         ),
@@ -310,9 +310,9 @@ class _HealthRiskViewState extends State<HealthRiskView>
         ),
         title: Text(title),
         subtitle: Text(
-          isHighRisk 
-              ? 'Yüksek Risk (%${(result.probability * 100).toStringAsFixed(1)})' 
-              : 'Düşük Risk',
+          isHighRisk
+              ? 'High Risk (${(result.probability * 100).toStringAsFixed(1)}%)'
+              : 'Low Risk',
           style: TextStyle(
             color: color,
             fontWeight: FontWeight.bold,

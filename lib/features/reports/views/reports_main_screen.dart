@@ -44,7 +44,7 @@ class _ReportsMainScreenState extends State<ReportsMainScreen> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         title: Text(
-          'Raporlarım',
+          'My Reports',
           style: Theme.of(context).textTheme.titleLarge?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
@@ -106,8 +106,8 @@ class _ReportsMainScreenState extends State<ReportsMainScreen> {
 
     return _buildReportCard(
       context: context,
-      title: 'Günlük Rapor',
-      subtitle: 'Son 24 saat',
+      title: 'Daily Report',
+      subtitle: 'Last 24 hours',
       icon: Icons.today,
       iconColor: AppColors.primaryTeal,
       isLoading: isLoading,
@@ -129,15 +129,15 @@ class _ReportsMainScreenState extends State<ReportsMainScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  '${report.steps} adım',
+                  '${report.steps} steps',
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
                 Text(
-                  '${report.waterIntake.toStringAsFixed(1)}L su',
+                  '${report.waterIntake.toStringAsFixed(1)}L water',
                   style: Theme.of(context).textTheme.bodySmall,
                 ),
                 Text(
-                  'Hedef: %${(report.dailyGoalAchievement * 100).toStringAsFixed(0)}',
+                  'Goal: ${(report.dailyGoalAchievement * 100).toStringAsFixed(0)}%',
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         color: AppColors.accentGreen,
                         fontWeight: FontWeight.bold,
@@ -157,8 +157,8 @@ class _ReportsMainScreenState extends State<ReportsMainScreen> {
 
     return _buildReportCard(
       context: context,
-      title: 'Haftalık Rapor',
-      subtitle: 'Son 7 gün',
+      title: 'Weekly Report',
+      subtitle: 'Last 7 days',
       icon: Icons.calendar_view_week,
       iconColor: AppColors.accentGreen,
       isLoading: isLoading,
@@ -180,11 +180,11 @@ class _ReportsMainScreenState extends State<ReportsMainScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Ort: ${report.avgSteps.toStringAsFixed(0)} adım/gün',
+                  'Avg: ${report.avgSteps.toStringAsFixed(0)} steps/day',
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
                 Text(
-                  '${report.daysGoalAchieved}/${report.totalDays} gün hedefe ulaştı',
+                  '${report.daysGoalAchieved}/${report.totalDays} days goal reached',
                   style: Theme.of(context).textTheme.bodySmall,
                 ),
                 Text(
@@ -208,8 +208,8 @@ class _ReportsMainScreenState extends State<ReportsMainScreen> {
 
     return _buildReportCard(
       context: context,
-      title: 'Aylık Rapor',
-      subtitle: 'Son 30 gün',
+      title: 'Monthly Report',
+      subtitle: 'Last 30 days',
       icon: Icons.calendar_month,
       iconColor: AppColors.alertOrange,
       isLoading: isLoading,
@@ -231,16 +231,16 @@ class _ReportsMainScreenState extends State<ReportsMainScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Toplam: ${(report.totalSteps / 1000).toStringAsFixed(1)}K adım',
+                  'Total: ${(report.totalSteps / 1000).toStringAsFixed(1)}K steps',
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
                 Text(
-                  '${report.daysGoalAchieved}/${report.totalDays} gün başarılı',
+                  '${report.daysGoalAchieved}/${report.totalDays} days successful',
                   style: Theme.of(context).textTheme.bodySmall,
                 ),
                 if (report.achievements.isNotEmpty)
                   Text(
-                    '${report.achievements.length} rozet kazanıldı',
+                    '${report.achievements.length} badges earned',
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
                           color: AppColors.alertOrange,
                           fontWeight: FontWeight.bold,
@@ -331,7 +331,7 @@ class _ReportsMainScreenState extends State<ReportsMainScreen> {
                       const SizedBox(width: 8),
                       Expanded(
                         child: Text(
-                          'Yüklenemedi',
+                          'Failed to load',
                           style: TextStyle(
                             color: Colors.red[700],
                             fontSize: 12,
@@ -348,7 +348,7 @@ class _ReportsMainScreenState extends State<ReportsMainScreen> {
               if (lastUpdate != null && !hasError) ...[
                 const SizedBox(height: 12),
                 Text(
-                  'Son güncelleme: ${_formatLastUpdate(lastUpdate)}',
+                  'Last update: ${_formatLastUpdate(lastUpdate)}',
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         color: Colors.grey[500],
                         fontSize: 11,
@@ -375,7 +375,7 @@ class _ReportsMainScreenState extends State<ReportsMainScreen> {
           const SizedBox(width: 12),
           Expanded(
             child: Text(
-              'Raporlar uygulamayı her açtığınızda otomatik güncellenir. Elle güncellemek için ↻ ikonuna tıklayın.',
+              'Reports are automatically updated each time you open the app. Click ↻ icon to manually refresh.',
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
                     color: AppColors.primaryTeal,
                   ),
@@ -391,24 +391,24 @@ class _ReportsMainScreenState extends State<ReportsMainScreen> {
     final diff = now.difference(dateTime);
 
     if (diff.inMinutes < 1) {
-      return 'Az önce';
+      return 'Just now';
     } else if (diff.inMinutes < 60) {
-      return '${diff.inMinutes} dakika önce';
+      return '${diff.inMinutes} minutes ago';
     } else if (diff.inHours < 24) {
-      return '${diff.inHours} saat önce';
+      return '${diff.inHours} hours ago';
     } else {
-      return DateFormat('dd MMM HH:mm', 'tr_TR').format(dateTime);
+      return DateFormat('dd MMM HH:mm', 'en_US').format(dateTime);
     }
   }
 
   String _getTrendText(String trend) {
     switch (trend) {
       case 'improving':
-        return '↗ İyileşiyor';
+        return '↗ Improving';
       case 'declining':
-        return '↘ Düşüşte';
+        return '↘ Declining';
       default:
-        return '→ Stabil';
+        return '→ Stable';
     }
   }
 

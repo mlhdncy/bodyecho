@@ -56,7 +56,7 @@ class _TrendsScreenState extends State<TrendsScreen> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        title: const Text('Trendler'),
+        title: const Text('Trends'),
       ),
       body: _isLoading 
         ? const Center(child: CircularProgressIndicator())
@@ -77,7 +77,7 @@ class _TrendsScreenState extends State<TrendsScreen> {
 
               // Steps Chart
               _buildChartCard(
-                title: 'Adım Sayısı',
+                title: 'Step Count',
                 icon: Icons.directions_walk,
                 color: AppColors.primaryTeal,
                 chart: _buildStepsChart(),
@@ -87,7 +87,7 @@ class _TrendsScreenState extends State<TrendsScreen> {
 
               // Water Chart
               _buildChartCard(
-                title: 'Su Tüketimi',
+                title: 'Water Intake',
                 icon: Icons.water_drop,
                 color: AppColors.accentBlue,
                 chart: _buildWaterChart(),
@@ -97,7 +97,7 @@ class _TrendsScreenState extends State<TrendsScreen> {
 
               // Calories Chart
               _buildChartCard(
-                title: 'Kalori',
+                title: 'Calories',
                 icon: Icons.local_fire_department,
                 color: AppColors.alertOrange,
                 chart: _buildCaloriesChart(),
@@ -123,10 +123,10 @@ class _TrendsScreenState extends State<TrendsScreen> {
       child: Row(
         children: [
           Expanded(
-            child: _buildPeriodButton('Hafta', 'week'),
+            child: _buildPeriodButton('Week', 'week'),
           ),
           Expanded(
-            child: _buildPeriodButton('Ay', 'month'),
+            child: _buildPeriodButton('Month', 'month'),
           ),
         ],
       ),
@@ -206,8 +206,8 @@ class _TrendsScreenState extends State<TrendsScreen> {
           const SizedBox(height: 20),
           SizedBox(
             height: 200,
-            child: _history.isEmpty 
-              ? const Center(child: Text('Veri yok')) 
+            child: _history.isEmpty
+              ? const Center(child: Text('No data'))
               : chart,
           ),
         ],
@@ -236,7 +236,7 @@ class _TrendsScreenState extends State<TrendsScreen> {
                 if (value.toInt() >= 0 && value.toInt() < _history.length) {
                   final date = _history[value.toInt()].date;
                   return Text(
-                    DateFormat('E', 'tr_TR').format(date), // Gün ismi
+                    DateFormat('E', 'en_US').format(date), // Day name
                     style: const TextStyle(color: AppColors.textSecondary, fontSize: 10),
                   );
                 }
@@ -285,7 +285,7 @@ class _TrendsScreenState extends State<TrendsScreen> {
                 if (value.toInt() >= 0 && value.toInt() < _history.length) {
                   final date = _history[value.toInt()].date;
                   return Text(
-                    DateFormat('E', 'tr_TR').format(date),
+                    DateFormat('E', 'en_US').format(date),
                     style: const TextStyle(color: AppColors.textSecondary, fontSize: 10),
                   );
                 }
@@ -330,7 +330,7 @@ class _TrendsScreenState extends State<TrendsScreen> {
                 if (value.toInt() >= 0 && value.toInt() < _history.length) {
                   final date = _history[value.toInt()].date;
                   return Text(
-                    DateFormat('E', 'tr_TR').format(date),
+                    DateFormat('E', 'en_US').format(date),
                     style: const TextStyle(color: AppColors.textSecondary, fontSize: 10),
                   );
                 }
@@ -379,7 +379,7 @@ class _TrendsScreenState extends State<TrendsScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            '${_selectedPeriod == 'week' ? 'Bu Hafta' : 'Bu Ay'} Özeti',
+            '${_selectedPeriod == 'week' ? 'This Week' : 'This Month'} Summary',
             style: const TextStyle(
               color: Colors.white,
               fontSize: 18,
@@ -390,9 +390,9 @@ class _TrendsScreenState extends State<TrendsScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              _buildStatItem('Ort. Adım', '$avgSteps', Icons.directions_walk),
-              _buildStatItem('Top. Su', '${totalWater.toStringAsFixed(1)} L', Icons.water_drop),
-              _buildStatItem('Top. Kalori', '$totalCalories', Icons.local_fire_department),
+              _buildStatItem('Avg. Steps', '$avgSteps', Icons.directions_walk),
+              _buildStatItem('Total Water', '${totalWater.toStringAsFixed(1)} L', Icons.water_drop),
+              _buildStatItem('Total Cal.', '$totalCalories', Icons.local_fire_department),
             ],
           ),
         ],
@@ -473,7 +473,7 @@ class _TrendsScreenState extends State<TrendsScreen> {
                       ),
                       const SizedBox(width: 12),
                       const Text(
-                        'YENİ',
+                        'NEW',
                         style: TextStyle(
                           color: Colors.white70,
                           fontSize: 12,
@@ -485,7 +485,7 @@ class _TrendsScreenState extends State<TrendsScreen> {
                   ),
                   const SizedBox(height: 16),
                   const Text(
-                    'AI Sağlık Risk Analizi',
+                    'AI Health Risk Analysis',
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 20,
@@ -494,7 +494,7 @@ class _TrendsScreenState extends State<TrendsScreen> {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    'Yapay zeka destekli vücut risk haritanızı keşfedin',
+                    'Discover your AI-powered body risk map',
                     style: TextStyle(
                       color: Colors.white.withValues(alpha: 0.9),
                       fontSize: 14,
@@ -511,7 +511,7 @@ class _TrendsScreenState extends State<TrendsScreen> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(
-                          'Analiz Et',
+                          'Analyze',
                           style: TextStyle(
                             color: Color(0xFF6B73FF),
                             fontWeight: FontWeight.bold,

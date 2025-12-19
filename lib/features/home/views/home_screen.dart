@@ -59,7 +59,7 @@ class _HomeScreenState extends State<HomeScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Merhaba,',
+              'Hello,',
               style: Theme.of(context).textTheme.bodySmall,
             ),
             Text(
@@ -230,7 +230,7 @@ class _HomeScreenState extends State<HomeScreen> {
       children: [
         _buildMetricCard(
           context,
-          title: 'Su İçimi',
+          title: 'Water Intake',
           value: '${metric?.waterIntake.toStringAsFixed(1) ?? '0.0'} L',
           goal: '2.5 L',
           progress: metric != null ? metric.waterProgress : 0.0,
@@ -239,7 +239,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         _buildMetricCard(
           context,
-          title: 'Kalori',
+          title: 'Calories',
           value: '${metric?.calorieEstimate ?? 0}',
           goal: '2500 kcal',
           progress: metric != null ? metric.calorieProgress : 0.0,
@@ -248,18 +248,18 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         _buildMetricCard(
           context,
-          title: 'Uyku',
-          value: '${metric?.sleepQuality ?? 0} saat',
-          goal: '8 saat',
+          title: 'Sleep',
+          value: '${metric?.sleepQuality ?? 0} hrs',
+          goal: '8 hrs',
           progress: metric != null ? metric.sleepProgress : 0.0,
           icon: Icons.bedtime,
           color: AppColors.accentPurple,
         ),
         _buildMetricCard(
           context,
-          title: 'Aktivite',
+          title: 'Activity',
           value: '$activityCount',
-          goal: '3 aktivite',
+          goal: '3 activities',
           progress: activityProgress,
           icon: Icons.directions_run,
           color: AppColors.accentGreen,
@@ -337,7 +337,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           const SizedBox(height: 4),
           Text(
-            'Hedef: $goal',
+            'Goal: $goal',
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
                   color: AppColors.textSecondary,
                   fontSize: 10,
@@ -353,7 +353,7 @@ class _HomeScreenState extends State<HomeScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Hızlı İşlemler',
+          'Quick Actions',
           style: Theme.of(context).textTheme.titleMedium?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
@@ -365,7 +365,7 @@ class _HomeScreenState extends State<HomeScreen> {
               child: _buildActionButton(
                 context,
                 icon: Icons.add,
-                label: 'Su Ekle',
+                label: 'Add Water',
                 color: AppColors.accentBlue,
                 onTap: () => _showAddWaterDialog(context),
               ),
@@ -375,7 +375,7 @@ class _HomeScreenState extends State<HomeScreen> {
               child: _buildActionButton(
                 context,
                 icon: Icons.directions_run,
-                label: 'Aktivite',
+                label: 'Activity',
                 color: AppColors.accentGreen,
                 onTap: () => _navigateToAddActivity(context),
               ),
@@ -389,7 +389,7 @@ class _HomeScreenState extends State<HomeScreen> {
               child: _buildActionButton(
                 context,
                 icon: Icons.directions_walk,
-                label: 'Adım Ekle',
+                label: 'Add Steps',
                 color: AppColors.primaryTeal,
                 onTap: () => _showAddStepsDialog(context),
               ),
@@ -399,7 +399,7 @@ class _HomeScreenState extends State<HomeScreen> {
               child: _buildActionButton(
                 context,
                 icon: Icons.bedtime,
-                label: 'Uyku Ekle',
+                label: 'Add Sleep',
                 color: AppColors.accentPurple,
                 onTap: () => _showAddSleepDialog(context),
               ),
@@ -413,7 +413,7 @@ class _HomeScreenState extends State<HomeScreen> {
               child: _buildActionButton(
                 context,
                 icon: Icons.local_fire_department,
-                label: 'Kalori Ekle',
+                label: 'Add Calories',
                 color: AppColors.alertOrange,
                 onTap: () => _showAddCaloriesDialog(context),
               ),
@@ -423,7 +423,7 @@ class _HomeScreenState extends State<HomeScreen> {
               child: _buildActionButton(
                 context,
                 icon: Icons.analytics,
-                label: 'AI Analiz',
+                label: 'AI Analysis',
                 color: Color(0xFF6B73FF),
                 onTap: () {
                   Navigator.push(
@@ -486,7 +486,7 @@ class _HomeScreenState extends State<HomeScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Son Aktiviteler',
+                  'Recent Activities',
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
@@ -499,7 +499,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     );
                   },
-                  child: const Text('Tümünü Gör'),
+                  child: const Text('View All'),
                 ),
               ],
             ),
@@ -521,7 +521,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       const SizedBox(height: 8),
                       Text(
-                        'Henüz aktivite yok',
+                        'No activities yet',
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                               color: AppColors.textSecondary,
                             ),
@@ -648,13 +648,13 @@ class _HomeScreenState extends State<HomeScreen> {
   String _getActivityName(String type) {
     switch (type) {
       case 'walking':
-        return 'Yürüyüş';
+        return 'Walking';
       case 'running':
-        return 'Koşu';
+        return 'Running';
       case 'cycling':
-        return 'Bisiklet';
+        return 'Cycling';
       default:
-        return 'Aktivite';
+        return 'Activity';
     }
   }
 
@@ -699,13 +699,13 @@ class _HomeScreenState extends State<HomeScreen> {
             children: [
               _buildNavItem(
                 icon: Icons.home,
-                label: 'Ana Sayfa',
+                label: 'Home',
                 isActive: true,
                 onTap: () {},
               ),
               _buildNavItem(
                 icon: Icons.show_chart,
-                label: 'Trendler',
+                label: 'Trends',
                 isActive: false,
                 onTap: () {
                   Navigator.of(context).push(
@@ -717,7 +717,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               _buildNavItem(
                 icon: Icons.assessment,
-                label: 'Raporlar',
+                label: 'Reports',
                 isActive: false,
                 onTap: () {
                   Navigator.of(context).push(
@@ -741,7 +741,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               _buildNavItem(
                 icon: Icons.person,
-                label: 'Profil',
+                label: 'Profile',
                 isActive: false,
                 onTap: () {
                   Navigator.of(context).push(
@@ -797,11 +797,11 @@ class _HomeScreenState extends State<HomeScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Su Ekle'),
+        title: const Text('Add Water'),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text('Ne kadar su içtiniz?'),
+            const Text('How much water did you drink?'),
             const SizedBox(height: 16),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -816,7 +816,7 @@ class _HomeScreenState extends State<HomeScreen> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('İptal'),
+            child: const Text('Cancel'),
           ),
         ],
       ),
@@ -838,7 +838,7 @@ class _HomeScreenState extends State<HomeScreen> {
             Navigator.pop(context);
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text('$label su eklendi!'),
+                content: Text('$label water added!'),
                 backgroundColor: AppColors.accentGreen,
               ),
             );
@@ -869,17 +869,17 @@ class _HomeScreenState extends State<HomeScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Adım Ekle'),
+        title: const Text('Add Steps'),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text('Bugün kaç adım attınız?'),
+            const Text('How many steps did you take today?'),
             const SizedBox(height: 16),
             TextField(
               controller: stepsController,
               keyboardType: TextInputType.number,
               decoration: InputDecoration(
-                hintText: 'Örn: 5000',
+                hintText: 'e.g. 5000',
                 prefixIcon: const Icon(Icons.directions_walk),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
@@ -892,7 +892,7 @@ class _HomeScreenState extends State<HomeScreen> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('İptal'),
+            child: const Text('Cancel'),
           ),
           ElevatedButton(
             onPressed: () async {
@@ -910,7 +910,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     Navigator.pop(context);
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
-                        content: Text('$steps adım eklendi!'),
+                        content: Text('$steps steps added!'),
                         backgroundColor: AppColors.accentGreen,
                       ),
                     );
@@ -918,7 +918,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 }
               }
             },
-            child: const Text('Ekle'),
+            child: const Text('Add'),
           ),
         ],
       ),
@@ -929,11 +929,11 @@ class _HomeScreenState extends State<HomeScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Uyku Ekle'),
+        title: const Text('Add Sleep'),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text('Bu gece kaç saat uyudunuz?'),
+            const Text('How many hours did you sleep last night?'),
             const SizedBox(height: 16),
             Wrap(
               spacing: 12,
@@ -949,7 +949,7 @@ class _HomeScreenState extends State<HomeScreen> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('İptal'),
+            child: const Text('Cancel'),
           ),
         ],
       ),
@@ -971,7 +971,7 @@ class _HomeScreenState extends State<HomeScreen> {
             Navigator.pop(context);
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text('$hours saat uyku kaydedildi!'),
+                content: Text('$hours hours of sleep recorded!'),
                 backgroundColor: AppColors.accentGreen,
               ),
             );
@@ -998,7 +998,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             const Text(
-              'saat',
+              'hrs',
               style: TextStyle(
                 color: AppColors.accentPurple,
                 fontSize: 10,

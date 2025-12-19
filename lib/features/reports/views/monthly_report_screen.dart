@@ -15,7 +15,7 @@ class MonthlyReportScreen extends StatelessWidget {
         backgroundColor: Colors.transparent,
         elevation: 0,
         title: Text(
-          'Aylık Rapor',
+          'Monthly Report',
           style: Theme.of(context).textTheme.titleLarge?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
@@ -31,7 +31,7 @@ class MonthlyReportScreen extends StatelessWidget {
 
           if (report == null) {
             return const Center(
-              child: Text('Aylık rapor bulunamadı'),
+              child: Text('Monthly report not found'),
             );
           }
 
@@ -47,6 +47,8 @@ class MonthlyReportScreen extends StatelessWidget {
                 _buildGoalAchievement(context, report),
                 const SizedBox(height: 20),
                 _buildTrends(context, report),
+                const SizedBox(height: 20),
+                _buildMLRiskSection(context, report),
                 const SizedBox(height: 20),
                 if (report.achievements.isNotEmpty)
                   _buildAchievements(context, report),
@@ -78,7 +80,7 @@ class MonthlyReportScreen extends StatelessWidget {
       child: Column(
         children: [
           Text(
-            '${DateFormat('d MMM', 'tr_TR').format(report.monthStartDate)} - ${DateFormat('d MMM yyyy', 'tr_TR').format(report.monthEndDate)}',
+            '${DateFormat('MMM d', 'en_US').format(report.monthStartDate)} - ${DateFormat('MMM d, yyyy', 'en_US').format(report.monthEndDate)}',
             style: Theme.of(context).textTheme.titleLarge?.copyWith(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
@@ -86,7 +88,7 @@ class MonthlyReportScreen extends StatelessWidget {
           ),
           const SizedBox(height: 4),
           Text(
-            'Son 30 Gün',
+            'Last 30 Days',
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   color: Colors.white70,
                 ),
@@ -106,7 +108,7 @@ class MonthlyReportScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Aylık Özet',
+              'Monthly Summary',
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
@@ -114,28 +116,28 @@ class MonthlyReportScreen extends StatelessWidget {
             const SizedBox(height: 16),
             _buildMetricRow(
               context,
-              'Toplam Adım',
+              'Total Steps',
               '${(report.totalSteps / 1000).toStringAsFixed(1)}K',
               report.stepsChangeVsPreviousMonth,
             ),
             const Divider(),
             _buildMetricRow(
               context,
-              'Günlük Ort. Adım',
+              'Daily Avg. Steps',
               '${report.avgSteps.toStringAsFixed(0)}',
               null,
             ),
             const Divider(),
             _buildMetricRow(
               context,
-              'Toplam Su',
+              'Total Water',
               '${report.totalWaterIntake.toStringAsFixed(1)}L',
               report.waterChangeVsPreviousMonth,
             ),
             const Divider(),
             _buildMetricRow(
               context,
-              'Toplam Kalori',
+              'Total Calories',
               '${(report.totalCalories / 1000).toStringAsFixed(1)}K',
               report.caloriesChangeVsPreviousMonth,
             ),
@@ -156,7 +158,7 @@ class MonthlyReportScreen extends StatelessWidget {
         child: Column(
           children: [
             Text(
-              'Aylık Başarı',
+              'Monthly Achievement',
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
@@ -168,7 +170,7 @@ class MonthlyReportScreen extends StatelessWidget {
                 _buildStatColumn(
                   context,
                   '${report.daysGoalAchieved}',
-                  'Başarılı Gün',
+                  'Successful Days',
                 ),
                 Container(
                   height: 40,
@@ -177,8 +179,8 @@ class MonthlyReportScreen extends StatelessWidget {
                 ),
                 _buildStatColumn(
                   context,
-                  '%$percentage',
-                  'Başarı Oranı',
+                  '$percentage%',
+                  'Success Rate',
                 ),
               ],
             ),
@@ -193,18 +195,18 @@ class MonthlyReportScreen extends StatelessWidget {
                     child: Column(
                       children: [
                         Text(
-                          'En İyi Gün',
+                          'Best Day',
                           style: Theme.of(context).textTheme.bodySmall,
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          DateFormat('d MMM', 'tr_TR').format(report.bestDay!),
+                          DateFormat('MMM d', 'en_US').format(report.bestDay!),
                           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                                 fontWeight: FontWeight.bold,
                               ),
                         ),
                         Text(
-                          '${report.bestDaySteps} adım',
+                          '${report.bestDaySteps} steps',
                           style: TextStyle(
                             color: Colors.green,
                             fontWeight: FontWeight.bold,
@@ -217,18 +219,18 @@ class MonthlyReportScreen extends StatelessWidget {
                     child: Column(
                       children: [
                         Text(
-                          'En Düşük Gün',
+                          'Lowest Day',
                           style: Theme.of(context).textTheme.bodySmall,
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          DateFormat('d MMM', 'tr_TR').format(report.worstDay!),
+                          DateFormat('MMM d', 'en_US').format(report.worstDay!),
                           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                                 fontWeight: FontWeight.bold,
                               ),
                         ),
                         Text(
-                          '${report.worstDaySteps} adım',
+                          '${report.worstDaySteps} steps',
                           style: TextStyle(
                             color: Colors.orange,
                             fontWeight: FontWeight.bold,
@@ -256,19 +258,19 @@ class MonthlyReportScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Uzun Vadeli Trendler',
+              'Long-term Trends',
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
             ),
             const SizedBox(height: 16),
-            _buildTrendRow(context, 'Adım', report.stepsTrend),
+            _buildTrendRow(context, 'Steps', report.stepsTrend),
             const Divider(),
-            _buildTrendRow(context, 'Su', report.waterTrend),
+            _buildTrendRow(context, 'Water', report.waterTrend),
             const Divider(),
-            _buildTrendRow(context, 'Uyku', report.sleepTrend),
+            _buildTrendRow(context, 'Sleep', report.sleepTrend),
             const Divider(),
-            _buildTrendRow(context, 'Risk Skorları', report.riskTrend),
+            _buildTrendRow(context, 'Risk Scores', report.riskTrend),
           ],
         ),
       ),
@@ -285,7 +287,7 @@ class MonthlyReportScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Başarılar',
+              'Achievements',
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
@@ -344,7 +346,7 @@ class MonthlyReportScreen extends StatelessWidget {
                 Icon(Icons.lightbulb, color: AppColors.primaryTeal),
                 const SizedBox(width: 8),
                 Text(
-                  'Öneriler',
+                  'Recommendations',
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
@@ -393,7 +395,7 @@ class MonthlyReportScreen extends StatelessWidget {
                 Icon(Icons.flag, color: AppColors.primaryTeal),
                 const SizedBox(width: 8),
                 Text(
-                  'Gelecek Ay Hedefleri',
+                  'Next Month Goals',
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.bold,
                         color: AppColors.primaryTeal,
@@ -479,10 +481,10 @@ class MonthlyReportScreen extends StatelessWidget {
             : Colors.grey;
 
     final text = trend == 'improving'
-        ? 'İyileşiyor'
+        ? 'Improving'
         : trend == 'declining'
-            ? 'Düşüşte'
-            : 'Stabil';
+            ? 'Declining'
+            : 'Stable';
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -526,5 +528,121 @@ class MonthlyReportScreen extends StatelessWidget {
         ),
       ],
     );
+  }
+
+  Widget _buildMLRiskSection(BuildContext context, report) {
+    final risks = <Map<String, dynamic>>[
+      if (report.diabetesRisk != null)
+        {'name': 'Diabetes', 'value': report.diabetesRisk as double, 'change': report.diabetesRiskChange},
+      if (report.highSugarRisk != null)
+        {'name': 'High Sugar', 'value': report.highSugarRisk as double, 'change': report.highSugarRiskChange},
+      if (report.obesityRisk != null)
+        {'name': 'Obesity', 'value': report.obesityRisk as double, 'change': report.obesityRiskChange},
+      if (report.cancerRisk != null)
+        {'name': 'Cancer', 'value': report.cancerRisk as double, 'change': report.cancerRiskChange},
+      if (report.highCholesterolRisk != null)
+        {'name': 'High Cholesterol', 'value': report.highCholesterolRisk as double, 'change': report.cholesterolRiskChange},
+      if (report.lowActivityRisk != null)
+        {'name': 'Low Activity', 'value': report.lowActivityRisk as double, 'change': null},
+    ];
+
+    if (risks.isEmpty) return const SizedBox.shrink();
+
+    return Card(
+      elevation: 2,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(Icons.analytics, color: Colors.orange),
+                const SizedBox(width: 8),
+                Text(
+                  'ML Risk Analysis',
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            ...risks.map((risk) {
+              final percentage = ((risk['value'] as double) * 100).toInt();
+              final change = risk['change'] as double?;
+              return Padding(
+                padding: const EdgeInsets.only(bottom: 12),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(risk['name'] as String),
+                        Row(
+                          children: [
+                            Text(
+                              '%$percentage',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: _getRiskColor(percentage),
+                              ),
+                            ),
+                            if (change != null) ...[
+                              const SizedBox(width: 8),
+                              _buildRiskChangeIndicator(change),
+                            ],
+                          ],
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 4),
+                    LinearProgressIndicator(
+                      value: risk['value'] as double,
+                      backgroundColor: Colors.grey[200],
+                      valueColor: AlwaysStoppedAnimation(
+                        _getRiskColor(percentage),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            }),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildRiskChangeIndicator(double change) {
+    final changePercent = (change * 100).toInt();
+    final isImproving = change < 0; // Risk azalıyorsa iyi
+    final color = isImproving ? Colors.green : Colors.red;
+
+    return Row(
+      children: [
+        Icon(
+          isImproving ? Icons.arrow_downward : Icons.arrow_upward,
+          size: 12,
+          color: color,
+        ),
+        Text(
+          '${changePercent.abs()}%',
+          style: TextStyle(
+            fontSize: 11,
+            color: color,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Color _getRiskColor(int percentage) {
+    if (percentage < 30) return Colors.green;
+    if (percentage < 60) return Colors.orange;
+    return Colors.red;
   }
 }

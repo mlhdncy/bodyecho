@@ -15,7 +15,7 @@ class WeeklyReportScreen extends StatelessWidget {
         backgroundColor: Colors.transparent,
         elevation: 0,
         title: Text(
-          'Haftalık Rapor',
+          'Weekly Report',
           style: Theme.of(context).textTheme.titleLarge?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
@@ -31,7 +31,7 @@ class WeeklyReportScreen extends StatelessWidget {
 
           if (report == null) {
             return Center(
-              child: Text('Haftalık rapor bulunamadı'),
+              child: Text('Weekly report not found'),
             );
           }
 
@@ -47,6 +47,8 @@ class WeeklyReportScreen extends StatelessWidget {
                 _buildTrendsSection(context, report),
                 const SizedBox(height: 20),
                 _buildGoalAchievement(context, report),
+                const SizedBox(height: 20),
+                _buildMLRiskSection(context, report),
                 const SizedBox(height: 20),
                 if (report.recommendations.isNotEmpty)
                   _buildRecommendations(context, report),
@@ -70,7 +72,7 @@ class WeeklyReportScreen extends StatelessWidget {
       child: Column(
         children: [
           Text(
-            '${DateFormat('d MMM', 'tr_TR').format(report.weekStartDate)} - ${DateFormat('d MMM yyyy', 'tr_TR').format(report.weekEndDate)}',
+            '${DateFormat('MMM d', 'en_US').format(report.weekStartDate)} - ${DateFormat('MMM d, yyyy', 'en_US').format(report.weekEndDate)}',
             style: Theme.of(context).textTheme.titleLarge?.copyWith(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
@@ -78,7 +80,7 @@ class WeeklyReportScreen extends StatelessWidget {
           ),
           const SizedBox(height: 4),
           Text(
-            'Son 7 Gün',
+            'Last 7 Days',
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   color: Colors.white70,
                 ),
@@ -98,7 +100,7 @@ class WeeklyReportScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Haftalık Ortalamalar',
+              'Weekly Averages',
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
@@ -106,28 +108,28 @@ class WeeklyReportScreen extends StatelessWidget {
             const SizedBox(height: 16),
             _buildSummaryRow(
               context,
-              'Adım',
-              '${report.avgSteps.toStringAsFixed(0)}/gün',
+              'Steps',
+              '${report.avgSteps.toStringAsFixed(0)}/day',
               report.stepsChangeVsPreviousWeek,
             ),
             const Divider(),
             _buildSummaryRow(
               context,
-              'Su',
-              '${report.avgWaterIntake.toStringAsFixed(1)}L/gün',
+              'Water',
+              '${report.avgWaterIntake.toStringAsFixed(1)}L/day',
               report.waterChangeVsPreviousWeek,
             ),
             const Divider(),
             _buildSummaryRow(
               context,
-              'Kalori',
-              '${report.avgCalories.toStringAsFixed(0)} kcal/gün',
+              'Calories',
+              '${report.avgCalories.toStringAsFixed(0)} kcal/day',
               report.caloriesChangeVsPreviousWeek,
             ),
             const Divider(),
             _buildSummaryRow(
               context,
-              'Uyku',
+              'Sleep',
               '${report.avgSleepQuality.toStringAsFixed(1)}/10',
               report.sleepChangeVsPreviousWeek,
             ),
@@ -147,19 +149,19 @@ class WeeklyReportScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Trendler',
+              'Trends',
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
             ),
             const SizedBox(height: 16),
-            _buildTrendRow(context, 'Adım', report.stepsTrend),
+            _buildTrendRow(context, 'Steps', report.stepsTrend),
             const Divider(),
-            _buildTrendRow(context, 'Su', report.waterTrend),
+            _buildTrendRow(context, 'Water', report.waterTrend),
             const Divider(),
-            _buildTrendRow(context, 'Uyku', report.sleepTrend),
+            _buildTrendRow(context, 'Sleep', report.sleepTrend),
             const Divider(),
-            _buildTrendRow(context, 'Genel Sağlık', report.overallHealthTrend),
+            _buildTrendRow(context, 'Overall Health', report.overallHealthTrend),
           ],
         ),
       ),
@@ -177,14 +179,14 @@ class WeeklyReportScreen extends StatelessWidget {
         child: Column(
           children: [
             Text(
-              'Haftalık Başarı',
+              'Weekly Achievement',
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
             ),
             const SizedBox(height: 16),
             Text(
-              '${report.daysGoalAchieved} / ${report.totalDays} gün',
+              '${report.daysGoalAchieved} / ${report.totalDays} days',
               style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                     fontWeight: FontWeight.bold,
                     color: AppColors.accentGreen,
@@ -192,7 +194,7 @@ class WeeklyReportScreen extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              'Hedefe Ulaşıldı (%$percentage)',
+              'Goal Reached ($percentage%)',
               style: Theme.of(context).textTheme.bodyMedium,
             ),
             if (report.bestDay != null) ...[
@@ -200,11 +202,11 @@ class WeeklyReportScreen extends StatelessWidget {
               const Divider(),
               const SizedBox(height: 8),
               Text(
-                'En İyi Gün: ${DateFormat('d MMMM', 'tr_TR').format(report.bestDay!)}',
+                'Best Day: ${DateFormat('MMMM d', 'en_US').format(report.bestDay!)}',
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
               Text(
-                '${report.bestDaySteps} adım',
+                '${report.bestDaySteps} steps',
                 style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                       fontWeight: FontWeight.bold,
                       color: AppColors.accentGreen,
@@ -231,7 +233,7 @@ class WeeklyReportScreen extends StatelessWidget {
                 Icon(Icons.lightbulb, color: AppColors.accentGreen),
                 const SizedBox(width: 8),
                 Text(
-                  'Öneriler',
+                  'Recommendations',
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
@@ -300,10 +302,10 @@ class WeeklyReportScreen extends StatelessWidget {
             : Colors.grey;
 
     final text = trend == 'improving'
-        ? 'İyileşiyor'
+        ? 'Improving'
         : trend == 'declining'
-            ? 'Düşüşte'
-            : 'Stabil';
+            ? 'Declining'
+            : 'Stable';
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -347,5 +349,88 @@ class WeeklyReportScreen extends StatelessWidget {
         ),
       ],
     );
+  }
+
+  Widget _buildMLRiskSection(BuildContext context, report) {
+    final risks = <Map<String, dynamic>>[
+      if (report.diabetesRisk != null)
+        {'name': 'Diabetes', 'value': report.diabetesRisk as double},
+      if (report.highSugarRisk != null)
+        {'name': 'High Sugar', 'value': report.highSugarRisk as double},
+      if (report.obesityRisk != null)
+        {'name': 'Obesity', 'value': report.obesityRisk as double},
+      if (report.cancerRisk != null)
+        {'name': 'Cancer', 'value': report.cancerRisk as double},
+      if (report.highCholesterolRisk != null)
+        {'name': 'High Cholesterol', 'value': report.highCholesterolRisk as double},
+      if (report.lowActivityRisk != null)
+        {'name': 'Low Activity', 'value': report.lowActivityRisk as double},
+    ];
+
+    if (risks.isEmpty) return const SizedBox.shrink();
+
+    return Card(
+      elevation: 2,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(Icons.analytics, color: Colors.orange),
+                const SizedBox(width: 8),
+                Text(
+                  'ML Risk Analysis',
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            ...risks.map((risk) {
+              final percentage = ((risk['value'] as double) * 100).toInt();
+              return Padding(
+                padding: const EdgeInsets.only(bottom: 12),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(risk['name'] as String),
+                        Text(
+                          '%$percentage',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: _getRiskColor(percentage),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 4),
+                    LinearProgressIndicator(
+                      value: risk['value'] as double,
+                      backgroundColor: Colors.grey[200],
+                      valueColor: AlwaysStoppedAnimation(
+                        _getRiskColor(percentage),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            }),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Color _getRiskColor(int percentage) {
+    if (percentage < 30) return Colors.green;
+    if (percentage < 60) return Colors.orange;
+    return Colors.red;
   }
 }

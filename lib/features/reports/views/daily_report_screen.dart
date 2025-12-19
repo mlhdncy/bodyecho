@@ -15,7 +15,7 @@ class DailyReportScreen extends StatelessWidget {
         backgroundColor: Colors.transparent,
         elevation: 0,
         title: Text(
-          'Günlük Rapor',
+          'Daily Report',
           style: Theme.of(context).textTheme.titleLarge?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
@@ -37,7 +37,7 @@ class DailyReportScreen extends StatelessWidget {
                   Icon(Icons.report_off, size: 64, color: Colors.grey[400]),
                   const SizedBox(height: 16),
                   Text(
-                    'Günlük rapor bulunamadı',
+                    'Daily report not found',
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
                           color: Colors.grey[600],
                         ),
@@ -99,7 +99,7 @@ class DailyReportScreen extends StatelessWidget {
       child: Column(
         children: [
           Text(
-            DateFormat('d MMMM yyyy', 'tr_TR').format(date),
+            DateFormat('MMMM d, yyyy', 'en_US').format(date),
             style: Theme.of(context).textTheme.titleLarge?.copyWith(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
@@ -107,7 +107,7 @@ class DailyReportScreen extends StatelessWidget {
           ),
           const SizedBox(height: 4),
           Text(
-            DateFormat('EEEE', 'tr_TR').format(date),
+            DateFormat('EEEE', 'en_US').format(date),
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   color: Colors.white70,
                 ),
@@ -133,7 +133,7 @@ class DailyReportScreen extends StatelessWidget {
         child: Column(
           children: [
             Text(
-              'Günlük Hedef Başarısı',
+              'Daily Goal Achievement',
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
@@ -183,7 +183,7 @@ class DailyReportScreen extends StatelessWidget {
                 Icon(Icons.directions_walk, color: Colors.blue),
                 const SizedBox(width: 8),
                 Text(
-                  'Aktivite',
+                  'Activity',
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
@@ -193,28 +193,28 @@ class DailyReportScreen extends StatelessWidget {
             const SizedBox(height: 16),
             _buildMetricRow(
               context,
-              'Adım',
+              'Steps',
               '${report.steps}',
               report.stepsChange,
             ),
             const Divider(),
             _buildMetricRow(
               context,
-              'Su Tüketimi',
+              'Water Intake',
               '${report.waterIntake.toStringAsFixed(1)} L',
               report.waterChange,
             ),
             const Divider(),
             _buildMetricRow(
               context,
-              'Kalori',
+              'Calories',
               '${report.calorieEstimate} kcal',
               report.calorieChange,
             ),
             const Divider(),
             _buildMetricRow(
               context,
-              'Uyku Kalitesi',
+              'Sleep Quality',
               '${report.sleepQuality}/10',
               report.sleepQualityChange,
             ),
@@ -244,7 +244,7 @@ class DailyReportScreen extends StatelessWidget {
                 Icon(Icons.favorite, color: Colors.red[400]),
                 const SizedBox(width: 8),
                 Text(
-                  'Sağlık Verileri',
+                  'Health Data',
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
@@ -255,14 +255,14 @@ class DailyReportScreen extends StatelessWidget {
             if (report.avgBloodGlucose != null)
               _buildHealthMetric(
                 context,
-                'Kan Şekeri',
+                'Blood Glucose',
                 '${report.avgBloodGlucose.toStringAsFixed(0)} mg/dL',
               ),
             if (report.avgSystolicBP != null && report.avgDiastolicBP != null) ...[
               const Divider(),
               _buildHealthMetric(
                 context,
-                'Tansiyon',
+                'Blood Pressure',
                 '${report.avgSystolicBP.toStringAsFixed(0)}/${report.avgDiastolicBP.toStringAsFixed(0)}',
               ),
             ],
@@ -270,7 +270,7 @@ class DailyReportScreen extends StatelessWidget {
               const Divider(),
               _buildHealthMetric(
                 context,
-                'Nabız',
+                'Heart Rate',
                 '${report.avgHeartRate.toStringAsFixed(0)} bpm',
               ),
             ],
@@ -278,7 +278,7 @@ class DailyReportScreen extends StatelessWidget {
               const Divider(),
               _buildHealthMetric(
                 context,
-                'Vücut Isısı',
+                'Body Temperature',
                 '${report.avgTemperature.toStringAsFixed(1)} °C',
               ),
             ],
@@ -291,17 +291,17 @@ class DailyReportScreen extends StatelessWidget {
   Widget _buildRiskScoresSection(BuildContext context, report) {
     final risks = [
       if (report.diabetesRisk != null)
-        {'name': 'Diyabet', 'value': report.diabetesRisk},
+        {'name': 'Diabetes', 'value': report.diabetesRisk},
       if (report.highSugarRisk != null)
-        {'name': 'Yüksek Şeker', 'value': report.highSugarRisk},
+        {'name': 'High Sugar', 'value': report.highSugarRisk},
       if (report.obesityRisk != null)
-        {'name': 'Obezite', 'value': report.obesityRisk},
+        {'name': 'Obesity', 'value': report.obesityRisk},
       if (report.cancerRisk != null)
-        {'name': 'Kanser', 'value': report.cancerRisk},
+        {'name': 'Cancer', 'value': report.cancerRisk},
       if (report.highCholesterolRisk != null)
-        {'name': 'Yüksek Kolesterol', 'value': report.highCholesterolRisk},
+        {'name': 'High Cholesterol', 'value': report.highCholesterolRisk},
       if (report.lowActivityRisk != null)
-        {'name': 'Düşük Aktivite', 'value': report.lowActivityRisk},
+        {'name': 'Low Activity', 'value': report.lowActivityRisk},
     ];
 
     if (risks.isEmpty) return const SizedBox.shrink();
@@ -319,7 +319,7 @@ class DailyReportScreen extends StatelessWidget {
                 Icon(Icons.analytics, color: Colors.orange),
                 const SizedBox(width: 8),
                 Text(
-                  'ML Risk Analizi',
+                  'ML Risk Analysis',
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
@@ -381,7 +381,7 @@ class DailyReportScreen extends StatelessWidget {
                 Icon(Icons.lightbulb, color: Colors.green),
                 const SizedBox(width: 8),
                 Text(
-                  'Öneriler',
+                  'Recommendations',
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.bold,
                       ),

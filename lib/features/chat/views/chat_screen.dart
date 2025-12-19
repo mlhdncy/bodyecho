@@ -54,18 +54,18 @@ class _ChatScreenState extends State<ChatScreen> {
     // Simple mock responses
     final lowerMessage = userMessage.toLowerCase();
 
-    if (lowerMessage.contains('merhaba') || lowerMessage.contains('selam')) {
-      return 'Merhaba! Size nasıl yardımcı olabilirim?';
-    } else if (lowerMessage.contains('aktivite')) {
-      return 'Aktivitelerinizi takip etmek için "Hızlı İşlemler" bölümünden "Aktivite Ekle" butonunu kullanabilirsiniz. Yürüyüş, koşu veya bisiklet aktivitelerinizi kaydedebilirsiniz.';
-    } else if (lowerMessage.contains('su')) {
-      return 'Su tüketiminizi kaydetmek için ana sayfadaki "Su Ekle" butonunu kullanabilirsiniz. Günlük su hedefi 2.5 litredir.';
-    } else if (lowerMessage.contains('kalori')) {
-      return 'Kalori takibi, aktivitelerinize göre otomatik olarak hesaplanır. Her aktivite eklediğinizde yakılan kalori miktarı otomatik olarak güncellenir.';
-    } else if (lowerMessage.contains('profil')) {
-      return 'Profilinizi görüntülemek ve düzenlemek için alt menüdeki "Profil" sekmesine tıklayabilirsiniz.';
+    if (lowerMessage.contains('hello') || lowerMessage.contains('hi')) {
+      return 'Hello! How can I help you?';
+    } else if (lowerMessage.contains('activity')) {
+      return 'To track your activities, you can use the "Activity" button in the "Quick Actions" section. You can log walking, running, or cycling activities.';
+    } else if (lowerMessage.contains('water')) {
+      return 'To log your water intake, use the "Add Water" button on the home page. The daily water goal is 2.5 liters.';
+    } else if (lowerMessage.contains('calorie')) {
+      return 'Calorie tracking is automatically calculated based on your activities. The calorie count is automatically updated every time you add an activity.';
+    } else if (lowerMessage.contains('profile')) {
+      return 'To view and edit your profile, you can tap the "Profile" tab in the bottom menu.';
     } else {
-      return 'Anlıyorum. Size yardımcı olmak için elimden geleni yapacağım. Aktivite takibi, su tüketimi veya diğer özellikler hakkında soru sorabilirsiniz.';
+      return 'I understand. I will do my best to help you. You can ask questions about activity tracking, water intake, or other features.';
     }
   }
 
@@ -99,7 +99,7 @@ class _ChatScreenState extends State<ChatScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'BodyEcho Asistan',
+                  'BodyEcho Assistant',
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 16,
@@ -107,7 +107,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   ),
                 ),
                 Text(
-                  'Çevrimiçi',
+                  'Online',
                   style: TextStyle(
                     color: Colors.white70,
                     fontSize: 12,
@@ -141,7 +141,7 @@ class _ChatScreenState extends State<ChatScreen> {
                         ),
                         const SizedBox(height: 24),
                         const Text(
-                          'Merhaba! 👋',
+                          'Hello! 👋',
                           style: TextStyle(
                             fontSize: 24,
                             fontWeight: FontWeight.bold,
@@ -150,7 +150,7 @@ class _ChatScreenState extends State<ChatScreen> {
                         ),
                         const SizedBox(height: 8),
                         const Text(
-                          'Size nasıl yardımcı olabilirim?',
+                          'How can I help you?',
                           style: TextStyle(
                             fontSize: 16,
                             color: AppColors.textSecondary,
@@ -162,9 +162,9 @@ class _ChatScreenState extends State<ChatScreen> {
                           runSpacing: 8,
                           alignment: WrapAlignment.center,
                           children: [
-                            _buildSuggestedQuestion('Aktivite nasıl eklerim?'),
-                            _buildSuggestedQuestion('Su takibi nasıl yapılır?'),
-                            _buildSuggestedQuestion('Kalori hesaplama'),
+                            _buildSuggestedQuestion('How do I add activity?'),
+                            _buildSuggestedQuestion('How to track water?'),
+                            _buildSuggestedQuestion('Calorie calculation'),
                           ],
                         ),
                       ],
@@ -201,7 +201,7 @@ class _ChatScreenState extends State<ChatScreen> {
                     child: TextField(
                       controller: _messageController,
                       decoration: InputDecoration(
-                        hintText: 'Mesajınızı yazın...',
+                        hintText: 'Type your message...',
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(24),
                           borderSide: BorderSide.none,
