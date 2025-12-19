@@ -138,13 +138,13 @@ class WaterIntakeRecommendation {
 
   String getRecommendationText(double currentIntake) {
     if (currentIntake >= recommendedLiters) {
-      return 'Harika! Su tüketim hedefinize ulaştınız (${recommendedLiters}L/gün). ${source} standartlarına uygun içiyorsunuz.';
+      return 'Great! You have reached your water intake goal (${recommendedLiters}L/day). You are drinking according to ${source} standards.';
     } else if (currentIntake >= recommendedLiters * 0.8) {
-      return 'İyi gidiyorsunuz! Hedefinize az kaldı. Günlük ${recommendedLiters}L su içmeye çalışın (${source} önerisi).';
+      return 'You are doing well! Almost at your goal. Try to drink ${recommendedLiters}L of water daily (${source} recommendation).';
     } else if (currentIntake >= recommendedLiters * 0.5) {
-      return 'Su tüketiminiz yetersiz. Hedefiniz ${recommendedLiters}L/gün (${source} önerisi). Daha fazla su için!';
+      return 'Your water intake is insufficient. Your goal is ${recommendedLiters}L/day (${source} recommendation). Drink more water!';
     } else {
-      return 'Dikkat! Su tüketiminiz çok düşük. Günde en az ${recommendedLiters}L su içmelisiniz (${source} önerisi). Susuzluk performansınızı ve sağlığınızı olumsuz etkiler.';
+      return 'Warning! Your water intake is very low. You should drink at least ${recommendedLiters}L of water per day (${source} recommendation). Dehydration negatively affects your performance and health.';
     }
   }
 }
@@ -167,25 +167,25 @@ class CalorieRecommendation {
     String activityDesc;
     switch (activityLevel) {
       case 'sedentary':
-        activityDesc = 'sedanter (hareketsiz)';
+        activityDesc = 'sedentary';
         break;
       case 'moderate':
-        activityDesc = 'orta düzey aktif';
+        activityDesc = 'moderately active';
         break;
       case 'active':
-        activityDesc = 'aktif';
+        activityDesc = 'active';
         break;
       default:
-        activityDesc = 'orta düzey aktif';
+        activityDesc = 'moderately active';
     }
 
     if (specialCondition == 'pregnant') {
-      return '$activityDesc yaşam tarzı ve hamilelik durumunuz için günlük $dailyCalories kalori önerilir.';
+      return 'For your $activityDesc lifestyle and pregnancy, $dailyCalories calories per day is recommended.';
     } else if (specialCondition == 'breastfeeding') {
-      return '$activityDesc yaşam tarzı ve emzirme durumunuz için günlük $dailyCalories kalori önerilir.';
+      return 'For your $activityDesc lifestyle and breastfeeding, $dailyCalories calories per day is recommended.';
     }
 
-    return '$activityDesc yaşam tarzınız için günlük $dailyCalories kalori önerilir.';
+    return 'For your $activityDesc lifestyle, $dailyCalories calories per day is recommended.';
   }
 }
 
@@ -207,16 +207,16 @@ class SleepRecommendation {
 
   String getRecommendationText(double? currentSleep) {
     if (currentSleep == null) {
-      return 'Yaş grubunuz için önerilen uyku süresi: $minHours-$maxHours saat (optimal: $optimalHours saat). ${source} standartlarına göre.';
+      return 'Recommended sleep duration for your age group: $minHours-$maxHours hours (optimal: $optimalHours hours). According to $source standards.';
     }
 
     if (currentSleep >= minHours && currentSleep <= maxHours) {
-      return 'Mükemmel! Uyku süreniz ($currentSleep saat) ideal aralıkta ($minHours-$maxHours saat). ${source} standartlarına uygun.';
+      return 'Excellent! Your sleep duration ($currentSleep hours) is in the ideal range ($minHours-$maxHours hours). Meets $source standards.';
     } else if (currentSleep < minHours) {
       final deficit = minHours - currentSleep;
-      return 'Uyku süreniz yetersiz. ${deficit.toStringAsFixed(1)} saat daha fazla uyumalısınız. Önerilen: $minHours-$maxHours saat (${source}).';
+      return 'Your sleep duration is insufficient. You should sleep ${deficit.toStringAsFixed(1)} hours more. Recommended: $minHours-$maxHours hours ($source).';
     } else {
-      return 'Çok fazla uyuyorsunuz. Önerilen uyku süresi: $minHours-$maxHours saat (${source}).';
+      return 'You are sleeping too much. Recommended sleep duration: $minHours-$maxHours hours ($source).';
     }
   }
 }
@@ -241,22 +241,22 @@ class PhysicalActivityRecommendation {
 
   String getStepsRecommendation(int currentSteps) {
     if (currentSteps >= stepsPerDay) {
-      return 'Harika! Günlük adım hedefinize ulaştınız ($currentSteps/$stepsPerDay adım). ${source} önerilerine uygun hareket ediyorsunuz.';
+      return 'Great! You have reached your daily step goal ($currentSteps/$stepsPerDay steps). You are moving according to $source recommendations.';
     } else if (currentSteps >= stepsPerDay * 0.8) {
       final remaining = stepsPerDay - currentSteps;
-      return 'İyi gidiyorsunuz! Hedefinize $remaining adım kaldı. Günlük $stepsPerDay adım hedefleyin (${source}).';
+      return 'You are doing well! $remaining steps left to your goal. Aim for $stepsPerDay steps daily ($source).';
     } else if (currentSteps >= stepsPerDay * 0.5) {
-      return 'Adım sayınız ortalamanın altında. Hedefiniz: $stepsPerDay adım/gün (${source} önerisi). Daha fazla yürüyün!';
+      return 'Your step count is below average. Your goal: $stepsPerDay steps/day ($source recommendation). Walk more!';
     } else {
-      return 'Dikkat! Çok az hareket ediyorsunuz. Günde en az $stepsPerDay adım atmalısınız (${source} önerisi). Kısa yürüyüşler yapın.';
+      return 'Warning! You are moving very little. You should take at least $stepsPerDay steps per day ($source recommendation). Take short walks.';
     }
   }
 
   String get weeklyActivityRecommendation {
     if (vigorousIntensityMinutesPerWeek != null) {
-      return 'Haftada $moderateIntensityMinutesPerWeek dakika orta yoğunlukta VEYA $vigorousIntensityMinutesPerWeek dakika yüksek yoğunlukta egzersiz yapın (${source} önerisi).';
+      return 'Exercise $moderateIntensityMinutesPerWeek minutes of moderate intensity OR $vigorousIntensityMinutesPerWeek minutes of vigorous intensity per week ($source recommendation).';
     }
-    return 'Haftada $moderateIntensityMinutesPerWeek dakika orta yoğunlukta egzersiz yapın (${source} önerisi).';
+    return 'Exercise $moderateIntensityMinutesPerWeek minutes of moderate intensity per week ($source recommendation).';
   }
 }
 
@@ -277,7 +277,7 @@ class SodiumAssessment {
   });
 
   String get warningMessage {
-    return 'Türkiye\'de ortalama tuz tüketimi ${currentTurkeyAverage}g/gün (önerilen: ${maxDailyGrams}g/gün). '
-        'Türk mutfağında yüksek tuz riski vardır: ${highSaltFoods.take(3).join(", ")}. $recommendation';
+    return 'Average salt consumption in Turkey is ${currentTurkeyAverage}g/day (recommended: ${maxDailyGrams}g/day). '
+        'High salt risk in Turkish cuisine: ${highSaltFoods.take(3).join(", ")}. $recommendation';
   }
 }

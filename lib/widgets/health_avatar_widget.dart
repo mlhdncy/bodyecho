@@ -110,19 +110,19 @@ class AvatarMoodHelper {
   static String getMoodMessage(AvatarMood mood) {
     switch (mood) {
       case AvatarMood.excited:
-        return 'Harika gidiyorsun! 🎉';
+        return 'You are doing amazing! 🎉';
       case AvatarMood.happy:
-        return 'Çok iyi! Devam et! 😊';
+        return 'Great job! Keep it up! 😊';
       case AvatarMood.normal:
-        return 'İyi gidiyorsun! 👍';
+        return 'You are doing well! 👍';
       case AvatarMood.tired:
-        return 'Biraz hareket etmeye ne dersin? 🚶';
+        return 'How about some movement? 🚶';
       case AvatarMood.thirsty:
-        return 'Su içmeyi unutma! 💧';
+        return 'Don\'t forget to drink water! 💧';
       case AvatarMood.sad:
-        return 'Hadi biraz daha çaba gösterelim! 💪';
+        return 'Let\'s put in a little more effort! 💪';
       case AvatarMood.worried:
-        return 'Küçük adımlarla başlayalım! 🌱';
+        return 'Let\'s start with small steps! 🌱';
     }
   }
 }

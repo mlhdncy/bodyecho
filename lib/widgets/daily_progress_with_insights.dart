@@ -74,7 +74,7 @@ class _DailyProgressWithInsightsState extends State<DailyProgressWithInsights> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     const Text(
-                      'Günlük İlerleme',
+                      'Daily Progress',
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
@@ -119,7 +119,7 @@ class _DailyProgressWithInsightsState extends State<DailyProgressWithInsights> {
                                 ),
                               ),
                               const Text(
-                                'Puan',
+                                'Score',
                                 style: TextStyle(
                                   fontSize: 9,
                                   color: Colors.white70,
@@ -198,9 +198,11 @@ class _DailyProgressWithInsightsState extends State<DailyProgressWithInsights> {
         iconData = Icons.lightbulb_rounded;
     }
 
-    return Container(
+    return GestureDetector(
+      onTap: () => _showInsightBottomSheet(insight, backgroundColor, iconColor, iconData),
+      child: Container(
       margin: const EdgeInsets.symmetric(horizontal: 4),
-      padding: const EdgeInsets.all(12),
+      padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
         color: backgroundColor,
         borderRadius: BorderRadius.circular(16),
@@ -209,113 +211,254 @@ class _DailyProgressWithInsightsState extends State<DailyProgressWithInsights> {
           width: 1.5,
         ),
       ),
-      child: Column(
+      child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: iconColor.withValues(alpha: 0.15),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Icon(
-                  iconData,
-                  color: iconColor,
-                  size: 20,
-                ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      insight.title,
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                        color: iconColor,
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      insight.message,
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.grey.shade800,
-                        height: 1.3,
-                      ),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ],
-                ),
-              ),
-            ],
+          Container(
+            padding: const EdgeInsets.all(6),
+            decoration: BoxDecoration(
+              color: iconColor.withValues(alpha: 0.15),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Icon(
+              iconData,
+              color: iconColor,
+              size: 18,
+            ),
           ),
-          // Kaynak bilgisi (varsa)
-          if (insight.source != null) ...[
-            const SizedBox(height: 8),
-            Row(
+          const SizedBox(width: 10),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
               children: [
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: iconColor.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(
-                      color: iconColor.withValues(alpha: 0.3),
-                      width: 1,
-                    ),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(
-                        Icons.verified_rounded,
-                        size: 12,
-                        color: iconColor,
-                      ),
-                      const SizedBox(width: 4),
-                      Text(
-                        insight.source!,
+                Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        insight.title,
                         style: TextStyle(
-                          fontSize: 9,
+                          fontSize: 13,
                           fontWeight: FontWeight.bold,
                           color: iconColor,
                         ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    if (insight.source != null) ...[
+                      const SizedBox(width: 6),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                        decoration: BoxDecoration(
+                          color: iconColor.withValues(alpha: 0.1),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Text(
+                          insight.source!,
+                          style: TextStyle(
+                            fontSize: 8,
+                            fontWeight: FontWeight.bold,
+                            color: iconColor,
+                          ),
+                        ),
                       ),
                     ],
+                  ],
+                ),
+                const SizedBox(height: 4),
+                Flexible(
+                  child: Text(
+                    insight.message,
+                    style: TextStyle(
+                      fontSize: 11,
+                      color: Colors.grey.shade800,
+                      height: 1.2,
+                    ),
+                    maxLines: 3,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
-                // Referans URL varsa info ikonu ekle
-                if (insight.referenceUrl != null) ...[
-                  const SizedBox(width: 8),
-                  InkWell(
-                    onTap: () => _openReferenceUrl(insight.referenceUrl!),
-                    borderRadius: BorderRadius.circular(12),
-                    child: Container(
-                      padding: const EdgeInsets.all(4),
-                      child: Icon(
-                        Icons.info_outline,
-                        size: 16,
-                        color: iconColor.withValues(alpha: 0.7),
-                      ),
+              ],
+            ),
+          ),
+        ],
+      ),
+      ),
+    );
+  }
+
+  void _showInsightBottomSheet(Insight insight, Color backgroundColor, Color iconColor, IconData iconData) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => Container(
+        constraints: BoxConstraints(
+          maxHeight: MediaQuery.of(context).size.height * 0.7,
+        ),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Handle bar
+            Container(
+              margin: const EdgeInsets.only(top: 12),
+              width: 40,
+              height: 4,
+              decoration: BoxDecoration(
+                color: Colors.grey[300],
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+            // Header
+            Padding(
+              padding: const EdgeInsets.all(20),
+              child: Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: backgroundColor,
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: Icon(iconData, color: iconColor, size: 28),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          insight.title,
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: iconColor,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          _getInsightTypeLabel(insight.type),
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.grey[600],
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ],
-              ],
+              ),
+            ),
+            const Divider(height: 1),
+            // Content
+            Flexible(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.all(20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      insight.message,
+                      style: TextStyle(
+                        fontSize: 15,
+                        color: Colors.grey[800],
+                        height: 1.5,
+                      ),
+                    ),
+                    if (insight.source != null) ...[
+                      const SizedBox(height: 20),
+                      Container(
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: Colors.grey[100],
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Row(
+                          children: [
+                            Icon(Icons.verified_rounded, color: iconColor, size: 20),
+                            const SizedBox(width: 8),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text(
+                                    'Source',
+                                    style: TextStyle(
+                                      fontSize: 11,
+                                      color: Colors.grey,
+                                    ),
+                                  ),
+                                  Text(
+                                    insight.source!,
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.bold,
+                                      color: iconColor,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            if (insight.referenceUrl != null)
+                              IconButton(
+                                onPressed: () => _openReferenceUrl(insight.referenceUrl!),
+                                icon: Icon(Icons.open_in_new, color: iconColor),
+                              ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
+              ),
+            ),
+            // Close button
+            SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () => Navigator.pop(context),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: iconColor,
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    child: const Text(
+                      'Close',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ),
+              ),
             ),
           ],
-        ],
+        ),
       ),
     );
+  }
+
+  String _getInsightTypeLabel(String type) {
+    switch (type) {
+      case 'risk':
+        return 'Health Risk';
+      case 'warning':
+        return 'Warning';
+      case 'success':
+        return 'Achievement';
+      case 'info':
+      default:
+        return 'Information';
+    }
   }
 
   Widget _buildEmptyState() {
@@ -341,7 +484,7 @@ class _DailyProgressWithInsightsState extends State<DailyProgressWithInsights> {
             ),
             const SizedBox(height: 8),
             Text(
-              'Henüz tavsiye yok',
+              'No insights yet',
               style: TextStyle(
                 fontSize: 13,
                 color: Colors.white.withValues(alpha: 0.9),
@@ -350,7 +493,7 @@ class _DailyProgressWithInsightsState extends State<DailyProgressWithInsights> {
             ),
             const SizedBox(height: 4),
             Text(
-              'Verileriniz analiz ediliyor',
+              'Analyzing your data',
               style: TextStyle(
                 fontSize: 11,
                 color: Colors.white.withValues(alpha: 0.7),

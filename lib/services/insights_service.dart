@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import '../models/user_model.dart';
 import '../models/daily_metric_model.dart';
 import '../models/health_record_model.dart';
@@ -34,7 +35,7 @@ class InsightsService {
       final heightInMeters = user.height! / 100;
       final bmi = user.weight! / (heightInMeters * heightInMeters);
 
-      // WHO standartlarını kullanarak dinamik BMI değerlendirmesi
+      // Use WHO standards for dynamic BMI assessment
       try {
         final bmiAssessment = await _healthStandards.evaluateBmi(
           bmi,
@@ -43,9 +44,9 @@ class InsightsService {
         );
 
         insights.add(Insight(
-          title: 'Vücut Kitle İndeksi (BMI)',
+          title: 'Body Mass Index (BMI)',
           message:
-              'BMI değeriniz: ${bmi.toStringAsFixed(1)} (${bmiAssessment.description}). '
+              'Your BMI is: ${bmi.toStringAsFixed(1)} (${bmiAssessment.description}). '
               '${bmiAssessment.recommendation}',
           type: bmiAssessment.insightType,
           category: 'obesity',
@@ -53,21 +54,21 @@ class InsightsService {
           referenceUrl: 'https://www.who.int/health-topics/obesity',
         ));
       } catch (e) {
-        print('BMI değerlendirme hatası: $e');
+        debugPrint('BMI assessment error: $e');
         // Fallback to basic evaluation
         insights.add(Insight(
-          title: 'Vücut Kitle İndeksi (BMI)',
+          title: 'Body Mass Index (BMI)',
           message:
-              'BMI değeriniz: ${bmi.toStringAsFixed(1)}. Detaylı değerlendirme için standartlar yükleniyor.',
+              'Your BMI is: ${bmi.toStringAsFixed(1)}. Loading standards for detailed assessment.',
           type: 'info',
           category: 'obesity',
         ));
       }
     } else {
       insights.add(Insight(
-        title: 'Profilinizi Tamamlayın',
+        title: 'Complete Your Profile',
         message:
-            'Daha doğru analizler için lütfen boy ve kilo bilgilerinizi profilinize ekleyin.',
+            'Please add your height and weight to your profile for more accurate analysis.',
         type: 'info',
         category: 'obesity',
       ));
@@ -100,33 +101,32 @@ class InsightsService {
       if (mlResponse.success) {
         final results = mlResponse.results;
 
-        // Diyabet Riski
+        // Diabetes Risk
         if (results['diabetes_risk']?.prediction == 1) {
           insights.add(Insight(
-            title: 'Diyabet Riski Uyarısı',
+            title: 'Diabetes Risk Warning',
             message:
-                'İstatistiksel modeller, kan şekeri ve diğer verilerinize dayanarak diyabet riskiniz olabileceğini öngörüyor. Lütfen bir doktora danışın.',
+                'Statistical models predict you may have diabetes risk based on your blood sugar and other data. Please consult a doctor.',
             type: 'risk',
             category: 'disease',
           ));
         }
 
-        // Kalp Riski
+        // Heart Risk
         if (results['heart_risk']?.prediction == 1) {
-          // Model ismine göre güncellenmeli
           insights.add(Insight(
-            title: 'Kalp Sağlığı Uyarısı',
+            title: 'Heart Health Warning',
             message:
-                'Verileriniz kalp sağlığı açısından risk faktörleri içeriyor olabilir.',
+                'Your data may contain risk factors for heart health.',
             type: 'risk',
             category: 'disease',
           ));
         }
 
-        // Diğer ML sonuçları buraya eklenebilir
+        // Other ML results can be added here
       }
     } catch (e) {
-      print('ML Analiz Hatası: $e');
+      debugPrint('ML Analysis Error: $e');
     }
 
     return insights;
@@ -145,13 +145,13 @@ class InsightsService {
 
     if (todayMetric == null) return insights;
 
-    // Su Tüketimi - Dinamik standartlar (yaş, cinsiyet, hamilelik durumu)
+    // Water Intake - Dynamic standards (age, gender, pregnancy status)
     try {
       final waterRecommendation =
           await _healthStandards.getWaterIntakeRecommendation(
         user.gender ?? 'Male',
         user.age ?? 30,
-        isPregnant: false, // UserModel'de bu alan yok, gerekirse eklenebilir
+        isPregnant: false,
         isBreastfeeding: false,
       );
 
@@ -160,7 +160,7 @@ class InsightsService {
 
       if (currentWater < recommendedWater * 0.5) {
         insights.add(Insight(
-          title: 'Su Tüketimi Çok Düşük',
+          title: 'Water Intake Very Low',
           message: waterRecommendation.getRecommendationText(currentWater),
           type: 'warning',
           category: 'lifestyle',
@@ -169,7 +169,7 @@ class InsightsService {
         ));
       } else if (currentWater >= recommendedWater) {
         insights.add(Insight(
-          title: 'Harika Hidrasyon',
+          title: 'Great Hydration',
           message: waterRecommendation.getRecommendationText(currentWater),
           type: 'success',
           category: 'lifestyle',
@@ -177,7 +177,7 @@ class InsightsService {
         ));
       } else if (currentWater < recommendedWater * 0.8) {
         insights.add(Insight(
-          title: 'Su Tüketimi Düşük',
+          title: 'Water Intake Low',
           message: waterRecommendation.getRecommendationText(currentWater),
           type: 'info',
           category: 'lifestyle',
@@ -185,10 +185,10 @@ class InsightsService {
         ));
       }
     } catch (e) {
-      print('Su tüketimi değerlendirme hatası: $e');
+      debugPrint('Water intake assessment error: $e');
     }
 
-    // Adım Sayısı - Dinamik standartlar (yaşa göre)
+    // Steps - Dynamic standards (by age)
     try {
       final activityRecommendation =
           await _healthStandards.getPhysicalActivityRecommendation(
@@ -200,7 +200,7 @@ class InsightsService {
 
       if (currentSteps < recommendedSteps * 0.3) {
         insights.add(Insight(
-          title: 'Harekete Geçin',
+          title: 'Get Moving',
           message: activityRecommendation.getStepsRecommendation(currentSteps),
           type: 'warning',
           category: 'lifestyle',
@@ -210,7 +210,7 @@ class InsightsService {
         ));
       } else if (currentSteps >= recommendedSteps) {
         insights.add(Insight(
-          title: 'Mükemmel Aktivite',
+          title: 'Excellent Activity',
           message: activityRecommendation.getStepsRecommendation(currentSteps),
           type: 'success',
           category: 'lifestyle',
@@ -218,7 +218,7 @@ class InsightsService {
         ));
       } else if (currentSteps < recommendedSteps * 0.8) {
         insights.add(Insight(
-          title: 'Daha Fazla Hareket',
+          title: 'Move More',
           message: activityRecommendation.getStepsRecommendation(currentSteps),
           type: 'info',
           category: 'lifestyle',
@@ -226,10 +226,10 @@ class InsightsService {
         ));
       }
     } catch (e) {
-      print('Aktivite değerlendirme hatası: $e');
+      debugPrint('Activity assessment error: $e');
     }
 
-    // Uyku - Dinamik standartlar (yaşa göre)
+    // Sleep - Dynamic standards (by age)
     if (todayMetric.sleepQuality > 0) {
       try {
         final sleepRecommendation =
@@ -239,26 +239,26 @@ class InsightsService {
 
         if (todayMetric.sleepQuality < 6) {
           insights.add(Insight(
-            title: 'Uyku Kalitesi Düşük',
-            message: 'Son zamanlarda uyku kaliteniz düşük görünüyor. '
+            title: 'Low Sleep Quality',
+            message: 'Your sleep quality appears to be low recently. '
                 '${sleepRecommendation.getRecommendationText(null)} '
-                'Yatmadan önce ekranlardan uzak durmayı deneyin.',
+                'Try staying away from screens before bed.',
             type: 'warning',
             category: 'lifestyle',
             source: sleepRecommendation.source,
           ));
         } else if (todayMetric.sleepQuality >= 8) {
           insights.add(Insight(
-            title: 'Mükemmel Uyku',
+            title: 'Excellent Sleep',
             message:
-                'Uyku kaliteniz harika! Böyle devam edin. ${sleepRecommendation.source} standartlarına uygun dinleniyorsunuz.',
+                'Your sleep quality is great! Keep it up. You are resting according to ${sleepRecommendation.source} standards.',
             type: 'success',
             category: 'lifestyle',
             source: sleepRecommendation.source,
           ));
         }
       } catch (e) {
-        print('Uyku değerlendirme hatası: $e');
+        debugPrint('Sleep assessment error: $e');
       }
     }
 

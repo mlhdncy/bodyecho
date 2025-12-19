@@ -3,7 +3,7 @@
   "last_updated": "2024-12-06",
   "source": "World Health Organization",
   "reference_url": "https://www.who.int/health-topics/",
-  "disclaimer": "Bu değerlendirmeler bilgilendirme amaçlıdır ve doktor tavsiyesi yerine geçmez.",
+  "disclaimer": "These assessments are for informational purposes only and do not replace medical advice.",
 
   "bmi": {
     "adults": {
@@ -13,55 +13,49 @@
       "categories": {
         "underweight": {
           "max": 18.5,
-          "description": "Zayıf",
-          "description_en": "Underweight",
+          "description": "Underweight",
           "risk_level": "warning",
-          "recommendation": "Sağlıklı bir şekilde kilo almak için beslenmenize dikkat etmelisiniz. Bir diyetisyene danışmanız önerilir."
+          "recommendation": "You should pay attention to your nutrition to gain weight in a healthy way. Consulting a dietitian is recommended."
         },
         "normal": {
           "min": 18.5,
           "max": 24.9,
-          "description": "Normal",
-          "description_en": "Normal weight",
+          "description": "Normal weight",
           "risk_level": "low",
-          "recommendation": "Harika! Kilonuzu korumaya devam edin. Dengeli beslenme ve düzenli egzersiz yapın."
+          "recommendation": "Great! Keep maintaining your weight. Eat a balanced diet and exercise regularly."
         },
         "overweight": {
           "min": 25.0,
           "max": 29.9,
-          "description": "Fazla Kilolu",
-          "description_en": "Overweight",
+          "description": "Overweight",
           "risk_level": "warning",
-          "recommendation": "Daha hareketli bir yaşam ve dengeli beslenme ile ideal kilonuza ulaşabilirsiniz. Haftada en az 150 dakika orta yoğunlukta egzersiz yapın."
+          "recommendation": "You can reach your ideal weight with a more active lifestyle and balanced nutrition. Exercise at least 150 minutes of moderate intensity per week."
         },
         "obese_class_1": {
           "min": 30.0,
           "max": 34.9,
-          "description": "Obez (Sınıf 1)",
-          "description_en": "Obese Class I",
+          "description": "Obese (Class I)",
           "risk_level": "moderate",
-          "recommendation": "Sağlığınız için bir uzmana danışarak kilo vermeyi hedeflemelisiniz. Tip 2 diyabet ve kardiyovasküler hastalık riskiniz artmıştır."
+          "recommendation": "You should aim to lose weight by consulting a specialist for your health. Your risk of Type 2 diabetes and cardiovascular disease has increased."
         },
         "obese_class_2": {
           "min": 35.0,
           "max": 39.9,
-          "description": "Obez (Sınıf 2)",
-          "description_en": "Obese Class II",
+          "description": "Obese (Class II)",
           "risk_level": "high",
-          "recommendation": "Acil bir doktora danışmalısınız. Ciddi sağlık riskleri söz konusudur. Profesyonel kilo yönetimi programına katılmanız önerilir."
+          "recommendation": "You should see a doctor urgently. There are serious health risks. Joining a professional weight management program is recommended."
         },
         "obese_class_3": {
           "min": 40.0,
-          "description": "Morbid Obez (Sınıf 3)",
-          "description_en": "Obese Class III (Morbidly Obese)",
+          "description": "Morbidly Obese (Class III)",
           "risk_level": "very_high",
-          "recommendation": "Acilen bir endokrinoloji uzmanına başvurmalısınız. Morbid obezite, yaşam kalitesini ciddi şekilde etkiler ve çeşitli komplikasyonlara yol açabilir."
+          "recommendation": "You should urgently consult an endocrinology specialist. Morbid obesity seriously affects quality of life and can lead to various complications."
         }
       }
     },
     "children": {
       "age_range": "2-18",
-      "note": "Çocuklarda BMI değerlendirmesi yaşa ve cinsiyete göre persentil tabloları kullanılarak yapılmalıdır.",
+      "note": "BMI assessment in children should be done using age and gender percentile charts.",
       "reference": "WHO Child Growth Standards",
       "reference_url": "https://www.who.int/tools/child-growth-standards"
     }
@@ -74,18 +68,18 @@
       "normal": {
         "max": 99,
         "description": "Normal",
-        "recommendation": "Kan şekeriniz normal aralıkta. Sağlıklı beslenme alışkanlıklarınıza devam edin."
+        "recommendation": "Your blood sugar is in the normal range. Continue your healthy eating habits."
       },
       "prediabetes": {
         "min": 100,
         "max": 125,
-        "description": "Prediyabet (Bozulmuş Açlık Glukozu)",
-        "recommendation": "Prediyabet aşamasındasınız. Kilo verme, egzersiz ve sağlıklı beslenme ile diyabeti önleyebilirsiniz. Bir doktora danışın."
+        "description": "Prediabetes (Impaired Fasting Glucose)",
+        "recommendation": "You are in the prediabetes stage. You can prevent diabetes with weight loss, exercise and healthy eating. Consult a doctor."
       },
       "diabetes": {
         "min": 126,
-        "description": "Diyabet",
-        "recommendation": "Diyabet tanı aralığındasınız. Mutlaka bir endokrinoloji uzmanına başvurun. İki ayrı ölçümde 126 mg/dL ve üzeri değer diyabet tanısı koydurmaktadır."
+        "description": "Diabetes",
+        "recommendation": "You are in the diabetes diagnosis range. Be sure to consult an endocrinology specialist. A value of 126 mg/dL or higher in two separate measurements leads to a diabetes diagnosis."
       }
     },
     "random": {
@@ -94,18 +88,18 @@
       "normal": {
         "max": 140,
         "description": "Normal",
-        "recommendation": "Tokluk kan şekeriniz normal aralıkta."
+        "recommendation": "Your postprandial blood sugar is in the normal range."
       },
       "prediabetes": {
         "min": 140,
         "max": 199,
-        "description": "Yüksek",
-        "recommendation": "Tokluk kan şekeriniz yüksek. Açlık kan şekeri testi yaptırmanız önerilir."
+        "description": "High",
+        "recommendation": "Your postprandial blood sugar is high. A fasting blood sugar test is recommended."
       },
       "diabetes": {
         "min": 200,
-        "description": "Diyabet Şüphesi",
-        "recommendation": "200 mg/dL ve üzeri rastgele kan şekeri diyabet belirtisi olabilir. Acilen bir doktora başvurun."
+        "description": "Suspected Diabetes",
+        "recommendation": "A random blood sugar of 200 mg/dL or higher may be a sign of diabetes. See a doctor immediately."
       }
     },
     "hba1c": {
@@ -118,11 +112,11 @@
       "prediabetes": {
         "min": 5.7,
         "max": 6.4,
-        "description": "Prediyabet"
+        "description": "Prediabetes"
       },
       "diabetes": {
         "min": 6.5,
-        "description": "Diyabet"
+        "description": "Diabetes"
       }
     }
   },
@@ -136,42 +130,42 @@
         "diastolic": {"max": 80},
         "description": "Optimal",
         "risk_level": "low",
-        "recommendation": "Kan basıncınız optimal seviyede. Sağlıklı yaşam tarzınıza devam edin."
+        "recommendation": "Your blood pressure is at an optimal level. Continue your healthy lifestyle."
       },
       "normal": {
         "systolic": {"min": 120, "max": 129},
         "diastolic": {"min": 80, "max": 84},
         "description": "Normal",
         "risk_level": "low",
-        "recommendation": "Kan basıncınız normal aralıkta. Tuz tüketiminizi azaltın ve düzenli egzersiz yapın."
+        "recommendation": "Your blood pressure is in the normal range. Reduce salt intake and exercise regularly."
       },
       "high_normal": {
         "systolic": {"min": 130, "max": 139},
         "diastolic": {"min": 85, "max": 89},
-        "description": "Normal-Yüksek",
+        "description": "High-Normal",
         "risk_level": "warning",
-        "recommendation": "Kan basıncınız normal-yüksek seviyede. Yaşam tarzı değişiklikleri yapın: Tuz kısıtlaması, kilo verme, egzersiz. Düzenli takip gerekir."
+        "recommendation": "Your blood pressure is at a high-normal level. Make lifestyle changes: salt restriction, weight loss, exercise. Regular monitoring is required."
       },
       "hypertension_grade_1": {
         "systolic": {"min": 140, "max": 159},
         "diastolic": {"min": 90, "max": 99},
-        "description": "Hipertansiyon (Evre 1)",
+        "description": "Hypertension (Grade 1)",
         "risk_level": "moderate",
-        "recommendation": "Evre 1 hipertansiyon. Bir kardiyolog veya iç hastalıkları uzmanına başvurun. İlaç tedavisi gerekebilir."
+        "recommendation": "Grade 1 hypertension. See a cardiologist or internal medicine specialist. Medication may be required."
       },
       "hypertension_grade_2": {
         "systolic": {"min": 160, "max": 179},
         "diastolic": {"min": 100, "max": 109},
-        "description": "Hipertansiyon (Evre 2)",
+        "description": "Hypertension (Grade 2)",
         "risk_level": "high",
-        "recommendation": "Evre 2 hipertansiyon. Acilen doktora başvurun. İlaç tedavisi gereklidir. Kalp krizi ve inme riskiniz artmıştır."
+        "recommendation": "Grade 2 hypertension. See a doctor urgently. Medication is required. Your risk of heart attack and stroke has increased."
       },
       "hypertension_grade_3": {
         "systolic": {"min": 180},
         "diastolic": {"min": 110},
-        "description": "Hipertansiyon (Evre 3 - Kritik)",
+        "description": "Hypertension (Grade 3 - Critical)",
         "risk_level": "very_high",
-        "recommendation": "Kritik hipertansiyon! Acil servise başvurun. Hipertansif kriz riski var. Derhal müdahale gerekir."
+        "recommendation": "Critical hypertension! Go to the emergency room. There is a risk of hypertensive crisis. Immediate intervention is required."
       }
     }
   },
@@ -182,19 +176,19 @@
       "reference": "WHO/ESC Lipid Guidelines",
       "desirable": {
         "max": 200,
-        "description": "İdeal",
-        "recommendation": "Total kolesterol seviyeniz ideal aralıkta."
+        "description": "Ideal",
+        "recommendation": "Your total cholesterol level is in the ideal range."
       },
       "borderline_high": {
         "min": 200,
         "max": 239,
-        "description": "Sınırda Yüksek",
-        "recommendation": "Kolesterolünüz sınırda yüksek. Diyetinize dikkat edin, doymuş yağları azaltın."
+        "description": "Borderline High",
+        "recommendation": "Your cholesterol is borderline high. Watch your diet, reduce saturated fats."
       },
       "high": {
         "min": 240,
-        "description": "Yüksek",
-        "recommendation": "Yüksek kolesterol. Kardiyoloji uzmanına başvurun. İlaç tedavisi gerekebilir."
+        "description": "High",
+        "recommendation": "High cholesterol. See a cardiology specialist. Medication may be required."
       }
     },
     "ldl": {
@@ -207,21 +201,21 @@
       "near_optimal": {
         "min": 100,
         "max": 129,
-        "description": "Optimale Yakın"
+        "description": "Near Optimal"
       },
       "borderline_high": {
         "min": 130,
         "max": 159,
-        "description": "Sınırda Yüksek"
+        "description": "Borderline High"
       },
       "high": {
         "min": 160,
         "max": 189,
-        "description": "Yüksek"
+        "description": "High"
       },
       "very_high": {
         "min": 190,
-        "description": "Çok Yüksek"
+        "description": "Very High"
       }
     },
     "hdl": {
@@ -229,30 +223,30 @@
       "reference": "HDL-C Protective Levels",
       "low_risk": {
         "min": 60,
-        "description": "Koruyucu Seviye",
-        "recommendation": "HDL kolesterolünüz yüksek - bu kalp sağlığı için koruyucudur!"
+        "description": "Protective Level",
+        "recommendation": "Your HDL cholesterol is high - this is protective for heart health!"
       },
       "moderate_male": {
         "min": 40,
         "max": 59,
-        "description": "Normal (Erkek)",
-        "recommendation": "HDL seviyeniz kabul edilebilir."
+        "description": "Normal (Male)",
+        "recommendation": "Your HDL level is acceptable."
       },
       "moderate_female": {
         "min": 50,
         "max": 59,
-        "description": "Normal (Kadın)",
-        "recommendation": "HDL seviyeniz kabul edilebilir."
+        "description": "Normal (Female)",
+        "recommendation": "Your HDL level is acceptable."
       },
       "high_risk_male": {
         "max": 40,
-        "description": "Düşük (Erkek)",
-        "recommendation": "HDL kolesterolünüz düşük. Egzersiz yapın, sağlıklı yağlar tüketin."
+        "description": "Low (Male)",
+        "recommendation": "Your HDL cholesterol is low. Exercise and consume healthy fats."
       },
       "high_risk_female": {
         "max": 50,
-        "description": "Düşük (Kadın)",
-        "recommendation": "HDL kolesterolünüz düşük. Egzersiz yapın, sağlıklı yağlar tüketin."
+        "description": "Low (Female)",
+        "recommendation": "Your HDL cholesterol is low. Exercise and consume healthy fats."
       }
     },
     "triglycerides": {
@@ -265,16 +259,16 @@
       "borderline_high": {
         "min": 150,
         "max": 199,
-        "description": "Sınırda Yüksek"
+        "description": "Borderline High"
       },
       "high": {
         "min": 200,
         "max": 499,
-        "description": "Yüksek"
+        "description": "High"
       },
       "very_high": {
         "min": 500,
-        "description": "Çok Yüksek"
+        "description": "Very High"
       }
     }
   },
@@ -284,22 +278,22 @@
     "male_adult": {
       "min": 3.7,
       "unit": "liters/day",
-      "description": "Yetişkin Erkek (18+ yaş)"
+      "description": "Adult Male (18+ years)"
     },
     "female_adult": {
       "min": 2.7,
       "unit": "liters/day",
-      "description": "Yetişkin Kadın (18+ yaş)"
+      "description": "Adult Female (18+ years)"
     },
     "pregnant": {
       "min": 3.0,
       "unit": "liters/day",
-      "description": "Hamile Kadın"
+      "description": "Pregnant Woman"
     },
     "breastfeeding": {
       "min": 3.8,
       "unit": "liters/day",
-      "description": "Emziren Kadın"
+      "description": "Breastfeeding Woman"
     },
     "children_9_13": {
       "male": 2.4,
@@ -315,7 +309,7 @@
       "male": 3.7,
       "female": 2.7,
       "unit": "liters/day",
-      "note": "Yaşlılarda susuzluk hissi azalabilir, düzenli su tüketimi önemlidir."
+      "note": "Thirst sensation may decrease in the elderly, regular water intake is important."
     }
   },
 
@@ -326,23 +320,23 @@
       "vigorous_intensity_minutes_per_week": 75,
       "steps_per_day": 10000,
       "muscle_strengthening_days_per_week": 2,
-      "description": "Yetişkinler haftada en az 150-300 dakika orta yoğunlukta veya 75-150 dakika yüksek yoğunlukta aerobik aktivite yapmalıdır."
+      "description": "Adults should do at least 150-300 minutes of moderate intensity or 75-150 minutes of vigorous intensity aerobic activity per week."
     },
     "elderly_65_plus": {
       "moderate_intensity_minutes_per_week": 150,
       "vigorous_intensity_minutes_per_week": 75,
       "steps_per_day": 7000,
       "balance_training_days_per_week": 3,
-      "description": "Yaşlılar için denge ve düşme önleme egzersizleri önemlidir."
+      "description": "Balance and fall prevention exercises are important for the elderly."
     },
     "children_5_17": {
       "moderate_to_vigorous_minutes_per_day": 60,
       "vigorous_days_per_week": 3,
-      "description": "Çocuklar ve gençler günde en az 60 dakika orta-yüksek yoğunlukta fiziksel aktivite yapmalıdır."
+      "description": "Children and adolescents should do at least 60 minutes of moderate-to-vigorous physical activity per day."
     },
     "pregnant_postpartum": {
       "moderate_intensity_minutes_per_week": 150,
-      "note": "Hamile ve doğum sonrası kadınlar için düzenli fiziksel aktivite önerilir (tıbbi kontrendikasyon yoksa)."
+      "note": "Regular physical activity is recommended for pregnant and postpartum women (if no medical contraindication)."
     }
   },
 
@@ -405,22 +399,22 @@
       "excellent_athlete": {
         "min": 40,
         "max": 60,
-        "description": "Mükemmel (Sporcu)"
+        "description": "Excellent (Athlete)"
       },
       "good": {
         "min": 60,
         "max": 80,
-        "description": "İyi"
+        "description": "Good"
       },
       "above_average": {
         "min": 80,
         "max": 100,
-        "description": "Ortalamanın Üstünde"
+        "description": "Above Average"
       },
       "high": {
         "min": 100,
-        "description": "Yüksek - Taşikardi",
-        "recommendation": "Dinlenme kalp hızınız yüksek. Bir kardiyologa başvurun."
+        "description": "High - Tachycardia",
+        "recommendation": "Your resting heart rate is high. See a cardiologist."
       }
     },
     "maximum_hr_formula": "220 - age"
@@ -438,18 +432,18 @@
       "min": 37.3,
       "max": 38.0,
       "unit": "°C",
-      "description": "Hafif Ateş"
+      "description": "Low-Grade Fever"
     },
     "fever": {
       "min": 38.1,
       "max": 39.0,
       "unit": "°C",
-      "description": "Ateş"
+      "description": "Fever"
     },
     "high_fever": {
       "min": 39.1,
       "unit": "°C",
-      "description": "Yüksek Ateş"
+      "description": "High Fever"
     }
   }
 }

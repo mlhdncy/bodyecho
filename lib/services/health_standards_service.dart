@@ -44,9 +44,9 @@ class HealthStandardsService {
     if (age < 18) {
       return BmiAssessment(
         category: 'children',
-        description: 'Çocuk yaş grubu',
+        description: 'Child age group',
         riskLevel: 'info',
-        recommendation: 'Çocuklarda BMI değerlendirmesi yaşa ve cinsiyete göre persentil tabloları kullanılarak yapılmalıdır. Bir çocuk doktoruna danışın.',
+        recommendation: 'BMI assessment in children should be done using age and gender percentile charts. Consult a pediatrician.',
         source: 'WHO',
         bmiValue: bmi,
       );
@@ -134,7 +134,7 @@ class HealthStandardsService {
     return GlucoseAssessment(
       status: status,
       description: categoryData?['description'] ?? status,
-      warning: status == 'normal' ? '' : 'Kan şekeriniz yüksek!',
+      warning: status == 'normal' ? '' : 'Your blood sugar is high!',
       recommendation: categoryData?['recommendation'] ?? '',
       minNormal: null,
       maxNormal: standards['normal']?['max']?.toDouble(),
@@ -231,11 +231,11 @@ class HealthStandardsService {
 
     if (isBreastfeeding) {
       recommendedLiters = waterStandards['breastfeeding']['min']?.toDouble() ?? 3.8;
-      description = 'Emziren kadın';
+      description = 'Breastfeeding woman';
       specialCondition = 'breastfeeding';
     } else if (isPregnant) {
       recommendedLiters = waterStandards['pregnant']['min']?.toDouble() ?? 3.0;
-      description = 'Hamile kadın';
+      description = 'Pregnant woman';
       specialCondition = 'pregnant';
     } else if (age >= 65) {
       if (gender == 'Male') {
@@ -243,14 +243,14 @@ class HealthStandardsService {
       } else {
         recommendedLiters = waterStandards['elderly_65_plus']['female']?.toDouble() ?? 2.7;
       }
-      description = 'Yaşlı yetişkin (65+ yaş)';
+      description = 'Elderly adult (65+ years)';
     } else if (age >= 18) {
       if (gender == 'Male') {
         recommendedLiters = waterStandards['male_adult']['min']?.toDouble() ?? 3.7;
-        description = 'Yetişkin erkek';
+        description = 'Adult male';
       } else {
         recommendedLiters = waterStandards['female_adult']['min']?.toDouble() ?? 2.7;
-        description = 'Yetişkin kadın';
+        description = 'Adult female';
       }
     } else if (age >= 14) {
       if (gender == 'Male') {
@@ -258,10 +258,10 @@ class HealthStandardsService {
       } else {
         recommendedLiters = waterStandards['children_14_18']['female']?.toDouble() ?? 2.3;
       }
-      description = 'Genç (14-18 yaş)';
+      description = 'Teen (14-18 years)';
     } else {
       recommendedLiters = 2.0;
-      description = 'Çocuk';
+      description = 'Child';
     }
 
     return WaterIntakeRecommendation(

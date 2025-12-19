@@ -19,7 +19,7 @@ class CalorieTrackingScreen extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        title: const Text('Kalori Takibi',
+        title: const Text('Calorie Tracking',
             style: TextStyle(color: AppColors.textPrimary)),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: AppColors.textPrimary),
@@ -62,12 +62,12 @@ class CalorieTrackingScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Toplam Alınan',
+                      'Total Consumed',
                       style: TextStyle(color: Colors.white, fontSize: 16),
                     ),
                     SizedBox(height: 4),
                     Text(
-                      'Kalori',
+                      'Calories',
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 24,
@@ -93,16 +93,16 @@ class CalorieTrackingScreen extends StatelessWidget {
             child: ListView(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               children: [
-                _buildMealSection(context, 'Kahvaltı', 'breakfast',
+                _buildMealSection(context, 'Breakfast', 'breakfast',
                     nutritionProvider.breakfast),
                 const SizedBox(height: 16),
                 _buildMealSection(
-                    context, 'Öğle Yemeği', 'lunch', nutritionProvider.lunch),
+                    context, 'Lunch', 'lunch', nutritionProvider.lunch),
                 const SizedBox(height: 16),
-                _buildMealSection(context, 'Akşam Yemeği', 'dinner',
+                _buildMealSection(context, 'Dinner', 'dinner',
                     nutritionProvider.dinner),
                 const SizedBox(height: 16),
-                _buildMealSection(context, 'Ara Öğün / Atıştırmalık', 'snack',
+                _buildMealSection(context, 'Snacks', 'snack',
                     nutritionProvider.snacks),
                 const SizedBox(height: 100), // Bottom padding for FAB
               ],
@@ -123,7 +123,7 @@ class CalorieTrackingScreen extends StatelessWidget {
             if (context.mounted) {
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
-                  content: Text('Günlük kalori güncellendi!'),
+                  content: Text('Daily calories updated!'),
                   backgroundColor: AppColors.accentGreen,
                 ),
               );
@@ -133,7 +133,7 @@ class CalorieTrackingScreen extends StatelessWidget {
         },
         backgroundColor: AppColors.primaryTeal,
         icon: const Icon(Icons.check),
-        label: const Text('Kaydet ve Bitir'),
+        label: const Text('Save & Finish'),
       ),
     );
   }
@@ -292,7 +292,7 @@ class _FoodSearchSheetState extends State<_FoodSearchSheet> {
             child: TextField(
               controller: _searchController,
               decoration: InputDecoration(
-                hintText: 'Yiyecek ara...',
+                hintText: 'Search food...',
                 prefixIcon: const Icon(Icons.search),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
@@ -324,7 +324,7 @@ class _FoodSearchSheetState extends State<_FoodSearchSheet> {
                           Navigator.pop(context);
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
-                              content: Text('${food.name} eklendi!'),
+                              content: Text('${food.name} added!'),
                               duration: const Duration(seconds: 1),
                               backgroundColor: AppColors.accentGreen,
                             ),
